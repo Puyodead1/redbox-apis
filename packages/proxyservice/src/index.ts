@@ -53,6 +53,31 @@ app.get("/api/installer/getpendingbanners", (req, res) => {
     });
 });
 
+app.get("/api/installer/getpendingkiosks", (req, res) => {
+    // get stateid and banner id from query params
+    const stateId = req.query.stateid;
+    const bannerId = req.query.bannerid;
+    if (!stateId || !bannerId) {
+        res.status(400).json({ error: "stateid and banner are required" });
+        return;
+    }
+
+    res.json({
+        PendingKiosks: [
+            {
+                Id: 1,
+                Address: "somewhere",
+                City: "some city",
+                State: "some state",
+                ZipCode: "66666",
+                DueTime: "9:00",
+                MarketName: "Dollar General",
+                KaseyaMarketName: "toleto_oh",
+            },
+        ],
+    });
+});
+
 app.listen(PORT, () => {
     logger.info(`Server is running on port ${PORT}`);
 });
