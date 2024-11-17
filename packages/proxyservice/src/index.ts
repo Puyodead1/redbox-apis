@@ -35,6 +35,24 @@ app.get("/api/installer/getpendingstates", (req, res) => {
     });
 });
 
+app.get("/api/installer/getpendingbanners", (req, res) => {
+    // get stateid from query params
+    const stateId = req.query.stateid;
+    if (!stateId) {
+        res.status(400).json({ error: "stateid is required" });
+        return;
+    }
+
+    res.json({
+        Banners: [
+            {
+                Id: 1,
+                Name: "Banner 1",
+            },
+        ],
+    });
+});
+
 app.listen(PORT, () => {
     logger.info(`Server is running on port ${PORT}`);
 });
