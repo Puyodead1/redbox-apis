@@ -1,0 +1,13 @@
+{
+    "name": "apis",
+    "version": "1.0.0",
+    "description": "",
+    "main": "index.js",
+    "scripts": {
+        "build": "pnpm -r run build",
+        "start": "pnpm -r run start"
+    },
+    "keywords": [],
+    "author": "",
+    "license": "ISC"
+}

@@ -1,0 +1,21 @@
+{
+    "name": "dataservice",
+    "version": "1.0.0",
+    "description": "",
+    "main": "dist/index.js",
+    "scripts": {
+        "build": "tsc",
+        "start": "node dist/index.js"
+    },
+    "keywords": [],
+    "author": "",
+    "license": "ISC",
+    "dependencies": {
+        "express": "^4.21.1",
+        "winston": "^3.17.0"
+    },
+    "devDependencies": {
+        "@types/express": "^5.0.0",
+        "typescript": "^5.6.3"
+    }
+}
