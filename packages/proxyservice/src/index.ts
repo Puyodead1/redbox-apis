@@ -28,7 +28,7 @@ app.get("/api/installer/getpendingstates", (req, res) => {
     res.json({
         States: [
             {
-                Id: "state1",
+                Id: 1,
                 Description: "State 1",
             },
         ],
