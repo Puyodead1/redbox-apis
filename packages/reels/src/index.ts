@@ -11,7 +11,11 @@ const app = express();
 app.use(express.json());
 
 app.use((req, res, next) => {
-    logger.info(req.method, req.originalUrl, req.body);
+    logger.info("Request received", {
+        method: req.method,
+        url: req.originalUrl,
+        body: req.body,
+    });
     next();
 });
 
