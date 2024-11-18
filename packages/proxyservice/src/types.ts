@@ -28,6 +28,21 @@ export interface IPlanogramInfo {
     PresignedUrl: string;
 }
 
+export enum ELocationType {
+    Outdoor = 0,
+    Indoor = 1,
+}
+
+export interface INearbyKiosk {
+    KioskId: number;
+    IsDual: boolean;
+    Label?: string; // A, or B
+    LocationName: string;
+    LocationType: ELocationType;
+    Address: string;
+    DistanceMiles: number;
+}
+
 // ---- Responses ----
 
 export interface IPendingStatesResponse {
@@ -44,4 +59,9 @@ export interface IPendingKiosksResponse {
 
 export interface IGetPlanogramsResponse {
     Planograms: IPlanogramInfo[];
+}
+
+export interface INearbyKiosksResponse {
+    MessageId?: string; // GUID
+    Kiosks: INearbyKiosk[];
 }

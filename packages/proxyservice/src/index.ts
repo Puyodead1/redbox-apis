@@ -2,7 +2,9 @@ import express, { NextFunction, Request, Response } from "express";
 import { query, ValidationChain, validationResult } from "express-validator";
 import winston from "winston";
 import {
+    ELocationType,
     IGetPlanogramsResponse,
+    INearbyKiosksResponse,
     IPendingBannersResponse,
     IPendingKiosksResponse,
     IPendingStatesResponse,
@@ -87,7 +89,7 @@ app.get(
                     City: "idk",
                     State: "yes",
                     ZipCode: "66666",
-                    DueTime: "9:00",
+                    DueTime: "09:00PM",
                     MarketName: "Dollar General",
                     KaseyaMarketName: "toleto_oh",
                 },
@@ -102,6 +104,22 @@ app.get("/api/planogram/allcurrent", validateRequest([query("lastReportedTime").
     res.json({
         Planograms: [],
     } as IGetPlanogramsResponse);
+});
+
+app.get("/api/kiosk/:kioskId/nearby", (req, res) => {
+    // TODO: real data
+    res.json({
+        Kiosks: [
+            {
+                Address: "5028 W Ridge Rd Erie, PA 16506-1216",
+                DistanceMiles: 0.1,
+                IsDual: false,
+                KioskId: 10001,
+                LocationName: "Wegmans",
+                LocationType: ELocationType.Indoor,
+            },
+        ],
+    } as INearbyKiosksResponse);
 });
 
 app.listen(PORT, () => {
