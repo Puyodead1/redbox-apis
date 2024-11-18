@@ -1,9 +1,13 @@
 import express, { NextFunction, Request, Response } from "express";
-import { query, ValidationChain, validationResult } from "express-validator";
+import { body, query, ValidationChain, validationResult } from "express-validator";
 import winston from "winston";
 import {
+    EAssetTarget,
+    EControlType,
+    EInCartType,
     ELocationType,
     IGetPlanogramsResponse,
+    IKioskCampaignsResponse,
     INearbyKiosksResponse,
     IPendingBannersResponse,
     IPendingKiosksResponse,
@@ -121,6 +125,49 @@ app.get("/api/kiosk/:kioskId/nearby", (req, res) => {
         ],
     } as INearbyKiosksResponse);
 });
+
+app.post(
+    "/api/cms/campaign/kiosk/:kioskId",
+    validateRequest([body("LastSyncTime").optional().toDate()]),
+    (req, res) => {
+        const kioskId = req.params.kioskId;
+        const lastSyncTime = req.body.LastSyncTime;
+
+        res.json({
+            InCarts: [
+                {
+                    CampaignInCartId: 1,
+                    InCartType: EInCartType.StartScreen,
+                    PromoCode: "PROMO",
+                    ExcludeTitles: [],
+                },
+            ],
+            StartScreens: [
+                {
+                    Controls: [
+                        {
+                            ControlType: EControlType.StartAsset,
+                            Asset: {
+                                Id: 1,
+                                Name: "Asset 1",
+                                Url: "https://picsum.photos/200",
+                                FullPath: "https://picsum.photos/200",
+                            },
+                            ControlId: 1,
+                            DisplayDuration: 1000,
+                            IncludeIfNoInventory: true,
+                            Order: 1,
+                            MaxTitles: 100,
+                            ShowPressToStart: true,
+                            Target: EAssetTarget.PromoCode,
+                            TargetValue: "1",
+                        },
+                    ],
+                },
+            ],
+        } as IKioskCampaignsResponse);
+    }
+);
 
 app.listen(PORT, () => {
     logger.info(`Server is running on port ${PORT}`);

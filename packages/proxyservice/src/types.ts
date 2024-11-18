@@ -29,8 +29,8 @@ export interface IPlanogramInfo {
 }
 
 export enum ELocationType {
-    Outdoor = 0,
-    Indoor = 1,
+    Outdoor,
+    Indoor,
 }
 
 export interface INearbyKiosk {
@@ -41,6 +41,57 @@ export interface INearbyKiosk {
     LocationType: ELocationType;
     Address: string;
     DistanceMiles: number;
+}
+
+export enum EInCartType {
+    NotSet,
+    StartScreen,
+    InCart,
+}
+
+export interface IInCartDetails {
+    CampaignInCartId: number;
+    InCartType: EInCartType;
+    Amount?: number;
+    PromoCode: string;
+    ExcludeTitles: string[];
+}
+
+export enum EControlType {
+    NotSet,
+    StartAsset,
+    Carousel,
+}
+
+export interface IAsset {
+    Id: number;
+    Name: string;
+    Url: string;
+    FullPath: string;
+}
+
+export enum EAssetTarget {
+    ProductGroupId,
+    PromoCode,
+    None,
+    BrowseFilter,
+}
+
+export interface IControl {
+    ControlId?: number;
+    DisplayDuration?: number;
+    ControlType: EControlType;
+    Asset?: IAsset; // only if StartAsset
+    Target?: EAssetTarget; // only if StartAsset
+    TargetValue?: string; // only if StartAsset
+    Order?: number; // only if StartAsset
+    ShowPressToStart?: boolean; // only if StartAsset
+    IncludeIfNoInventory?: boolean; // only if StartAsset
+    MaxTitles?: number; // only if Carousel
+}
+
+export interface IStartScreenDetails {
+    Controls: IControl[];
 }
 
 // ---- Responses ----
@@ -64,4 +115,10 @@ export interface IGetPlanogramsResponse {
 export interface INearbyKiosksResponse {
     MessageId?: string; // GUID
     Kiosks: INearbyKiosk[];
+}
+
+export interface IKioskCampaignsResponse {
+    LastSyncTime?: string; // DateTime
+    InCarts: IInCartDetails[];
+    StartScreens: IStartScreenDetails[];
 }
