@@ -1,5 +1,6 @@
 import { celebrate, Joi, Segments } from "celebrate";
 import { Request, Response } from "express";
+import { v4 } from "uuid";
 import { IPendingBannersResponse } from "../../types";
 
 export const get = [
@@ -15,6 +16,9 @@ export const get = [
         const stateId = req.query.stateid as string;
 
         return res.json({
+            MessageId: v4(),
+            Success: true,
+            Errors: [],
             Banners: [
                 {
                     Id: 1,

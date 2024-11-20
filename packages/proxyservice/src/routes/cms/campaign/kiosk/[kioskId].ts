@@ -1,5 +1,6 @@
 import { celebrate, Segments } from "celebrate";
 import { Request, Response } from "express";
+import { v4 } from "uuid";
 import { KioskCampaignsRequest } from "../../../../interfaces";
 import { KioskCampaignsRequestSchema } from "../../../../schemas";
 import { EAssetTarget, EControlType, EInCartType, IKioskCampaignsResponse } from "../../../../types";
@@ -15,6 +16,9 @@ export const post = [
         const body: KioskCampaignsRequest = req.body;
 
         return res.json({
+            MessageId: v4(),
+            Success: true,
+            Errors: [],
             InCarts: [
                 {
                     CampaignInCartId: 1,

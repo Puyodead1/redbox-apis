@@ -1,4 +1,5 @@
 import { Request, Response } from "express";
+import { v4 } from "uuid";
 import { ELocationType, INearbyKiosksResponse } from "../../../types";
 
 export const get = async (req: Request, res: Response) => {
@@ -6,6 +7,9 @@ export const get = async (req: Request, res: Response) => {
 
     // TODO: real data?
     return res.json({
+        MessageId: v4(),
+        Success: true,
+        Errors: [],
         Kiosks: [
             {
                 Address: "5028 W Ridge Rd Erie, PA 16506-1216",

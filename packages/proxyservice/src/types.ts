@@ -1,3 +1,5 @@
+import { BaseResponse } from "common";
+
 export interface IInstallerModelState {
     Id: number;
     Description: string;
@@ -96,28 +98,27 @@ export interface IStartScreenDetails {
 
 // ---- Responses ----
 
-export interface IPendingStatesResponse {
+export interface IPendingStatesResponse extends BaseResponse {
     States: IInstallerModelState[];
 }
 
-export interface IPendingBannersResponse {
+export interface IPendingBannersResponse extends BaseResponse {
     Banners: IInstallerModelBanner[];
 }
 
-export interface IPendingKiosksResponse {
+export interface IPendingKiosksResponse extends BaseResponse {
     PendingKiosks: IInstallerModelPendingKiosk[];
 }
 
-export interface IGetPlanogramsResponse {
+export interface IGetPlanogramsResponse extends BaseResponse {
     Planograms: IPlanogramInfo[];
 }
 
-export interface INearbyKiosksResponse {
-    MessageId?: string; // GUID
+export interface INearbyKiosksResponse extends BaseResponse {
     Kiosks: INearbyKiosk[];
 }
 
-export interface IKioskCampaignsResponse {
+export interface IKioskCampaignsResponse extends BaseResponse {
     LastSyncTime?: string; // DateTime
     InCarts: IInCartDetails[];
     StartScreens: IStartScreenDetails[];

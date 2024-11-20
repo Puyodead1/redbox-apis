@@ -1,7 +1,8 @@
 import { celebrate, Segments } from "celebrate";
 import { Request, Response } from "express";
+import { v4 } from "uuid";
 import { ReturnRequest } from "../../interfaces";
-import { ReturnRequestSchema } from "../../schemas";
+import { ReturnRequestSchema } from "../../schemas/ReturnRequestSchema";
 
 export const post = [
     celebrate({
@@ -12,6 +13,12 @@ export const post = [
 
         const body: ReturnRequest = req.body;
 
-        return res.sendStatus(200);
+        const MessageId = v4();
+
+        return res.json({
+            MessageId,
+            Success: true,
+            Errors: [],
+        });
     },
 ];

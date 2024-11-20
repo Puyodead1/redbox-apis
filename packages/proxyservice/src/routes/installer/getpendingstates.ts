@@ -1,4 +1,5 @@
 import { Request, Response } from "express";
+import { v4 } from "uuid";
 import { IPendingStatesResponse } from "../../types";
 
 export const get = async (req: Request, res: Response) => {
@@ -6,6 +7,9 @@ export const get = async (req: Request, res: Response) => {
 
     // TODO: I dont really see the point of implementing this
     return res.json({
+        MessageId: v4(),
+        Success: true,
+        Errors: [],
         States: [
             {
                 Id: 1,

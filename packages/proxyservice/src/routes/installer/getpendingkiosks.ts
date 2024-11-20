@@ -1,5 +1,6 @@
 import { celebrate, Joi, Segments } from "celebrate";
 import { Request, Response } from "express";
+import { v4 } from "uuid";
 import { IPendingKiosksResponse } from "../../types";
 
 export const get = [
@@ -17,6 +18,9 @@ export const get = [
         const bannerId = req.query.bannerid;
 
         res.json({
+            MessageId: v4(),
+            Success: true,
+            Errors: [],
             PendingKiosks: [
                 {
                     Id: 1,

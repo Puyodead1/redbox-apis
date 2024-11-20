@@ -17,6 +17,7 @@
         "express": "^4.21.1",
         "express-file-routing": "^3.0.3",
         "joi-extract-type": "^15.0.8",
+        "uuid": "^11.0.3",
         "winston": "^3.17.0"
     },
     "devDependencies": {
