@@ -10,12 +10,46 @@ importers:
 
   packages/adserver:
     dependencies:
+      celebrate:
+        specifier: ^15.0.3
+        version: 15.0.3
+      common:
+        specifier: workspace:^
+        version: link:../common
       express:
         specifier: ^4.21.1
         version: 4.21.1
-      express-validator:
-        specifier: ^7.2.0
-        version: 7.2.0
+      express-file-routing:
+        specifier: ^3.0.3
+        version: 3.0.3(express@4.21.1)
+      joi-extract-type:
+        specifier: ^15.0.8
+        version: 15.0.8(@hapi/joi@17.1.1)
+      winston:
+        specifier: ^3.17.0
+        version: 3.17.0
+    devDependencies:
+      '@types/express':
+        specifier: ^5.0.0
+        version: 5.0.0
+      joi-to-typescript:
+        specifier: ^4.14.0
+        version: 4.14.0(joi@17.13.3)
+      ts-node:
+        specifier: ^10.9.2
+        version: 10.9.2(@types/node@22.9.0)(typescript@4.9.5)
+      typescript:
+        specifier: ^4.9.5
+        version: 4.9.5
+
+  packages/common:
+    dependencies:
+      common:
+        specifier: workspace:^
+        version: 'link:'
+      express:
+        specifier: ^4.21.1
+        version: 4.21.1
       winston:
         specifier: ^3.17.0
         version: 3.17.0
@@ -29,12 +63,21 @@ importers:
 
   packages/dataservice:
     dependencies:
+      celebrate:
+        specifier: ^15.0.3
+        version: 15.0.3
+      common:
+        specifier: workspace:^
+        version: link:../common
       express:
         specifier: ^4.21.1
         version: 4.21.1
-      express-validator:
-        specifier: ^7.2.0
-        version: 7.2.0
+      express-file-routing:
+        specifier: ^3.0.3
+        version: 3.0.3(express@4.21.1)
+      joi-extract-type:
+        specifier: ^15.0.8
+        version: 15.0.8(@hapi/joi@17.1.1)
       winston:
         specifier: ^3.17.0
         version: 3.17.0
@@ -42,34 +85,61 @@ importers:
       '@types/express':
         specifier: ^5.0.0
         version: 5.0.0
+      joi-to-typescript:
+        specifier: ^4.14.0
+        version: 4.14.0(joi@17.13.3)
+      ts-node:
+        specifier: ^10.9.2
+        version: 10.9.2(@types/node@22.9.0)(typescript@4.9.5)
       typescript:
-        specifier: ^5.6.3
-        version: 5.6.3
+        specifier: ^4.9.5
+        version: 4.9.5
 
   packages/dataservice_old:
     dependencies:
+      celebrate:
+        specifier: ^15.0.3
+        version: 15.0.3
       express:
         specifier: ^4.21.1
         version: 4.21.1
-      express-validator:
-        specifier: ^7.2.0
-        version: 7.2.0
+      express-file-routing:
+        specifier: ^3.0.3
+        version: 3.0.3(express@4.21.1)
+      joi-extract-type:
+        specifier: ^15.0.8
+        version: 15.0.8(@hapi/joi@17.1.1)
     devDependencies:
       '@types/express':
         specifier: ^5.0.0
         version: 5.0.0
+      joi-to-typescript:
+        specifier: ^4.14.0
+        version: 4.14.0(joi@17.13.3)
+      ts-node:
+        specifier: ^10.9.2
+        version: 10.9.2(@types/node@22.9.0)(typescript@4.9.5)
       typescript:
-        specifier: ^5.6.3
-        version: 5.6.3
+        specifier: ^4.9.5
+        version: 4.9.5
 
   packages/kioskinventory:
     dependencies:
+      celebrate:
+        specifier: ^15.0.3
+        version: 15.0.3
+      common:
+        specifier: workspace:^
+        version: link:../common
       express:
         specifier: ^4.21.1
         version: 4.21.1
-      express-validator:
-        specifier: ^7.2.0
-        version: 7.2.0
+      express-file-routing:
+        specifier: ^3.0.3
+        version: 3.0.3(express@4.21.1)
+      joi-extract-type:
+        specifier: ^15.0.8
+        version: 15.0.8(@hapi/joi@17.1.1)
       winston:
         specifier: ^3.17.0
         version: 3.17.0
@@ -77,18 +147,33 @@ importers:
       '@types/express':
         specifier: ^5.0.0
         version: 5.0.0
+      joi-to-typescript:
+        specifier: ^4.14.0
+        version: 4.14.0(joi@17.13.3)
+      ts-node:
+        specifier: ^10.9.2
+        version: 10.9.2(@types/node@22.9.0)(typescript@4.9.5)
       typescript:
-        specifier: ^5.6.3
-        version: 5.6.3
+        specifier: ^4.9.5
+        version: 4.9.5
 
   packages/proxyservice:
     dependencies:
+      celebrate:
+        specifier: ^15.0.3
+        version: 15.0.3
+      common:
+        specifier: workspace:^
+        version: link:../common
       express:
         specifier: ^4.21.1
         version: 4.21.1
-      express-validator:
-        specifier: ^7.2.0
-        version: 7.2.0
+      express-file-routing:
+        specifier: ^3.0.3
+        version: 3.0.3(express@4.21.1)
+      joi-extract-type:
+        specifier: ^15.0.8
+        version: 15.0.8(@hapi/joi@17.1.1)
       winston:
         specifier: ^3.17.0
         version: 3.17.0
@@ -96,18 +181,33 @@ importers:
       '@types/express':
         specifier: ^5.0.0
         version: 5.0.0
+      joi-to-typescript:
+        specifier: ^4.14.0
+        version: 4.14.0(joi@17.13.3)
+      ts-node:
+        specifier: ^10.9.2
+        version: 10.9.2(@types/node@22.9.0)(typescript@4.9.5)
       typescript:
-        specifier: ^5.6.3
-        version: 5.6.3
+        specifier: ^4.9.5
+        version: 4.9.5
 
   packages/reels:
     dependencies:
+      celebrate:
+        specifier: ^15.0.3
+        version: 15.0.3
+      common:
+        specifier: workspace:^
+        version: link:../common
       express:
         specifier: ^4.21.1
         version: 4.21.1
-      express-validator:
-        specifier: ^7.2.0
-        version: 7.2.0
+      express-file-routing:
+        specifier: ^3.0.3
+        version: 3.0.3(express@4.21.1)
+      joi-extract-type:
+        specifier: ^15.0.8
+        version: 15.0.8(@hapi/joi@17.1.1)
       winston:
         specifier: ^3.17.0
         version: 3.17.0
@@ -115,18 +215,33 @@ importers:
       '@types/express':
         specifier: ^5.0.0
         version: 5.0.0
+      joi-to-typescript:
+        specifier: ^4.14.0
+        version: 4.14.0(joi@17.13.3)
+      ts-node:
+        specifier: ^10.9.2
+        version: 10.9.2(@types/node@22.9.0)(typescript@4.9.5)
       typescript:
-        specifier: ^5.6.3
-        version: 5.6.3
+        specifier: ^4.9.5
+        version: 4.9.5
 
   packages/transactionservice:
     dependencies:
+      celebrate:
+        specifier: ^15.0.3
+        version: 15.0.3
+      common:
+        specifier: workspace:^
+        version: link:../common
       express:
         specifier: ^4.21.1
         version: 4.21.1
-      express-validator:
-        specifier: ^7.2.0
-        version: 7.2.0
+      express-file-routing:
+        specifier: ^3.0.3
+        version: 3.0.3(express@4.21.1)
+      joi-extract-type:
+        specifier: ^15.0.8
+        version: 15.0.8(@hapi/joi@17.1.1)
       winston:
         specifier: ^3.17.0
         version: 3.17.0
@@ -134,9 +249,15 @@ importers:
       '@types/express':
         specifier: ^5.0.0
         version: 5.0.0
+      joi-to-typescript:
+        specifier: ^4.14.0
+        version: 4.14.0(joi@17.13.3)
+      ts-node:
+        specifier: ^10.9.2
+        version: 10.9.2(@types/node@22.9.0)(typescript@4.9.5)
       typescript:
-        specifier: ^5.6.3
-        version: 5.6.3
+        specifier: ^4.9.5
+        version: 4.9.5
 
 packages:
 
@@ -144,8 +265,64 @@ packages:
     resolution: {integrity: sha512-Ir+AOibqzrIsL6ajt3Rz3LskB7OiMVHqltZmspbW/TJuTVuyOMirVqAkjfY6JISiLHgyNqicAC8AyHHGzNd/dA==}
     engines: {node: '>=0.1.90'}
 
+  '@cspotcode/source-map-support@0.8.1':
+    resolution: {integrity: sha512-IchNf6dN4tHoMFIn/7OE8LWZ19Y6q/67Bmf6vnGREv8RSbBVb9LPJxEcnwrcwX6ixSvaiGoomAUvu4YSxXrVgw==}
+    engines: {node: '>=12'}
+
   '@dabh/diagnostics@2.0.3':
     resolution: {integrity: sha512-hrlQOIi7hAfzsMqlGSFyVucrx38O+j6wiGOf//H2ecvIEqYN4ADBSS2iLMh5UFyDunCNniUIPk/q3riFv45xRA==}
+
+  '@hapi/address@4.1.0':
+    resolution: {integrity: sha512-SkszZf13HVgGmChdHo/PxchnSaCJ6cetVqLzyciudzZRT0jcOouIF/Q93mgjw8cce+D+4F4C1Z/WrfFN+O3VHQ==}
+    deprecated: Moved to 'npm install @sideway/address'
+
+  '@hapi/formula@2.0.0':
+    resolution: {integrity: sha512-V87P8fv7PI0LH7LiVi8Lkf3x+KCO7pQozXRssAHNXXL9L1K+uyu4XypLXwxqVDKgyQai6qj3/KteNlrqDx4W5A==}
+    deprecated: Moved to 'npm install @sideway/formula'
+
+  '@hapi/hoek@9.3.0':
+    resolution: {integrity: sha512-/c6rf4UJlmHlC9b5BaNvzAcFv7HZ2QHaV0D4/HNlBdvFnvQq8RI4kYdhyPCl7Xj+oWvTWQ8ujhqS53LIgAe6KQ==}
+
+  '@hapi/joi@17.1.1':
+    resolution: {integrity: sha512-p4DKeZAoeZW4g3u7ZeRo+vCDuSDgSvtsB/NpfjXEHTUjSeINAi/RrVOWiVQ1isaoLzMvFEhe8n5065mQq1AdQg==}
+    deprecated: Switch to 'npm install joi'
+
+  '@hapi/pinpoint@2.0.1':
+    resolution: {integrity: sha512-EKQmr16tM8s16vTT3cA5L0kZZcTMU5DUOZTuvpnY738m+jyP3JIUj+Mm1xc1rsLkGBQ/gVnfKYPwOmPg1tUR4Q==}
+
+  '@hapi/topo@5.1.0':
+    resolution: {integrity: sha512-foQZKJig7Ob0BMAYBfcJk8d77QtOe7Wo4ox7ff1lQYoNNAb6jwcY1ncdoy2e9wQZzvNy7ODZCYJkK8kzmcAnAg==}
+
+  '@jridgewell/resolve-uri@3.1.2':
+    resolution: {integrity: sha512-bRISgCIjP20/tbWSPWMEi54QVPRZExkuD9lJL+UIxUKtwVJA8wW1Trb1jMs1RFXo1CBTNZ/5hpC9QvmKWdopKw==}
+    engines: {node: '>=6.0.0'}
+
+  '@jridgewell/sourcemap-codec@1.5.0':
+    resolution: {integrity: sha512-gv3ZRaISU3fjPAgNsriBRqGWQL6quFx04YMPW/zD8XMLsU32mhCCbfbO6KZFLjvYpCZ8zyDEgqsgf+PwPaM7GQ==}
+
+  '@jridgewell/trace-mapping@0.3.9':
+    resolution: {integrity: sha512-3Belt6tdc8bPgAtbcmdtNJlirVoTmEb5e2gC94PnkwEW9jI6CAHUeoG85tjWP5WquqfavoMtMwiG4P926ZKKuQ==}
+
+  '@sideway/address@4.1.5':
+    resolution: {integrity: sha512-IqO/DUQHUkPeixNQ8n0JA6102hT9CmaljNTPmQ1u8MEhBo/R4Q8eKLN/vGZxuebwOroDB4cbpjheD4+/sKFK4Q==}
+
+  '@sideway/formula@3.0.1':
+    resolution: {integrity: sha512-/poHZJJVjx3L+zVD6g9KgHfYnb443oi7wLu/XKojDviHy6HOEOA6z1Trk5aR1dGcmPenJEgb2sK2I80LeS3MIg==}
+
+  '@sideway/pinpoint@2.0.0':
+    resolution: {integrity: sha512-RNiOoTPkptFtSVzQevY/yWtZwf/RxyVnPy/OcA9HBM3MlGDnBEYL5B41H0MTn0Uec8Hi+2qUtTfG2WWZBmMejQ==}
+
+  '@tsconfig/node10@1.0.11':
+    resolution: {integrity: sha512-DcRjDCujK/kCk/cUe8Xz8ZSpm8mS3mNNpta+jGCA6USEDfktlNvm1+IuZ9eTcDbNk41BHwpHHeW+N1lKCz4zOw==}
+
+  '@tsconfig/node12@1.0.11':
+    resolution: {integrity: sha512-cqefuRsh12pWyGsIoBKJA9luFu3mRxCA+ORZvA4ktLSzIuCUtWVxGIuXigEwO5/ywWFMZ2QEGKWvkZG1zDMTag==}
+
+  '@tsconfig/node14@1.0.3':
+    resolution: {integrity: sha512-ysT8mhdixWK6Hw3i1V2AeRqZ5WfXg1G43mqoYlM2nc6388Fq5jcXyr5mRsqViLx/GJYdoL0bfXD8nmF+Zn/Iow==}
+
+  '@tsconfig/node16@1.0.4':
+    resolution: {integrity: sha512-vxhUy4J8lyeyinH7Azl1pdd43GJhZH/tP2weN8TntQblOY+A0XbT8DJk1/oCPuOOyg/Ja757rG0CgHcWC8OfMA==}
 
   '@types/body-parser@1.19.5':
     resolution: {integrity: sha512-fB3Zu92ucau0iQ0JMCFQE7b/dv8Ot07NI3KaZIkIUNXq82k4eBAqUaneXfleGY9JWskeS9y+u0nXMyspcuQrCg==}
@@ -158,6 +335,12 @@ packages:
 
   '@types/express@5.0.0':
     resolution: {integrity: sha512-DvZriSMehGHL1ZNLzi6MidnsDhUZM/x2pRdDIKdwbUNqqwHxMlRdkxtn6/EPKyqKpHqTl/4nRZsRNLpZxZRpPQ==}
+
+  '@types/hapi__joi@15.0.4':
+    resolution: {integrity: sha512-VSS6zc7AIOdHVXmqKaGNPYl8eGrMvWi0R5pt3evJL3UdxO8XS28/XAkBXNyLQoymHxhMd4bF3o1U9mZkWDeN8w==}
+
+  '@types/hapi__joi@17.1.15':
+    resolution: {integrity: sha512-Ehq/YQB0ZqZGObrGngztxtThTiShrG0jlqyUSsNK3cebJSoyYgE/hdZvYt6lH4Wimi28RowDwnr87XseiemqAg==}
 
   '@types/http-errors@2.0.4':
     resolution: {integrity: sha512-D0CFMMtydbJAegzOyHjtiKPLlvnm3iTZyZRSZoLq2mRhDdmLfIWOCYPfQJ4cu2erKghU++QvjcUjp/5h7hESpA==}
@@ -187,6 +370,18 @@ packages:
     resolution: {integrity: sha512-PYAthTa2m2VKxuvSD3DPC/Gy+U+sOA1LAuT8mkmRuvw+NACSaeXEQ+NHcVF7rONl6qcaxV3Uuemwawk+7+SJLw==}
     engines: {node: '>= 0.6'}
 
+  acorn-walk@8.3.4:
+    resolution: {integrity: sha512-ueEepnujpqee2o5aIYnvHU6C0A42MNdsIDeqy5BydrkuC5R1ZuUFnm27EeFJGoEHJQgn3uleRvmTXaJgfXbt4g==}
+    engines: {node: '>=0.4.0'}
+
+  acorn@8.14.0:
+    resolution: {integrity: sha512-cl669nCJTZBsL97OF4kUQm5g5hC2uihk0NxY3WENAC0TYdILVkAyHymAntgxGkl7K+t0cXIrH5siy5S4XkFycA==}
+    engines: {node: '>=0.4.0'}
+    hasBin: true
+
+  arg@4.1.3:
+    resolution: {integrity: sha512-58S9QDqG0Xx27YwPSt9fJxivjYl432YCwfDMfZ+71RAqUrZef7LrKQZ3LHLOwCS4FLNBplP533Zx895SeOCHvA==}
+
   array-flatten@1.1.1:
     resolution: {integrity: sha512-PCVAQswWemu6UdxsDFFX/+gVeYqKAod3D3UVm91jHwynguOwAvYPhx8nNlM++NqRcK6CxxpUafjmhIdKiHibqg==}
 
@@ -204,6 +399,9 @@ packages:
   call-bind@1.0.7:
     resolution: {integrity: sha512-GHTSNSYICQ7scH7sZ+M2rFopRoLh8t2bLSW6BbgrtLsahOIB5iyAVJf9GjWK3cYTDaMj4XdBpM1cA6pIS0Kv2w==}
     engines: {node: '>= 0.4'}
+
+  celebrate@15.0.3:
+    resolution: {integrity: sha512-ToF8ILq/F0KhQ0CPtexP7Cu9GkqKJ91VKy3ZOCV24aaNWdm3QCHqnXAKfKHrtcM2B2zmPFe11p8WWsQkmq8k4g==}
 
   color-convert@1.9.3:
     resolution: {integrity: sha512-QfAUtd+vFdAtFQcC8CCyYt1fYWxSqAiK2cSD6zDB8N3cpsEBAvRxp9zOGg6G/SHHJYAT88/az/IuDGALsNVbGg==}
@@ -238,6 +436,9 @@ packages:
     resolution: {integrity: sha512-6DnInpx7SJ2AK3+CTUE/ZM0vWTUboZCegxhC2xiIydHR9jNuTAASBrfEpHhiGOZw/nX51bHt6YQl8jsGo4y/0w==}
     engines: {node: '>= 0.6'}
 
+  create-require@1.1.1:
+    resolution: {integrity: sha512-dcKFX3jn0MpIaXjisoRvexIJVEKzaq7z2rZKxf+MSr9TkdmHmsU4m2lcLojrj/FHl8mk5VxMmYA+ftRkP/3oKQ==}
+
   debug@2.6.9:
     resolution: {integrity: sha512-bC7ElrdJaJnPbAP+1EotYvqZsb3ecl5wi6Bfi6BJTUcNowp6cvspg0jXznRTKDjm/E7AdgFBVeAPVMNcKGsHMA==}
     peerDependencies:
@@ -257,6 +458,10 @@ packages:
   destroy@1.2.0:
     resolution: {integrity: sha512-2sJGJTaXIIaR1w4iJSNoN0hnMY7Gpc/n8D4qSCJw8QqFWXf7cuAgnEHxBpweaVcPevC2l3KpjYCx3NypQQgaJg==}
     engines: {node: '>= 0.8', npm: 1.2.8000 || >= 1.4.16}
+
+  diff@4.0.2:
+    resolution: {integrity: sha512-58lmxKSA4BNyLz+HHMUzlOEpg09FV+ev6ZMe3vJihgdxzgcwZ8VoEEPmALCZG9LmqfVoNMMKpttIYTVG6uDY7A==}
+    engines: {node: '>=0.3.1'}
 
   ee-first@1.1.1:
     resolution: {integrity: sha512-WMwm9LhRUo+WUaRN+vRuETqG89IgZphVSNkdFgeb6sS/E4OrDIN7t48CAewSHXc6C8lefD8KKfr5vY61brQlow==}
@@ -287,9 +492,10 @@ packages:
     resolution: {integrity: sha512-aIL5Fx7mawVa300al2BnEE4iNvo1qETxLrPI/o05L7z6go7fCw1J6EQmbK4FmJ2AS7kgVF/KEZWufBfdClMcPg==}
     engines: {node: '>= 0.6'}
 
-  express-validator@7.2.0:
-    resolution: {integrity: sha512-I2ByKD8panjtr8Y05l21Wph9xk7kk64UMyvJCl/fFM/3CTJq8isXYPLeKW/aZBCdb/LYNv63PwhY8khw8VWocA==}
-    engines: {node: '>= 8.0.0'}
+  express-file-routing@3.0.3:
+    resolution: {integrity: sha512-0936IhPc64moJHAG1Fz3SLCi0Upt6ahsbocrC6hdPUgmHY2018wjVrbln0HP67JoWFUdmmzypYiIHjF898s0hA==}
+    peerDependencies:
+      express: '>4.1.2'
 
   express@4.21.1:
     resolution: {integrity: sha512-YSFlK1Ee0/GC8QaO91tHcDxJiE/X4FbpAyQWkxAvG6AXCuR65YzK8ua6D9hvi/TzUfZMpc+BwuM1IPw8fmQBiQ==}
@@ -360,6 +566,20 @@ packages:
     resolution: {integrity: sha512-hFoiJiTl63nn+kstHGBtewWSKnQLpyb155KHheA1l39uvtO9nWIop1p3udqPcUd/xbF1VLMO4n7OI6p7RbngDg==}
     engines: {node: '>=8'}
 
+  joi-extract-type@15.0.8:
+    resolution: {integrity: sha512-Or97aW6QN6YJq0B+x/vYs65+nmcPvYDE7xhlwRl7yHzY+7Z8pVaj0zxjdJlXmIA9zRcbbYQKCGvW+I4g0kUHgA==}
+    peerDependencies:
+      '@hapi/joi': ~15
+
+  joi-to-typescript@4.14.0:
+    resolution: {integrity: sha512-2KFIYO1B8luxeDaG7Rxo8njGXwgAtWBUc/0wWtfJsjuHHfxwcOPBPQxWlSyYiyTIBd8iWpAYviLzEYtetJnrRA==}
+    engines: {node: '>=14.0.0'}
+    peerDependencies:
+      joi: 17.x
+
+  joi@17.13.3:
+    resolution: {integrity: sha512-otDA4ldcIx+ZXsKHWmp0YizCweVRZG96J10b0FevjfuncLO1oX59THoAmHkNubYJ+9gWsYsp5k8v4ib6oDv1fA==}
+
   kuler@2.0.0:
     resolution: {integrity: sha512-Xq9nH7KlWZmXAtodXDDRE7vs6DU1gTU8zYDHDiWLSip45Egwq3plLHzPn27NgvzL2r1LMPC1vdqh98sQxtqj4A==}
 
@@ -369,6 +589,9 @@ packages:
   logform@2.7.0:
     resolution: {integrity: sha512-TFYA4jnP7PVbmlBIfhlSe+WKxs9dklXMTEGcBCIvLhE/Tn3H6Gk1norupVW7m5Cnd4bLcr08AytbyV/xj7f/kQ==}
     engines: {node: '>= 12.0.0'}
+
+  make-error@1.3.6:
+    resolution: {integrity: sha512-s8UhlNe7vPKomQhC1qFelMokr/Sc3AgNbso3n74mVPA5LTZwkB9NlXf4XPamLxJE8h0gh73rM94xvwRT2CVInw==}
 
   media-typer@0.3.0:
     resolution: {integrity: sha512-dq+qelQ9akHpcOl/gUVRTxVIOkAJ1wR3QAvb4RsVjS8oVoFjDGTc679wJYmUmknUF5HwMLOgb5O+a3KxfWapPQ==}
@@ -495,9 +718,28 @@ packages:
     resolution: {integrity: sha512-aZbgViZrg1QNcG+LULa7nhZpJTZSLm/mXnHXnbAbjmN5aSa0y7V+wvv6+4WaBtpISJzThKy+PIPxc1Nq1EJ9mg==}
     engines: {node: '>= 14.0.0'}
 
+  ts-node@10.9.2:
+    resolution: {integrity: sha512-f0FFpIdcHgn8zcPSbf1dRevwt047YMnaiJM3u2w2RewrB+fob/zePZcrOyQoLMMO7aBIddLcQIEK5dYjkLnGrQ==}
+    hasBin: true
+    peerDependencies:
+      '@swc/core': '>=1.2.50'
+      '@swc/wasm': '>=1.2.50'
+      '@types/node': '*'
+      typescript: '>=2.7'
+    peerDependenciesMeta:
+      '@swc/core':
+        optional: true
+      '@swc/wasm':
+        optional: true
+
   type-is@1.6.18:
     resolution: {integrity: sha512-TkRKr9sUTxEH8MdfuCSP7VizJyzRNMjj2J2do2Jr3Kym598JVdEksuzPQCnlFPW4ky9Q+iA+ma9BGm06XQBy8g==}
     engines: {node: '>= 0.6'}
+
+  typescript@4.9.5:
+    resolution: {integrity: sha512-1FXk9E2Hm+QzZQ7z+McJiHL4NW1F2EzMu9Nq9i3zAaGqibafqYwCVU6WyWAuyQRRzOlxou8xZSyXLEN8oKj24g==}
+    engines: {node: '>=4.2.0'}
+    hasBin: true
 
   typescript@5.6.3:
     resolution: {integrity: sha512-hjcS1mhfuyi4WW8IWtjP7brDrG2cuDZukyrYrSauoXGNgx0S7zceP07adYkJycEr56BOUTNPzbInooiN3fn1qw==}
@@ -518,9 +760,8 @@ packages:
     resolution: {integrity: sha512-pMZTvIkT1d+TFGvDOqodOclx0QWkkgi6Tdoa8gC8ffGAAqz9pzPTZWAybbsHHoED/ztMtkv/VoYTYyShUn81hA==}
     engines: {node: '>= 0.4.0'}
 
-  validator@13.12.0:
-    resolution: {integrity: sha512-c1Q0mCiPlgdTVVVIJIrBuxNicYE+t/7oKeI9MWLj3fh/uq2Pxh/3eeWbVZ4OcGW1TUf53At0njHw5SMdA3tmMg==}
-    engines: {node: '>= 0.10'}
+  v8-compile-cache-lib@3.0.1:
+    resolution: {integrity: sha512-wa7YjyUGfNZngI/vtK0UHAN+lgDCxBPCylVXGp0zu59Fz5aiGtNXaq3DhIov063MorB+VfufLh3JlF2KdTK3xg==}
 
   vary@1.1.2:
     resolution: {integrity: sha512-BNGbWLfd0eUPabhkXUVm0j8uuvREyTh5ovRa/dyow/BqAbZJyC+5fU+IzQOzmAKzYqYRAISoRhdQr3eIZ/PXqg==}
@@ -534,15 +775,70 @@ packages:
     resolution: {integrity: sha512-DLiFIXYC5fMPxaRg832S6F5mJYvePtmO5G9v9IgUFPhXm9/GkXarH/TUrBAVzhTCzAj9anE/+GjrgXp/54nOgw==}
     engines: {node: '>= 12.0.0'}
 
+  yn@3.1.1:
+    resolution: {integrity: sha512-Ux4ygGWsu2c7isFWe8Yu1YluJmqVhxqK2cLXNQA5AcC3QfbGNpM7fu0Y8b/z16pXLnFxZYvWhd3fhBY9DLmC6Q==}
+    engines: {node: '>=6'}
+
 snapshots:
 
   '@colors/colors@1.6.0': {}
+
+  '@cspotcode/source-map-support@0.8.1':
+    dependencies:
+      '@jridgewell/trace-mapping': 0.3.9
 
   '@dabh/diagnostics@2.0.3':
     dependencies:
       colorspace: 1.1.4
       enabled: 2.0.0
       kuler: 2.0.0
+
+  '@hapi/address@4.1.0':
+    dependencies:
+      '@hapi/hoek': 9.3.0
+
+  '@hapi/formula@2.0.0': {}
+
+  '@hapi/hoek@9.3.0': {}
+
+  '@hapi/joi@17.1.1':
+    dependencies:
+      '@hapi/address': 4.1.0
+      '@hapi/formula': 2.0.0
+      '@hapi/hoek': 9.3.0
+      '@hapi/pinpoint': 2.0.1
+      '@hapi/topo': 5.1.0
+
+  '@hapi/pinpoint@2.0.1': {}
+
+  '@hapi/topo@5.1.0':
+    dependencies:
+      '@hapi/hoek': 9.3.0
+
+  '@jridgewell/resolve-uri@3.1.2': {}
+
+  '@jridgewell/sourcemap-codec@1.5.0': {}
+
+  '@jridgewell/trace-mapping@0.3.9':
+    dependencies:
+      '@jridgewell/resolve-uri': 3.1.2
+      '@jridgewell/sourcemap-codec': 1.5.0
+
+  '@sideway/address@4.1.5':
+    dependencies:
+      '@hapi/hoek': 9.3.0
+
+  '@sideway/formula@3.0.1': {}
+
+  '@sideway/pinpoint@2.0.0': {}
+
+  '@tsconfig/node10@1.0.11': {}
+
+  '@tsconfig/node12@1.0.11': {}
+
+  '@tsconfig/node14@1.0.3': {}
+
+  '@tsconfig/node16@1.0.4': {}
 
   '@types/body-parser@1.19.5':
     dependencies:
@@ -566,6 +862,12 @@ snapshots:
       '@types/express-serve-static-core': 5.0.1
       '@types/qs': 6.9.17
       '@types/serve-static': 1.15.7
+
+  '@types/hapi__joi@15.0.4':
+    dependencies:
+      '@types/hapi__joi': 17.1.15
+
+  '@types/hapi__joi@17.1.15': {}
 
   '@types/http-errors@2.0.4': {}
 
@@ -597,6 +899,14 @@ snapshots:
       mime-types: 2.1.35
       negotiator: 0.6.3
 
+  acorn-walk@8.3.4:
+    dependencies:
+      acorn: 8.14.0
+
+  acorn@8.14.0: {}
+
+  arg@4.1.3: {}
+
   array-flatten@1.1.1: {}
 
   async@3.2.6: {}
@@ -627,6 +937,12 @@ snapshots:
       function-bind: 1.1.2
       get-intrinsic: 1.2.4
       set-function-length: 1.2.2
+
+  celebrate@15.0.3:
+    dependencies:
+      escape-html: 1.0.3
+      joi: 17.13.3
+      lodash: 4.17.21
 
   color-convert@1.9.3:
     dependencies:
@@ -661,6 +977,8 @@ snapshots:
 
   cookie@0.7.1: {}
 
+  create-require@1.1.1: {}
+
   debug@2.6.9:
     dependencies:
       ms: 2.0.0
@@ -674,6 +992,8 @@ snapshots:
   depd@2.0.0: {}
 
   destroy@1.2.0: {}
+
+  diff@4.0.2: {}
 
   ee-first@1.1.1: {}
 
@@ -693,10 +1013,9 @@ snapshots:
 
   etag@1.8.1: {}
 
-  express-validator@7.2.0:
+  express-file-routing@3.0.3(express@4.21.1):
     dependencies:
-      lodash: 4.17.21
-      validator: 13.12.0
+      express: 4.21.1
 
   express@4.21.1:
     dependencies:
@@ -800,6 +1119,23 @@ snapshots:
 
   is-stream@2.0.1: {}
 
+  joi-extract-type@15.0.8(@hapi/joi@17.1.1):
+    dependencies:
+      '@hapi/joi': 17.1.1
+      '@types/hapi__joi': 15.0.4
+
+  joi-to-typescript@4.14.0(joi@17.13.3):
+    dependencies:
+      joi: 17.13.3
+
+  joi@17.13.3:
+    dependencies:
+      '@hapi/hoek': 9.3.0
+      '@hapi/topo': 5.1.0
+      '@sideway/address': 4.1.5
+      '@sideway/formula': 3.0.1
+      '@sideway/pinpoint': 2.0.0
+
   kuler@2.0.0: {}
 
   lodash@4.17.21: {}
@@ -812,6 +1148,8 @@ snapshots:
       ms: 2.1.3
       safe-stable-stringify: 2.5.0
       triple-beam: 1.4.1
+
+  make-error@1.3.6: {}
 
   media-typer@0.3.0: {}
 
@@ -940,10 +1278,30 @@ snapshots:
 
   triple-beam@1.4.1: {}
 
+  ts-node@10.9.2(@types/node@22.9.0)(typescript@4.9.5):
+    dependencies:
+      '@cspotcode/source-map-support': 0.8.1
+      '@tsconfig/node10': 1.0.11
+      '@tsconfig/node12': 1.0.11
+      '@tsconfig/node14': 1.0.3
+      '@tsconfig/node16': 1.0.4
+      '@types/node': 22.9.0
+      acorn: 8.14.0
+      acorn-walk: 8.3.4
+      arg: 4.1.3
+      create-require: 1.1.1
+      diff: 4.0.2
+      make-error: 1.3.6
+      typescript: 4.9.5
+      v8-compile-cache-lib: 3.0.1
+      yn: 3.1.1
+
   type-is@1.6.18:
     dependencies:
       media-typer: 0.3.0
       mime-types: 2.1.35
+
+  typescript@4.9.5: {}
 
   typescript@5.6.3: {}
 
@@ -955,7 +1313,7 @@ snapshots:
 
   utils-merge@1.0.1: {}
 
-  validator@13.12.0: {}
+  v8-compile-cache-lib@3.0.1: {}
 
   vary@1.1.2: {}
 
@@ -978,3 +1336,5 @@ snapshots:
       stack-trace: 0.0.10
       triple-beam: 1.4.1
       winston-transport: 4.9.0
+
+  yn@3.1.1: {}

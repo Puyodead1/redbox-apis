@@ -1,8 +1,12 @@
 {
-    "name": "dataservice",
+    "name": "common",
     "version": "1.0.0",
     "description": "",
     "main": "dist/index.js",
+    "types": "dist/index.d.ts",
+    "files": [
+        "dist"
+    ],
     "scripts": {
         "build": "tsc",
         "start": "node dist/index.js"
@@ -11,17 +15,12 @@
     "author": "",
     "license": "ISC",
     "dependencies": {
-        "celebrate": "^15.0.3",
         "common": "workspace:^",
         "express": "^4.21.1",
-        "express-file-routing": "^3.0.3",
-        "joi-extract-type": "^15.0.8",
         "winston": "^3.17.0"
     },
     "devDependencies": {
         "@types/express": "^5.0.0",
-        "joi-to-typescript": "^4.14.0",
-        "ts-node": "^10.9.2",
-        "typescript": "^4.9.5"
+        "typescript": "^5.6.3"
     }
 }

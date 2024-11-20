@@ -1,31 +1,18 @@
+import { logger, loggingMiddleware } from "common";
 import express from "express";
-import winston from "winston";
-
-const logger = winston.createLogger({
-    level: "info", // Set the default logging level
-    format: winston.format.combine(
-        winston.format.simple() // You can choose other formats like JSON
-    ),
-    transports: [
-        new winston.transports.Console(), // Log to the console
-        new winston.transports.File({ filename: "server.log" }), // Log to a file
-    ],
-});
+import { router } from "express-file-routing";
 
 const PORT = 3015;
 const app = express();
 
-app.use(express.json());
+(async () => {
+    app.use(express.json());
 
-app.use((req, res, next) => {
-    logger.info("Request received", {
-        method: req.method,
-        url: req.originalUrl,
-        body: req.body,
+    loggingMiddleware(app, logger);
+
+    app.use("/api", await router());
+
+    app.listen(PORT, () => {
+        logger.info(`Server is running on port ${PORT}`);
     });
-    next();
-});
-
-app.listen(PORT, () => {
-    logger.info(`Server is running on port ${PORT}`);
-});
+})();
