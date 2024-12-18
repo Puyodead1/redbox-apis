@@ -1,5 +1,6 @@
 {
     "name": "kioskinventory",
+    "private": true,
     "version": "1.0.0",
     "description": "",
     "main": "dist/index.js",
@@ -9,8 +10,8 @@
         "types": "ts-node scripts/types.ts"
     },
     "keywords": [],
-    "author": "",
-    "license": "ISC",
+    "author": "Puyodead1",
+    "license": "GPL-3.0-only",
     "dependencies": {
         "celebrate": "^15.0.3",
         "common": "workspace:^",

@@ -1,0 +1,29 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+// model Inventory {
+//   KioskId   Int    @unique
+//   Inventory String
+// }
+
+model Statistics {
+  KioskId           Int    @unique
+  Damaged           String
+  DumpBin           String
+  EmptySlots        String
+  InventoryData     String
+  ProfileData       String
+  RebalancesInKiosk String
+  ThinDiscs         String
+  TotalDiscs        String
+  UnknownDiscs      String
+  UnknownTitle      String
+  UnmatchedInKiosk  String
+  WrongTitle        String
+}

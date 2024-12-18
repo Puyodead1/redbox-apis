@@ -1,5 +1,6 @@
 {
     "name": "dataservice",
+    "private": true,
     "version": "1.0.0",
     "description": "",
     "main": "dist/index.js",
@@ -8,11 +9,12 @@
         "start": "node dist/index.js"
     },
     "keywords": [],
-    "author": "",
-    "license": "ISC",
+    "author": "Puyodead1",
+    "license": "GPL-3.0-only",
     "dependencies": {
         "celebrate": "^15.0.3",
         "common": "workspace:^",
+        "db": "workspace:^",
         "express": "^4.21.1",
         "express-file-routing": "^3.0.3",
         "uuid": "^11.0.3",

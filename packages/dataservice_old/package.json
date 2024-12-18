@@ -7,8 +7,8 @@
         "test": "echo \"Error: no test specified\" && exit 1"
     },
     "keywords": [],
-    "author": "",
-    "license": "ISC",
+    "author": "Puyodead1",
+    "license": "GPL-3.0-only",
     "dependencies": {
         "celebrate": "^15.0.3",
         "express": "^4.21.1",
