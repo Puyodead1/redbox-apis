@@ -4,37 +4,26 @@
  */
 
 export interface KioskStatisticsObject {
-  Damaged: string;
-  DumpBin: string;
-  EmptySlots: string;
-  InventoryData: string;
-  ProfileData: string;
-  RebalancesInKiosk: string;
-  ThinDiscs: string;
-  TotalDiscs: string;
-  UnknownDiscs: string;
-  UnknownTitle: string;
-  UnmatchedInKiosk: string;
-  WrongTitle: string;
+    Damaged?: string;
+    DumpBin?: string;
+    EmptySlots?: string;
+    InventoryData?: string;
+    ProfileData?: string;
+    RebalancesInKiosk?: string;
+    ThinDiscs?: string;
+    TotalDiscs?: string;
+    UnknownDiscs?: string;
+    UnknownTitle?: string;
+    UnmatchedInKiosk?: string;
+    WrongTitle?: string;
+    MinutesInMaintenance?: string;
+    FraudCleanSync?: string;
 }
 
 export interface KioskStatisticsRequest {
-  CreatedOn: Date;
-  CreatedOnLocal: string;
-  KioskId: number;
-  MessageId?: string;
-  Statistics: {
-    Damaged: string;
-    DumpBin: string;
-    EmptySlots: string;
-    InventoryData: string;
-    ProfileData: string;
-    RebalancesInKiosk: string;
-    ThinDiscs: string;
-    TotalDiscs: string;
-    UnknownDiscs: string;
-    UnknownTitle: string;
-    UnmatchedInKiosk: string;
-    WrongTitle: string;
-  };
+    CreatedOn: Date;
+    CreatedOnLocal: string;
+    KioskId: number;
+    MessageId?: string;
+    Statistics: KioskStatisticsObject;
 }

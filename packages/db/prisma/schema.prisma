@@ -13,17 +13,19 @@ datasource db {
 // }
 
 model Statistics {
-  KioskId           Int    @unique
-  Damaged           String
-  DumpBin           String
-  EmptySlots        String
-  InventoryData     String
-  ProfileData       String
-  RebalancesInKiosk String
-  ThinDiscs         String
-  TotalDiscs        String
-  UnknownDiscs      String
-  UnknownTitle      String
-  UnmatchedInKiosk  String
-  WrongTitle        String
+  KioskId              Int     @unique
+  Damaged              String?
+  DumpBin              String?
+  EmptySlots           String?
+  InventoryData        String?
+  ProfileData          String?
+  RebalancesInKiosk    String?
+  ThinDiscs            String?
+  TotalDiscs           String?
+  UnknownDiscs         String?
+  UnknownTitle         String?
+  UnmatchedInKiosk     String?
+  WrongTitle           String?
+  MinutesInMaintenance String?
+  FraudCleanSync       String?
 }

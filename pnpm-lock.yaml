@@ -131,6 +131,12 @@ importers:
       '@prisma/client':
         specifier: 6.1.0
         version: 6.1.0(prisma@6.1.0)
+      common:
+        specifier: workspace:^
+        version: link:../common
+      winston:
+        specifier: ^3.17.0
+        version: 3.17.0
     devDependencies:
       '@types/node':
         specifier: ^22.10.2
