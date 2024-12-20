@@ -1,5 +1,5 @@
 -- CreateTable
-CREATE TABLE `Statistics` (
+CREATE TABLE `statistics` (
     `KioskId` INTEGER NOT NULL,
     `Damaged` VARCHAR(191) NOT NULL,
     `DumpBin` VARCHAR(191) NOT NULL,
@@ -14,5 +14,5 @@ CREATE TABLE `Statistics` (
     `UnmatchedInKiosk` VARCHAR(191) NOT NULL,
     `WrongTitle` VARCHAR(191) NOT NULL,
 
-    UNIQUE INDEX `Statistics_KioskId_key`(`KioskId`)
+    UNIQUE INDEX `statistics_KioskId_key`(`KioskId`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
