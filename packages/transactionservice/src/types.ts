@@ -1,4 +1,4 @@
-import { BaseResponse } from "common";
+import { BaseResponse } from "@redbox-apis/common";
 
 export enum ConfirmationStatus {
     DontShow,

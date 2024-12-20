@@ -1,5 +1,5 @@
 {
-    "name": "transactionservice",
+    "name": "@redbox-apis/transactionservice",
     "private": true,
     "version": "1.0.0",
     "description": "",
@@ -11,10 +11,10 @@
     },
     "keywords": [],
     "author": "Puyodead1",
-    "license": "GPL-3.0-only",
+    "license": "GPL-3.0-or-later",
     "dependencies": {
         "celebrate": "^15.0.3",
-        "common": "workspace:^",
+        "@redbox-apis/common": "workspace:*",
         "express": "^4.21.1",
         "express-file-routing": "^3.0.3",
         "uuid": "^11.0.3",
@@ -23,7 +23,11 @@
     "devDependencies": {
         "@types/express": "^5.0.0",
         "joi-to-typescript": "^4.14.0",
+        "rimraf": "^6.0.1",
         "ts-node": "^10.9.2",
         "typescript": "^5.6.3"
+    },
+    "engines": {
+        "node": ">=20"
     }
 }

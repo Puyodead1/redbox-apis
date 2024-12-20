@@ -1,5 +1,5 @@
+import { logger } from "@redbox-apis/common";
 import { celebrate, Segments } from "celebrate";
-import { logger } from "common";
 import { getPrisma } from "db";
 import { Request, Response } from "express";
 import { KioskStatisticsRequest } from "../../interfaces";

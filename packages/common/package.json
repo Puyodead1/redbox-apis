@@ -1,27 +1,31 @@
 {
-    "name": "common",
+    "name": "@redbox-apis/common",
     "private": true,
     "version": "1.0.0",
     "description": "",
     "main": "dist/index.js",
     "types": "dist/index.d.ts",
-    "files": [
-        "dist"
-    ],
     "scripts": {
         "build": "tsc",
-        "start": "node dist/index.js"
+        "start": "node dist/index.js",
+        "clean": "pnpm rimraf dist server.log"
     },
     "keywords": [],
     "author": "Puyodead1",
-    "license": "GPL-3.0-only",
+    "license": "GPL-3.0-or-later",
     "dependencies": {
-        "common": "workspace:^",
         "express": "^4.21.1",
         "winston": "^3.17.0"
     },
     "devDependencies": {
         "@types/express": "^5.0.0",
+        "rimraf": "^6.0.1",
         "typescript": "^5.6.3"
-    }
+    },
+    "engines": {
+        "node": ">=20"
+    },
+    "files": [
+        "dist"
+    ]
 }

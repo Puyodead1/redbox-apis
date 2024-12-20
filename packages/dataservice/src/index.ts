@@ -1,5 +1,5 @@
-import { logger, loggingMiddleware } from "common";
-import { getPrisma } from "db";
+import { logger, loggingMiddleware } from "@redbox-apis/common";
+import { getPrisma } from "@redbox-apis/db";
 import express from "express";
 
 const PORT = 3013;

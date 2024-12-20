@@ -1,5 +1,5 @@
 {
-    "name": "db",
+    "name": "@redbox-apis/db",
     "private": true,
     "version": "1.0.0",
     "description": "",
@@ -8,20 +8,27 @@
         "build": "tsc",
         "start": "node dist/index.js",
         "types": "ts-node scripts/types.ts",
-        "generate": "prisma generate"
+        "generate": "prisma generate",
+        "migrate:prod": "prisma migrate deploy",
+        "migrate:dev": "prisma migrate dev",
+        "clean": "pnpm rimraf dist server.log"
     },
     "keywords": [],
     "author": "Puyodead1",
-    "license": "GPL-3.0-only",
+    "license": "GPL-3.0-or-later",
     "devDependencies": {
         "@types/node": "^22.10.2",
         "prisma": "^6.1.0",
+        "rimraf": "^6.0.1",
         "tsx": "^4.19.2",
         "typescript": "^5.6.3"
     },
     "dependencies": {
         "@prisma/client": "6.1.0",
-        "winston": "^3.17.0",
-        "common": "workspace:^"
+        "@redbox-apis/common": "workspace:*",
+        "winston": "^3.17.0"
+    },
+    "engines": {
+        "node": ">=20"
     }
 }

@@ -1,4 +1,4 @@
-import { logger, loggingMiddleware } from "common";
+import { logger, loggingMiddleware } from "@redbox-apis/common";
 import express from "express";
 
 const PORT = 3016;
