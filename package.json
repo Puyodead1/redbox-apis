@@ -6,9 +6,11 @@
     "private": true,
     "scripts": {
         "build": "pnpm -r run build",
-        "start": "pnpm -r run start",
+        "start": "pnpm -r --workspace-concurrency Infinity --filter !db --filter !common --parallel start",
         "clean": "pnpm -r run clean",
-        "prebuild": "pnpm --filter common --filter db build"
+        "prebuild": "pnpm --filter common --filter db build",
+        "migrate:prod": "pnpm --filter db migrate:prod",
+        "migrate:dev": "pnpm --filter db migrate:dev"
     },
     "type": "module",
     "author": "Puyodead1",

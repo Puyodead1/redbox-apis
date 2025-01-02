@@ -1,15 +1,20 @@
 import { logger, loggingMiddleware } from "@redbox-apis/common";
 import { getPrisma } from "@redbox-apis/db";
 import express from "express";
+import { router } from "express-file-routing";
 
 const PORT = 3013;
 const app = express();
 
-app.use(express.json());
-
-loggingMiddleware(app, logger);
-
-app.listen(PORT, async () => {
-    logger.info(`Server is running on port ${PORT}`);
+(async () => {
     await getPrisma();
-});
+    app.use(express.json());
+
+    loggingMiddleware(app, logger);
+
+    app.use("/api", await router());
+
+    app.listen(PORT, () => {
+        logger.info(`Server is running on port ${PORT}`);
+    });
+})();

@@ -1,15 +1,33 @@
--- AlterTable
-ALTER TABLE `statistics` ADD COLUMN `FraudCleanSync` VARCHAR(191) NULL,
-    ADD COLUMN `MinutesInMaintenance` VARCHAR(191) NULL,
-    MODIFY `Damaged` VARCHAR(191) NULL,
-    MODIFY `DumpBin` VARCHAR(191) NULL,
-    MODIFY `EmptySlots` VARCHAR(191) NULL,
-    MODIFY `InventoryData` VARCHAR(191) NULL,
-    MODIFY `ProfileData` VARCHAR(191) NULL,
-    MODIFY `RebalancesInKiosk` VARCHAR(191) NULL,
-    MODIFY `ThinDiscs` VARCHAR(191) NULL,
-    MODIFY `TotalDiscs` VARCHAR(191) NULL,
-    MODIFY `UnknownDiscs` VARCHAR(191) NULL,
-    MODIFY `UnknownTitle` VARCHAR(191) NULL,
-    MODIFY `UnmatchedInKiosk` VARCHAR(191) NULL,
-    MODIFY `WrongTitle` VARCHAR(191) NULL;
+CREATE TABLE statistics_new (
+    KioskId INTEGER NOT NULL,
+    Damaged TEXT,
+    DumpBin TEXT,
+    EmptySlots TEXT,
+    InventoryData TEXT,
+    ProfileData TEXT,
+    RebalancesInKiosk TEXT,
+    ThinDiscs TEXT,
+    TotalDiscs TEXT,
+    UnknownDiscs TEXT,
+    UnknownTitle TEXT,
+    UnmatchedInKiosk TEXT,
+    WrongTitle TEXT,
+    FraudCleanSync TEXT,
+    MinutesInMaintenance TEXT,
+    UNIQUE (KioskId)
+);
+
+INSERT INTO statistics_new (
+    KioskId, Damaged, DumpBin, EmptySlots, InventoryData, ProfileData,
+    RebalancesInKiosk, ThinDiscs, TotalDiscs, UnknownDiscs, UnknownTitle,
+    UnmatchedInKiosk, WrongTitle
+)
+SELECT 
+    KioskId, Damaged, DumpBin, EmptySlots, InventoryData, ProfileData,
+    RebalancesInKiosk, ThinDiscs, TotalDiscs, UnknownDiscs, UnknownTitle,
+    UnmatchedInKiosk, WrongTitle
+FROM statistics;
+
+DROP TABLE statistics;
+
+ALTER TABLE statistics_new RENAME TO statistics;

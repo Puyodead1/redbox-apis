@@ -5,7 +5,7 @@
     "description": "",
     "main": "dist/index.js",
     "scripts": {
-        "build": "tsc",
+        "build": "pnpm generate && tsc",
         "start": "node dist/index.js",
         "types": "ts-node scripts/types.ts",
         "generate": "prisma generate",
