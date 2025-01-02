@@ -1,6 +1,6 @@
 import { logger } from "@redbox-apis/common";
+import { getPrisma } from "@redbox-apis/db";
 import { celebrate, Segments } from "celebrate";
-import { getPrisma } from "db";
 import { Request, Response } from "express";
 import { KioskStatisticsRequest } from "../../interfaces";
 import { KioskStatisticsRequestSchema } from "../../schemas/KioskStatisticsSchema";
