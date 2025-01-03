@@ -27,5 +27,5 @@ export const CardStatsRequestSchema = Joi.object({
     WalletFormat: Joi.string()
         .valid(...Object.keys(WalletType))
         .required(),
-    VasErrorCode: Joi.string().required(),
+    VasErrorCode: Joi.string().allow("").required(),
 }).meta({ className: "CardStatsRequest" });
