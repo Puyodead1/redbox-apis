@@ -1,0 +1,16 @@
+export enum CardReadExitType {
+    GoodRead = 0,
+    BadRead = 1,
+    Cancelled = 2,
+    ButtonPressed = 3,
+    ClessCardFloorLimitExceeded = 4,
+    MaxClessFloorLimitExceeded = 5,
+    InvalidPrompt = 6,
+    EncryptionFailed = 7,
+    BadKeyCard = 8,
+    BadFormatOf23 = 9,
+    AmountWasNotSetAndContactlessReaderWasNotEnabled = 10,
+    AtLeastOneSpecifiedReaderIsDisabled = 11,
+    InvalidExitCode = 998,
+    NotPerformed = 999,
+}
