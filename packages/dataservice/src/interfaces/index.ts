@@ -3,4 +3,6 @@
  * Do not modify this file manually
  */
 
+export * from './DeviceStatusRequest';
 export * from './KioskStatistics';
+export * from './RebootStatusRequest';
