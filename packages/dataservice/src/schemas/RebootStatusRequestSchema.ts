@@ -2,7 +2,7 @@ import { Joi } from "celebrate";
 import { RebootType } from "../interfaces/RebootType";
 
 export const RebootStatusRequestSchema = Joi.object({
-    Id: Joi.number().optional(),
+    Id: Joi.string().optional(),
     Type: Joi.number()
         .valid(...Object.values(RebootType))
         .required(),
