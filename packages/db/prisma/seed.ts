@@ -13,7 +13,7 @@ const prisma = new PrismaClient();
 async function main() {
     const promo1 = await prisma.promoCode.create({
         data: {
-            code: "dvdonme",
+            code: "DVDONME",
             actionType: getEnumKey(PromotionActionCode, PromotionActionCode.Rental),
             allowFullDiscount: true,
             formatIds: [TitleType.DVD],
@@ -30,7 +30,7 @@ async function main() {
 
     const promo2 = await prisma.promoCode.create({
         data: {
-            code: "blurayonme",
+            code: "BLURAYONME",
             actionType: getEnumKey(PromotionActionCode, PromotionActionCode.Rental),
             allowFullDiscount: true,
             formatIds: [TitleType.Bluray],
@@ -47,7 +47,7 @@ async function main() {
 
     const promo3 = await prisma.promoCode.create({
         data: {
-            code: "4konme",
+            code: "4KONME",
             actionType: getEnumKey(PromotionActionCode, PromotionActionCode.Rental),
             allowFullDiscount: true,
             formatIds: [TitleType._4KUHD],
@@ -64,7 +64,7 @@ async function main() {
 
     const promo4 = await prisma.promoCode.create({
         data: {
-            code: "gameonme",
+            code: "GAMEONME",
             actionType: getEnumKey(PromotionActionCode, PromotionActionCode.Rental),
             allowFullDiscount: true,
             formatIds: [
@@ -93,7 +93,7 @@ async function main() {
 
     const promo5 = await prisma.promoCode.create({
         data: {
-            code: "freegame",
+            code: "FREEGAME",
             actionType: getEnumKey(PromotionActionCode, PromotionActionCode.Rental),
             allowFullDiscount: true,
             formatIds: [TitleType.All],
@@ -110,7 +110,7 @@ async function main() {
 
     const promo6 = await prisma.promoCode.create({
         data: {
-            code: "halfoff",
+            code: "HALFOFF",
             actionType: getEnumKey(PromotionActionCode, PromotionActionCode.Rental),
             allowFullDiscount: false,
             formatIds: [TitleType.All],
@@ -127,7 +127,7 @@ async function main() {
 
     const promo7 = await prisma.promoCode.create({
         data: {
-            code: "onedollaroff",
+            code: "ONEDOLLAROFF",
             actionType: getEnumKey(PromotionActionCode, PromotionActionCode.Rental),
             allowFullDiscount: false,
             formatIds: [TitleType.All],
@@ -144,7 +144,7 @@ async function main() {
 
     const promo8 = await prisma.promoCode.create({
         data: {
-            code: "rent5get5",
+            code: "RENT5GET5",
             actionType: getEnumKey(PromotionActionCode, PromotionActionCode.Rental),
             allowFullDiscount: false,
             formatIds: [TitleType.All],
@@ -161,7 +161,7 @@ async function main() {
 
     const promo9 = await prisma.promoCode.create({
         data: {
-            code: "ava",
+            code: "AVA",
             actionType: getEnumKey(PromotionActionCode, PromotionActionCode.Rental),
             allowFullDiscount: false,
             formatIds: [TitleType.All],
