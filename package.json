@@ -5,7 +5,7 @@
     "description": "Reimplementation of the Redbox APIs",
     "private": true,
     "scripts": {
-        "build": "pnpm -r run build",
+        "build": "pnpm -r --workspace-concurrency Infinity --filter !db --filter !common build",
         "start": "pnpm -r --workspace-concurrency Infinity --filter !db --filter !common --parallel start",
         "clean": "pnpm -r run clean",
         "prebuild": "pnpm --filter common --filter db build",

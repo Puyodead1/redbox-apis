@@ -6,8 +6,6 @@ import { router } from "express-file-routing";
 const PORT = 3016;
 const app = express();
 
-app.use(express.json());
-
 (async () => {
     app.use(express.json());
 
