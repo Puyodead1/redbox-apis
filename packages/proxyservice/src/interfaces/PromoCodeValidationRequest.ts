@@ -3,10 +3,6 @@
  * Do not modify this file manually
  */
 
-export interface KioskCampaignsRequest {
-  LastSyncTime?: Date;
-}
-
 export interface PromoCodeValidationRequest {
   Code: string;
   KioskId: number;

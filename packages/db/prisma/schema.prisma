@@ -29,3 +29,22 @@ model Statistics {
   MinutesInMaintenance String?
   FraudCleanSync       String?
 }
+
+model PromoCode {
+  id                Int      @id @default(autoincrement())
+  code              String   @unique
+  amount            Float
+  promotionIntent   String
+  rentQty           Int?
+  rentFormat        String
+  getQty            Int?
+  getFormat         String
+  campaignTitles    Json // array of DiscountValidationCampaignTitlesResult
+  productTypeId     Int?
+  formatIds         Json // int array
+  actionType        String
+  allowFullDiscount Boolean
+  defaultPromo      Json? // DefaultPromo
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+}

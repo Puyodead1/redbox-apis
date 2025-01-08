@@ -10,7 +10,8 @@
         "clean": "pnpm -r run clean",
         "prebuild": "pnpm --filter common --filter db build",
         "migrate:prod": "pnpm --filter db migrate:prod",
-        "migrate:dev": "pnpm --filter db migrate:dev"
+        "migrate:dev": "pnpm --filter db migrate:dev",
+        "seed": "pnpm --filter db seed"
     },
     "type": "module",
     "author": "Puyodead1",
