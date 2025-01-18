@@ -210,6 +210,23 @@ async function main() {
         },
     });
 
+    const promo12 = await prisma.promoCode.create({
+        data: {
+            code: "FUCKBILL",
+            actionType: getEnumKey(PromotionActionCode, PromotionActionCode.Rental),
+            allowFullDiscount: true,
+            formatIds: [TitleType.All],
+            rentQty: 0,
+            rentFormat: getEnumKey(PromotionRentFormat, PromotionRentFormat.Any),
+            getQty: 0,
+            getFormat: getEnumKey(PromotionGetFormat, PromotionGetFormat.Any),
+            promotionIntent: getEnumKey(PromotionIntentCode, PromotionIntentCode.PercentOffCartTotal),
+            amount: 200,
+            campaignTitles: [],
+            productTypeId: TitleFamily.All,
+        },
+    });
+
     console.log({
         promo1,
         promo2,
@@ -222,6 +239,7 @@ async function main() {
         promo9,
         promo10,
         promo11,
+        promo12,
     });
 }
 
