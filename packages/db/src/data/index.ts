@@ -1,5 +1,6 @@
 import stateData from "./states.json";
 import storeData from "./stores.json";
+import bannerData from "./banners.json"
 
 interface IStore {
     Id: number;
@@ -19,6 +20,13 @@ interface IState {
     Description: string;
 }
 
+interface IBanner {
+    Id: number;
+    Name: string;
+}
+
 export const stores: IStore[] = storeData as any;
 
 export const states: IState[] = stateData as any;
+
+export const banners: IBanner[] = bannerData as any;
