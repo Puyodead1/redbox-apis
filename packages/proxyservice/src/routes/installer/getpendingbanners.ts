@@ -2,6 +2,7 @@ import { celebrate, Joi, Segments } from "celebrate";
 import { Request, Response } from "express";
 import { v4 } from "uuid";
 import { IPendingBannersResponse } from "../../types";
+import { banners } from "@redbox-apis/db";
 
 export const get = [
     celebrate({
@@ -19,12 +20,7 @@ export const get = [
             MessageId: v4(),
             Success: true,
             Errors: [],
-            Banners: [
-                {
-                    Id: 1,
-                    Name: "Banner 1",
-                },
-            ],
+            Banners: banners,
         } as IPendingBannersResponse);
     },
 ];
