@@ -14,8 +14,8 @@
     "author": "Puyodead1",
     "license": "GPL-3.0-or-later",
     "dependencies": {
-        "celebrate": "^15.0.3",
         "@redbox-apis/common": "workspace:*",
+        "celebrate": "^15.0.3",
         "express": "^4.21.1",
         "express-file-routing": "^3.0.3",
         "uuid": "^11.0.3",

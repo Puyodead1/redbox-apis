@@ -1,3 +1,5 @@
+export * from "./EncryptionService";
+export * from "./HashService";
 export * from "./interfaces";
 export * from "./logger";
 export * from "./middleware";

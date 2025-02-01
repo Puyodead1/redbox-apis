@@ -2,9 +2,9 @@ import { PrismaClient } from "@prisma/client";
 import { logger } from "@redbox-apis/common";
 
 export let connected = false;
-export const prisma = new PrismaClient();
+export const prisma: PrismaClient = new PrismaClient();
 
-export const getPrisma = async () => {
+export const getPrisma: () => Promise<PrismaClient> = async () => {
     if (!connected) {
         logger.info("Connecting to Prisma");
         await prisma.$connect();
