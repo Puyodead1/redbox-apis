@@ -102,7 +102,7 @@ export class KeyService {
 
     public async generateDeviceCertificate(
         kioskId: string
-    ): Promise<{ deviceClientPfx: string; certificateId: string; certificate: string; privateKey: string }> {
+    ): Promise<{ deviceClientPfx: string; certificateId: string }> {
         const keys = forge.pki.rsa.generateKeyPair(2048);
         const cert = forge.pki.createCertificate();
 
@@ -135,7 +135,7 @@ export class KeyService {
         const hashService = new HashService();
         const password = await hashService.getCertificatePassword(kioskId);
 
-        var p12Asn1 = forge.pkcs12.toPkcs12Asn1(keys.privateKey, [cert], password, {
+        const p12Asn1 = forge.pkcs12.toPkcs12Asn1(keys.privateKey, [cert], password, {
             generateLocalKeyId: true,
             friendlyName: kioskId,
             algorithm: "3des",
@@ -144,19 +144,9 @@ export class KeyService {
         const p12Der = forge.asn1.toDer(p12Asn1).getBytes();
         const p12b64 = forge.util.encode64(p12Der);
 
-        const asn1PK = forge.pki.privateKeyToAsn1(cert.privateKey);
-        const derPK = forge.asn1.toDer(asn1PK).getBytes();
-        const b64PK = forge.util.encode64(derPK);
-
-        const ans1Crt = forge.pki.certificateToAsn1(cert);
-        const derCrt = forge.asn1.toDer(ans1Crt).getBytes();
-        const b64Crt = forge.util.encode64(derCrt);
-
         return {
             deviceClientPfx: p12b64,
             certificateId,
-            certificate: b64Crt,
-            privateKey: b64PK,
         };
     }
 }

@@ -14,6 +14,7 @@ const app = express();
     await keyService.loadRootCA();
 
     app.locals.encryptionService = encryptionService;
+    app.locals.keyService = keyService;
 
     app.use(express.json());
 

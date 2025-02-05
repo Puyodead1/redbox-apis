@@ -10,7 +10,7 @@ export const post = [
         [Segments.BODY]: IOTCertificateGenerateRequestSchema,
         [Segments.HEADERS]: Joi.object({
             password: Joi.string().required(),
-        }),
+        }).unknown(true),
     }),
     async (req: Request, res: Response) => {
         if (req.method !== "POST") return res.status(405);
@@ -25,7 +25,7 @@ export const post = [
 
         logger.info(`CertificateGenerate for kioskId: ${kioskId}, type: ${thingType}, kioskPassword: ${password}`);
 
-        const generated: { deviceClientPfx: string; certificateId: string; certificate: string; privateKey: string } =
+        const generated: { deviceClientPfx: string; certificateId: string } =
             await req.app.locals.keyService.generateDeviceCertificate(kioskId);
 
         const prisma = await getPrisma();
@@ -33,8 +33,7 @@ export const post = [
             data: {
                 certificateId: generated.certificateId,
                 deviceId: kioskId,
-                certificate: generated.certificate,
-                privateKey: generated.privateKey,
+                devicePfx: generated.deviceClientPfx,
             },
         });
 
