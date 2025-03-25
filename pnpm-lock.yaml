@@ -50,6 +50,9 @@ importers:
       '@redbox-apis/common':
         specifier: workspace:*
         version: link:../common
+      '@redbox-apis/db':
+        specifier: workspace:^
+        version: link:../db
       winston:
         specifier: ^3.17.0
         version: 3.17.0

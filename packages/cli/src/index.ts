@@ -1,6 +1,7 @@
 // Soon
 
 import { KeyService } from "@redbox-apis/common";
+import { getPrisma } from "@redbox-apis/db";
 import fs from "fs/promises";
 
 (async () => {
@@ -9,10 +10,21 @@ import fs from "fs/promises";
     await keyService.loadRootCA();
     console.log("[KeyService] RootCA Loaded");
 
-    const deviceCert = await keyService.generateDeviceCertificate("59394");
+    const kioskId = "59394";
+    const generated = await keyService.generateDeviceCertificate(kioskId);
+
+    const prisma = await getPrisma();
+    await prisma.deviceCertificate.create({
+        data: {
+            certificateId: generated.certificateId,
+            deviceId: kioskId,
+            devicePfx: generated.deviceClientPfx,
+        },
+    });
+
     const data = {
-        CertificateId: deviceCert.certificateId,
-        DeviceCertPfxBase64: deviceCert.deviceClientPfx,
+        CertificateId: generated.certificateId,
+        DeviceCertPfxBase64: generated.deviceClientPfx,
         RootCa: await keyService.getRootCA(),
     };
     await fs.writeFile("../../iotcertificatedata.json", JSON.stringify(data));

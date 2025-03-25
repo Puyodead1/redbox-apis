@@ -15,6 +15,7 @@
     "license": "GPL-3.0-or-later",
     "dependencies": {
         "@redbox-apis/common": "workspace:*",
+        "@redbox-apis/db": "workspace:^",
         "winston": "^3.17.0"
     },
     "devDependencies": {
