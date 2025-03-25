@@ -78,7 +78,7 @@ export const CreditCardSchema = Joi.object({
     KeyId: Joi.number().optional(),
     CardId: Joi.string().optional(),
     CardType: Joi.number().required(),
-    Track2: Joi.string().optional(),
+    Track2: Joi.string().allow("").optional(),
     IsEncrypted: Joi.boolean().required(),
     BIN: Joi.string().optional(),
     LastFour: Joi.string().optional(),
