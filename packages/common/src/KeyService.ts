@@ -1,6 +1,7 @@
-import { HashService, logger } from "@redbox-apis/common";
 import fs from "fs/promises";
 import forge from "node-forge";
+import { HashService } from "./HashService";
+import { logger } from "./logger";
 import { generateCertificateId } from "./utils";
 
 export class KeyService {

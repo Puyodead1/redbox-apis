@@ -45,11 +45,33 @@ importers:
         specifier: ^5.6.3
         version: 5.6.3
 
+  packages/cli:
+    dependencies:
+      '@redbox-apis/common':
+        specifier: workspace:*
+        version: link:../common
+      winston:
+        specifier: ^3.17.0
+        version: 3.17.0
+    devDependencies:
+      rimraf:
+        specifier: ^6.0.1
+        version: 6.0.1
+      ts-node:
+        specifier: ^10.9.2
+        version: 10.9.2(@types/node@22.10.2)(typescript@5.6.3)
+      typescript:
+        specifier: ^5.6.3
+        version: 5.6.3
+
   packages/common:
     dependencies:
       express:
         specifier: ^4.21.1
         version: 4.21.1
+      node-forge:
+        specifier: ^1.3.1
+        version: 1.3.1
       winston:
         specifier: ^3.17.0
         version: 3.17.0
@@ -57,6 +79,9 @@ importers:
       '@types/express':
         specifier: ^5.0.0
         version: 5.0.0
+      '@types/node-forge':
+        specifier: ^1.3.11
+        version: 1.3.11
       rimraf:
         specifier: ^6.0.1
         version: 6.0.1
@@ -149,9 +174,6 @@ importers:
       express-file-routing:
         specifier: ^3.0.3
         version: 3.0.3(express@4.21.1)
-      node-forge:
-        specifier: ^1.3.1
-        version: 1.3.1
       uuid:
         specifier: ^11.0.3
         version: 11.0.3
@@ -162,9 +184,6 @@ importers:
       '@types/express':
         specifier: ^5.0.0
         version: 5.0.0
-      '@types/node-forge':
-        specifier: ^1.3.11
-        version: 1.3.11
       joi-to-typescript:
         specifier: ^4.14.0
         version: 4.14.0(joi@17.13.3)
