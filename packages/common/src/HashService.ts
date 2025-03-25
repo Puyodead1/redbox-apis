@@ -15,21 +15,11 @@ export class HashService {
     public async getCertificatePassword(kioskId: string): Promise<string> {
         let sha512 = createHash("sha512");
         const base64String = sha512.update(kioskId).digest("base64");
-        const certificatePassword = await this.getSaltOfTheCertificatePassword(kioskId);
+        // redbox devs didn't realize the salt generation function result wasnt used because they never awaited it lmfao
+        const certificatePassword = "System.Threading.Tasks.Task`1[System.String]";
 
         sha512 = createHash("sha512");
         return sha512.update(Buffer.from(base64String + certificatePassword.toString())).digest("base64");
-    }
-
-    private async getSaltOfTheCertificatePassword(kioskId: string): Promise<string> {
-        let num = 0;
-        const lastChar = kioskId[kioskId.length - 1];
-        const doubledId = kioskId + kioskId;
-
-        for (const char of doubledId) {
-            num *= char.charCodeAt(0) * lastChar.charCodeAt(0);
-        }
-        return num.toString();
     }
 
     private async getSaltOfTheKioskPassword(kioskId: string): Promise<string> {
