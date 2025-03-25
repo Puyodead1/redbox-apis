@@ -14,11 +14,17 @@ import fs from "fs/promises";
     const generated = await keyService.generateDeviceCertificate(kioskId);
 
     const prisma = await getPrisma();
-    await prisma.deviceCertificate.create({
-        data: {
+    await prisma.deviceCertificate.upsert({
+        create: {
             certificateId: generated.certificateId,
             deviceId: kioskId,
             devicePfx: generated.deviceClientPfx,
+        },
+        update: {
+            devicePfx: generated.deviceClientPfx,
+        },
+        where: {
+            deviceId: kioskId,
         },
     });
 
@@ -27,6 +33,6 @@ import fs from "fs/promises";
         DeviceCertPfxBase64: generated.deviceClientPfx,
         RootCa: await keyService.getRootCA(),
     };
-    await fs.writeFile("../../iotcertificatedata.json", JSON.stringify(data));
+    await fs.writeFile("iotcertificatedata.json", JSON.stringify(data));
     console.log("Device certificate generated");
 })();

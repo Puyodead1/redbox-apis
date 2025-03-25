@@ -23,7 +23,7 @@ export class KeyService {
     }
 
     public getRootCA(): string {
-        return forge.pki.certificateToPem(this.rootCertificate).replace(/\n/g, "\\n");
+        return forge.pki.certificateToPem(this.rootCertificate).replaceAll("\r\n", "\n");
     }
 
     public async generateRootCA(): Promise<void> {
