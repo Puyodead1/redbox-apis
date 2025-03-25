@@ -3,7 +3,7 @@ import { Request, Response } from "express";
 import { v4 } from "uuid";
 import { AuthorizeRequest } from "../../interfaces";
 import { AuthorizeRequestSchema } from "../../schemas/AuthorizeRequestSchema";
-import { AuthorizeResponse, ConfirmationStatus } from "../../types";
+import { AuthorizeResponse, AuthorizeType, ConfirmationStatus, GiftCardStatus } from "../../types";
 
 export const post = [
     celebrate({
@@ -19,19 +19,31 @@ export const post = [
 
         return res.json({
             MessageId,
-            Success: true,
-            Errors: [],
+            SessionId: "00000000-0000-0000-0000-000000000000",
+            AuthorizeType: AuthorizeType.Authorize,
+            IsOnline: true,
+            StandAlone: false,
+            ServerName: "TransactionService",
+            Response: "Success",
             Email: "user@example.com",
             ReferenceNumber,
-            CustomerProfileLastName: "Doe",
-            CustomerProfileFirstName: "John",
-            Limits: [],
             HasProfile: false,
-            CustomerProfileNumber: body.CustomerProfileNumber,
+            IsRBI: false,
+            FirstName: "John",
+            LastName: "Doe",
             ConfirmationStatus: ConfirmationStatus.NotSubscribedConfirmed,
             AccountNumber: "1234567890",
+            CustomerProfileNumber: body.CustomerProfileNumber,
+            StoreNumber: req.headers["x-redbox-kioskid"] as string,
+            GiftCardExists: true,
+            GiftCardStatus: GiftCardStatus.Registered,
+            GiftCardBalance: 999999.99,
+            GiftCardMaxDiscs: 99999999,
+            GiftCardMaxGames: 5999999,
             KioskTransactionSuccess: true,
             SubscriptionTransactionSuccess: true,
+            Errors: [],
+            Success: true,
         } as AuthorizeResponse);
     },
 ];

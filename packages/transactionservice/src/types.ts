@@ -14,17 +14,44 @@ export interface RentalLimit {
     ProductLimit: number;
 }
 
+export enum AuthorizeType {
+    Authorize,
+    GiftCardAuthorize,
+}
+
+export enum GiftCardStatus {
+    None,
+    Unregistered,
+    Registered,
+}
+
 export interface AuthorizeResponse extends BaseResponse {
     MessageId: string;
+    SessionId: string;
+    AuthorizeType: AuthorizeType;
+    IsOnline: boolean;
+    StandAlone: boolean;
+    ServerName: string;
+    Response: string;
     Email: string;
     ReferenceNumber: number;
-    CustomerProfileLastName: string;
-    CustomerProfileFirstName: string;
-    Limits: RentalLimit[];
     HasProfile: boolean;
-    CustomerProfileNumber: string;
+    IsRBI: boolean;
+    FirstName: string;
+    LastName: string;
     ConfirmationStatus: ConfirmationStatus;
     AccountNumber: string;
+    CustomerProfileNumber: string;
+    StoreNumber: string;
+    GiftCardExists: boolean;
+    GiftCardStatus: GiftCardStatus;
+    GiftCardBalance: number;
+    GiftCardMaxDiscs: number;
+    GiftCardMaxGames: number;
     KioskTransactionSuccess: boolean;
     SubscriptionTransactionSuccess: boolean;
+
+    // CustomerProfileLastName: string;
+    // CustomerProfileFirstName: string;
+    // Limits: RentalLimit[];
 }
