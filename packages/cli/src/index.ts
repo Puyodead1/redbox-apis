@@ -1,38 +1,20 @@
-// Soon
-
 import { KeyService } from "@redbox-apis/common";
-import { getPrisma } from "@redbox-apis/db";
-import fs from "fs/promises";
+import { program } from "commander";
+import { loadCommands } from "./commands";
+import Context from "./context";
 
 (async () => {
+    program.name("Redbox API CLI").description("Management CLI for Redbox API").version("1.0.0");
+
     const keyService = new KeyService();
-    console.log("[KeyService] Loading RootCA...");
     await keyService.loadRootCA();
-    console.log("[KeyService] RootCA Loaded");
 
-    const kioskId = "59394";
-    const generated = await keyService.generateDeviceCertificate(kioskId);
+    const context = new Context(keyService);
+    console.debug("[Context] Initialized");
+    console.debug("[Commands] Loading...");
+    const commands = loadCommands(context);
+    console.debug(`[Commands] Loaded ${commands.length} commands`);
+    commands.forEach((cmd) => program.addCommand(cmd));
 
-    const prisma = await getPrisma();
-    await prisma.deviceCertificate.upsert({
-        create: {
-            certificateId: generated.certificateId,
-            deviceId: kioskId,
-            devicePfx: generated.deviceClientPfx,
-        },
-        update: {
-            devicePfx: generated.deviceClientPfx,
-        },
-        where: {
-            deviceId: kioskId,
-        },
-    });
-
-    const data = {
-        CertificateId: generated.certificateId,
-        DeviceCertPfxBase64: generated.deviceClientPfx,
-        RootCa: await keyService.getRootCA(),
-    };
-    await fs.writeFile("iotcertificatedata.json", JSON.stringify(data));
-    console.log("Device certificate generated");
+    program.parse(process.argv);
 })();

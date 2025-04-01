@@ -125,3 +125,5 @@ dist
 redbox.db*
 RootCA.crt
 RootCA.key
+# ignore any generated device certificates
+certificates/

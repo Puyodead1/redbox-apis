@@ -1,8 +1,15 @@
+import { getPrisma } from "@redbox-apis/db";
 import fs from "fs/promises";
 import forge from "node-forge";
+import path from "path";
 import { HashService } from "./HashService";
 import { logger } from "./logger";
-import { generateCertificateId } from "./utils";
+import { findRoot, generateCertificateId } from "./utils";
+
+export interface GeneratedDeviceCertificate {
+    deviceClientPfx: string;
+    certificateId: string;
+}
 
 export class KeyService {
     private readonly ROOT_CA_PATH = "../../RootCA.crt";
@@ -11,6 +18,10 @@ export class KeyService {
     private rootCertificate!: forge.pki.Certificate;
     private rootPrivateKey!: forge.pki.PrivateKey;
 
+    /**
+     * Check if the root CA exists on the file system
+     * @returns Boolean indicating if the root CA exists
+     */
     public async rootCAExists(): Promise<boolean> {
         try {
             await fs.access(this.ROOT_CA_PATH);
@@ -22,10 +33,17 @@ export class KeyService {
         }
     }
 
+    /**
+     * Return the root CA certificate as a PEM string
+     * @returns The root CA certificate as a PEM string
+     */
     public getRootCA(): string {
         return forge.pki.certificateToPem(this.rootCertificate).replaceAll("\r\n", "\n");
     }
 
+    /**
+     * Generate a new root CA certificate and private key
+     */
     public async generateRootCA(): Promise<void> {
         const keys = forge.pki.rsa.generateKeyPair(2048);
         const cert = forge.pki.createCertificate();
@@ -83,13 +101,16 @@ export class KeyService {
         await fs.writeFile(this.ROOT_CA_KEY_PATH, forge.pki.privateKeyToPem(keys.privateKey));
     }
 
+    /**
+     * Load the root CA from the file system, generating it if it does not exist
+     */
     public async loadRootCA(): Promise<void> {
-        logger.info("Loading Root CA");
+        logger.info("[KeyService] Loading Root CA");
 
         if (!(await this.rootCAExists())) {
-            logger.info("Root CA does not exist. Generating Root CA");
+            logger.info("[KeyService] Root CA does not exist. Generating Root CA");
             await this.generateRootCA();
-            logger.info("Root CA generated");
+            logger.info("[KeyService] Root CA generated");
         } else {
             const certificateStr = await fs.readFile(this.ROOT_CA_PATH, "utf-8");
             const privateKeyStr = await fs.readFile(this.ROOT_CA_KEY_PATH, "utf-8");
@@ -98,12 +119,15 @@ export class KeyService {
             this.rootPrivateKey = forge.pki.privateKeyFromPem(privateKeyStr);
         }
 
-        logger.info("Root CA loaded");
+        logger.info("[KeyService] Root CA loaded");
     }
 
-    public async generateDeviceCertificate(
-        kioskId: string
-    ): Promise<{ deviceClientPfx: string; certificateId: string }> {
+    /**
+     * Generates a device certificate for the specified kiosk id
+     * @param kioskId The kiosk id to generate a certificate for
+     * @returns The generated device certificate object
+     */
+    public async generateDeviceCertificate(kioskId: string): Promise<GeneratedDeviceCertificate> {
         const keys = forge.pki.rsa.generateKeyPair(2048);
         const cert = forge.pki.createCertificate();
 
@@ -149,5 +173,48 @@ export class KeyService {
             deviceClientPfx: p12b64,
             certificateId,
         };
+    }
+
+    /**
+     * Save a device certificate to the database, either creating a new record or updating an existing one
+     * @param kioskId The kiosk id this certificate is for
+     * @param generatedCert The generated device certificate object
+     */
+    public async saveDeviceCertificate(kioskId: string, generatedCert: GeneratedDeviceCertificate): Promise<void> {
+        const prisma = await getPrisma();
+        await prisma.deviceCertificate.upsert({
+            create: {
+                certificateId: generatedCert.certificateId,
+                deviceId: kioskId,
+                devicePfx: generatedCert.deviceClientPfx,
+            },
+            update: {
+                devicePfx: generatedCert.deviceClientPfx,
+            },
+            where: {
+                deviceId: kioskId,
+            },
+        });
+    }
+
+    /**
+     * Saves the device certificate to a file ready for installation on kiosks
+     * @param kioskId The kiosk id this certificate is for
+     * @param generatedCert The generated device certificate object
+     * @returns The path to the exported file
+     */
+    public async exportDeviceCertificate(kioskId: string, generatedCert: GeneratedDeviceCertificate): Promise<string> {
+        const data = {
+            CertificateId: generatedCert.certificateId,
+            DeviceCertPfxBase64: generatedCert.deviceClientPfx,
+            RootCa: await this.getRootCA(),
+        };
+        const rootPath = findRoot(__dirname);
+        if (!rootPath) throw new Error("Could not find root path");
+        const certificatesPath = path.join(rootPath, "certificates");
+        await fs.mkdir(certificatesPath, { recursive: true });
+        const finalPath = path.join(certificatesPath, `${kioskId}_iotcertificatedata.json`);
+        await fs.writeFile(finalPath, JSON.stringify(data));
+        return finalPath;
     }
 }

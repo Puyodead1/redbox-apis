@@ -53,10 +53,22 @@ importers:
       '@redbox-apis/db':
         specifier: workspace:^
         version: link:../db
+      commander:
+        specifier: ^13.1.0
+        version: 13.1.0
       winston:
         specifier: ^3.17.0
         version: 3.17.0
     devDependencies:
+      '@types/commander':
+        specifier: ^2.12.5
+        version: 2.12.5
+      '@types/node':
+        specifier: ^22.10.2
+        version: 22.10.2
+      install:
+        specifier: ^0.13.0
+        version: 0.13.0
       rimraf:
         specifier: ^6.0.1
         version: 6.0.1
@@ -69,6 +81,9 @@ importers:
 
   packages/common:
     dependencies:
+      '@redbox-apis/db':
+        specifier: workspace:^
+        version: link:../db
       express:
         specifier: ^4.21.1
         version: 4.21.1
@@ -585,6 +600,10 @@ packages:
   '@types/body-parser@1.19.5':
     resolution: {integrity: sha512-fB3Zu92ucau0iQ0JMCFQE7b/dv8Ot07NI3KaZIkIUNXq82k4eBAqUaneXfleGY9JWskeS9y+u0nXMyspcuQrCg==}
 
+  '@types/commander@2.12.5':
+    resolution: {integrity: sha512-YXGZ/rz+s57VbzcvEV9fUoXeJlBt5HaKu5iUheiIWNsJs23bz6AnRuRiZBRVBLYyPnixNvVnuzM5pSaxr8Yp/g==}
+    deprecated: This is a stub types definition. commander provides its own type definitions, so you do not need this installed.
+
   '@types/connect@3.4.38':
     resolution: {integrity: sha512-K6uROf1LD88uDQqJCktA4yzL1YYAK6NgfsI0v/mTgyPKWsX1CnJ0XPSDhViejru1GcRkLWb8RlzFYJRqGUbaug==}
 
@@ -729,6 +748,10 @@ packages:
 
   colorspace@1.1.4:
     resolution: {integrity: sha512-BgvKJiuVu1igBUF2kEjRCZXol6wiiGbY5ipL/oVPwm0BL9sIpMIzM8IK7vwuxIIzOXMV3Ey5w+vxhm0rR/TN8w==}
+
+  commander@13.1.0:
+    resolution: {integrity: sha512-/rFeCpNJQbhSZjGVwO9RFV3xPqbnERS8MmIQzCtD/zl6gpJuV/bMLuN92oG3F7d8oDEHHRrujSXNUr8fpjntKw==}
+    engines: {node: '>=18'}
 
   concat-map@0.0.1:
     resolution: {integrity: sha512-/Srv4dswyQNBfohGpz9o6Yb3Gz3SrUDqBH5rTuhGR7ahtlbYKnVxw2bCFMRljaA7EXHaXZ8wsHdodFvbkhKmqg==}
@@ -937,6 +960,10 @@ packages:
 
   inherits@2.0.4:
     resolution: {integrity: sha512-k/vGaX4/Yla3WzyMCvTQOXYeIHvqOKtnqBduzTHpzpQZzAskKMhZ2K+EnBiSM9zGSoIFeMpXKxa4dYeZIQqewQ==}
+
+  install@0.13.0:
+    resolution: {integrity: sha512-zDml/jzr2PKU9I8J/xyZBQn8rPCAY//UOYNmR01XwNwyfhEWObo2SWfSl1+0tm1u6PhxLwDnfsT/6jB7OUxqFA==}
+    engines: {node: '>= 0.10'}
 
   ipaddr.js@1.9.1:
     resolution: {integrity: sha512-0KI/607xoxSToH7GjN1FfSbLoU0+btTicjsQSWQlh/hZykN8KpmMf7uYwPW3R+akZ6R/w18ZlXSHBYXiYUPO3g==}
@@ -1533,6 +1560,10 @@ snapshots:
       '@types/connect': 3.4.38
       '@types/node': 22.10.2
 
+  '@types/commander@2.12.5':
+    dependencies:
+      commander: 13.1.0
+
   '@types/connect@3.4.38':
     dependencies:
       '@types/node': 22.10.2
@@ -1706,6 +1737,8 @@ snapshots:
     dependencies:
       color: 3.2.1
       text-hex: 1.0.0
+
+  commander@13.1.0: {}
 
   concat-map@0.0.1: {}
 
@@ -1953,6 +1986,8 @@ snapshots:
       wrappy: 1.0.2
 
   inherits@2.0.4: {}
+
+  install@0.13.0: {}
 
   ipaddr.js@1.9.1: {}
 

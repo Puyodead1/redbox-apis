@@ -8,7 +8,7 @@
         "build": "tsc",
         "start": "node dist/index.js",
         "clean": "rimraf dist",
-        "dev": "ts-node-dev --respawn --transpile-only src/index.ts"
+        "dev": "ts-node src/index.ts"
     },
     "keywords": [],
     "author": "Puyodead1",
@@ -16,9 +16,13 @@
     "dependencies": {
         "@redbox-apis/common": "workspace:*",
         "@redbox-apis/db": "workspace:^",
+        "commander": "^13.1.0",
         "winston": "^3.17.0"
     },
     "devDependencies": {
+        "@types/commander": "^2.12.5",
+        "@types/node": "^22.10.2",
+        "install": "^0.13.0",
         "rimraf": "^6.0.1",
         "ts-node": "^10.9.2",
         "typescript": "^5.6.3"
