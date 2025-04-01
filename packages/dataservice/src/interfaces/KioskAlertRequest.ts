@@ -9,7 +9,7 @@ export interface KioskAlertRequest {
   CreatedOn: Date;
   CreatedOnLocal: Date;
   KioskId: number;
-  MessageId: number;
+  MessageId: string;
   SendToTable?: boolean;
   SubAlertType: string;
   UniqueId: string;

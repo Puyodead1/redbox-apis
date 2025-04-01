@@ -1,3 +1,4 @@
+import { logger } from "@redbox-apis/common";
 import { celebrate, Segments } from "celebrate";
 import { Request, Response } from "express";
 import { KioskAlertRequest } from "../../interfaces";
@@ -12,16 +13,16 @@ export const post = [
         if (req.method !== "POST") return res.status(405);
         const alert = req.body as KioskAlertRequest;
 
-        console.log("Kiosk Alert Received:");
-        console.log(`Kiosk ID: ${alert.KioskId}`);
-        console.log(`Message ID: ${alert.MessageId}`);
-        console.log(`Alert Type: ${alert.AlertType}`);
-        console.log(`Sub Alert Type: ${alert.SubAlertType}`);
-        console.log(`Alert Message: ${alert.AlertMessage}`);
-        console.log(`Created On: ${alert.CreatedOn}`);
-        console.log(`Created On Local: ${alert.CreatedOnLocal}`);
-        console.log(`Send To Table: ${alert.SendToTable}`);
-        console.log(`Unique ID: ${alert.UniqueId}`);
+        logger.debug("Kiosk Alert Received:");
+        logger.debug(`Kiosk ID: ${alert.KioskId}`);
+        logger.debug(`Message ID: ${alert.MessageId}`);
+        logger.debug(`Alert Type: ${alert.AlertType}`);
+        logger.debug(`Sub Alert Type: ${alert.SubAlertType}`);
+        logger.debug(`Alert Message: ${alert.AlertMessage}`);
+        logger.debug(`Created On: ${alert.CreatedOn}`);
+        logger.debug(`Created On Local: ${alert.CreatedOnLocal}`);
+        logger.debug(`Send To Table: ${alert.SendToTable}`);
+        logger.debug(`Unique ID: ${alert.UniqueId}`);
 
         res.json({
             Success: true,

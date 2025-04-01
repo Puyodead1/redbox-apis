@@ -1,7 +1,7 @@
 import { Joi } from "celebrate";
 
 export const KioskAlertRequestSchema = Joi.object({
-    MessageId: Joi.number().required(),
+    MessageId: Joi.string().required(),
     KioskId: Joi.number().required(),
     SendToTable: Joi.boolean().optional(),
     UniqueId: Joi.string().required(),
