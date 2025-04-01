@@ -5,5 +5,6 @@
 
 export * from './CardStatsRequest';
 export * from './DeviceStatusRequest';
+export * from './KioskAlertRequest';
 export * from './KioskStatistics';
 export * from './RebootStatusRequest';
