@@ -16,7 +16,7 @@ export function loadCommands(context: Context): Command[] {
             if (file.isDirectory()) {
                 loadCommandFiles(fullPath);
             } else if (file.name.endsWith(".ts") || file.name.endsWith(".js")) {
-                if (file.name === "base.ts" || file.name === "index.ts") {
+                if (file.name.startsWith("base") || file.name.startsWith("index")) {
                     continue;
                 }
                 const module = require(fullPath);
