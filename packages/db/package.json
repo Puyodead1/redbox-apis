@@ -25,7 +25,6 @@
     },
     "dependencies": {
         "@prisma/client": "6.6.0-dev.100",
-        "@redbox-apis/common": "workspace:*",
         "winston": "^3.17.0"
     },
     "engines": {
