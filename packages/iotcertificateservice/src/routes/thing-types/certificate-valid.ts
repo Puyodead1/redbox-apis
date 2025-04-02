@@ -1,7 +1,8 @@
-import { EncryptionService, logger } from "@redbox-apis/common";
+import { logger } from "@redbox-apis/common";
 import { getPrisma } from "@redbox-apis/db";
 import { celebrate, Joi, Segments } from "celebrate";
 import { Request, Response } from "express";
+import { EncryptionService } from "../../EncryptionService";
 import { IOTCertificateValidRequest } from "../../interfaces";
 import { IOTCertificateValidRequestSchema } from "../../schemas/IOTCertificateValidRequestSchema";
 

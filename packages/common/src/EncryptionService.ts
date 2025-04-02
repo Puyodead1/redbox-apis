@@ -1,49 +1,78 @@
 import { Buffer } from "buffer";
-import { createCipheriv, createDecipheriv, pbkdf2Sync, randomBytes } from "crypto";
+import { createCipheriv, createDecipheriv } from "crypto";
+
+export enum EncryptionType {
+    CUSTOMER,
+    LOCAL,
+}
 
 export class EncryptionService {
-    private readonly saltSize = 32;
-    private readonly iterationCount = 1000;
-    private readonly key =
-        ",$=Aqy*)eChz+62ySJUTRX\\j5.hjeCO;8p*R+(90LQvCg?-K(}+at7'ns^IvL,CM+4;Dk3}Pt7@~ai(6u}Ub6Eg^tsl:KEB@&yX+,SK?:$6h[V4hwXEY#*|Oe5G9J6tmvNRDu*Gs4]lRzN4\\mzJkZ&?IOipWJZ6,DpXFh?t\"%LEb+At&V'Iwx|[w}R!.M`L6`{|q#u@o.@]16,v\\tmxe2\\\\[3o-UzFlEYV:We>5qq>eT7`]@c8$mVq;SELkHU3q\"R)x?XtFU\\B@<$qX;IE_'bSCsbf3ezF<'0<w}uQ(L0P*/x\"#:2<V![z0n'I;alt#8`<V)J];7__lNhD@?kD\\gzFI+GrmYsqT)\"`U[T(5/b$KKumUb+G+|>fe)IGQFaf^`X<`0ap-+cd_t{q8/weN6n/Jdqmu8*6EC7U{$[+3quaAiADOMz4k@d2yJ,Nv<pE=X`R^3.%WwZ|%)ge5[E@YBF1Eul9$w\"fm0Lu-7Jds{O?XDJ>'pUW[A";
+    private readonly ENCRYPTION_CONSTANTS = {
+        [EncryptionType.CUSTOMER]: {
+            key: "{776DA6AF-3033-43ee-B379-2D4F28B5F1FC}",
+            iv: "{F375D7E0-4572-4518-9C2F-E8F022F42AA7}",
+        },
+        [EncryptionType.LOCAL]: {
+            key: "{02CAD7C4-E0F5-4b1b-BD04-808B840A61D2}",
+            iv: "{AD186FCD-2ACD-41a8-958D-6CA7DAEB1DE5}",
+        },
+    };
+
+    private guidToByteArray(guidStr: string): Buffer {
+        const hex = guidStr.replace(/[{}-]/g, "");
+        const bytes = Buffer.from(hex, "hex");
+
+        // little-endian format
+        return Buffer.concat([
+            Buffer.from([bytes[3], bytes[2], bytes[1], bytes[0]]),
+            Buffer.from([bytes[5], bytes[4]]),
+            Buffer.from([bytes[7], bytes[6]]),
+            bytes.slice(8),
+        ]);
+    }
 
     /**
      * Encrypts a string
-     * @param plainText Plaintext to encrypt
+     * @param data Plaintext to encrypt
      * @returns Encrypted string
      */
-    public encrypt(plainText: string): string {
-        const salt = randomBytes(this.saltSize);
-        const keyDerivation = pbkdf2Sync(this.key, salt, this.iterationCount, 48, "sha1");
-        const key = keyDerivation.slice(0, 32);
-        const iv = keyDerivation.slice(32, 48);
+    public encrypt(data: string, type: EncryptionType): string {
+        const enc = this.ENCRYPTION_CONSTANTS[type];
+        const m_keyValueBase = this.guidToByteArray(enc.key);
+        const m_initialVector = this.guidToByteArray(enc.iv).slice(0, 8); // only 1st 8 bytes
 
-        const cipher = createCipheriv("aes-256-cbc", key, iv);
-        let encrypted = cipher.update(plainText, "utf8");
+        // extend to 24 bytes (repeat 1st 8)
+        const m_keyValue = Buffer.concat([m_keyValueBase, m_keyValueBase.slice(0, 8)]);
+
+        const bytes = Buffer.from(data, "binary");
+        const cipher = createCipheriv("des-ede3-cbc", m_keyValue, m_initialVector);
+
+        let encrypted = cipher.update(bytes);
         encrypted = Buffer.concat([encrypted, cipher.final()]);
 
-        return Buffer.concat([salt, encrypted]).toString("base64");
+        return encrypted.toString("base64");
     }
 
     /**
      * Decrypts a string
-     * @param ciphetext The text to decrypt
+     * @param data The text to decrypt
      * @returns The decrypted text
      */
-    public decrypt(ciphetext: string): string {
-        const buffer = Buffer.from(ciphetext, "base64");
-        const salt = buffer.slice(0, this.saltSize);
-        const encryptedText = buffer.slice(this.saltSize);
+    public decrypt(data: string, type: EncryptionType): string {
+        const enc = this.ENCRYPTION_CONSTANTS[type];
+        // guid to byte arr
+        const m_keyValueBase = this.guidToByteArray(enc.key);
+        const m_initialVector = this.guidToByteArray(enc.iv).slice(0, 8); // only 1st 8 bytes
 
-        const keyDerivation = pbkdf2Sync(this.key, salt, this.iterationCount, 48, "sha1");
+        // extend to 24 bytes (repeat 1st 8)
+        const m_keyValue = Buffer.concat([m_keyValueBase, m_keyValueBase.slice(0, 8)]);
 
-        const key = keyDerivation.slice(0, 32);
-        const iv = keyDerivation.slice(32, 48);
+        const encBytes = Buffer.from(data, "base64");
+        const decipher = createDecipheriv("des-ede3-cbc", m_keyValue, m_initialVector);
 
-        const decipher = createDecipheriv("aes-256-cbc", key, iv);
-        let decrypted = decipher.update(encryptedText);
+        let decrypted = decipher.update(encBytes);
         decrypted = Buffer.concat([decrypted, decipher.final()]);
 
-        return decrypted.toString("utf8");
+        return decrypted.toString("binary");
     }
 }
