@@ -8,7 +8,7 @@
         "build": "pnpm -r --workspace-concurrency Infinity --filter !db --filter !common build",
         "start": "pnpm -r --workspace-concurrency Infinity --filter !db --filter !common --parallel start",
         "clean": "pnpm -r run clean",
-        "prebuild": "pnpm --filter db build && pnpm --filter common build",
+        "prebuild": "pnpm --filter common build && pnpm --filter db build",
         "migrate:prod": "pnpm --filter db migrate:prod",
         "migrate:dev": "pnpm --filter db migrate:dev",
         "seed": "pnpm --filter db seed"
