@@ -8,13 +8,3 @@ export interface KioskAuthenticateRequest {
   UseNtAuthentication: boolean;
   Username: string;
 }
-
-export interface KioskCampaignsRequest {
-  LastSyncTime?: Date;
-}
-
-export interface PromoCodeValidationRequest {
-  Code: string;
-  KioskId: number;
-  MessageId: string;
-}
