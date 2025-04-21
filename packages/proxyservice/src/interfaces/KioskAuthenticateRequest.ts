@@ -7,4 +7,8 @@ export interface KioskAuthenticateRequest {
   Password: string;
   UseNtAuthentication: boolean;
   Username: string;
+  /**
+   * Unknown Property
+   */
+  [x: string]: unknown;
 }
