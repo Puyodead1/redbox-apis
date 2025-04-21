@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=0.6">
+    <title>Dashboard | Redbox Perks</title>
+    <% if (recaptcha) { %>
+        <script src="https://www.google.com/recaptcha/api.js" async defer></script>
+    <% } %>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+    <%- include('header') %>
+    <a href="/logout" class="logout">Logout</a>
+
+    <div class="form-container">
+        <h1>Welcome, <%= user?.firstName || "Customer" %>!</h1>
+        <p style="text-align: center;">
+            You've been a Redbox member since 
+            <%= (d => `${d.toLocaleString('en-US', { month: 'long', day: 'numeric', year: 'numeric', hour: 'numeric', minute: '2-digit', hour12: true, timeZone: 'UTC' })} UTC`)
+                (new Date(user.signupDate)) %>.
+        </p>
+        <div class="statistics">  
+            <div class="item">
+                <h1><%= user.loyalty.pointBalance > 9999 ? '9000+' : user.loyalty.pointBalance || '0'; %></h1>
+                <b>Points</b>
+            </div>
+        
+            <div class="item">
+                <h1><%= user.loyalty.currentTier || 'Member' %></h1>
+                <b>Tier</b>
+            </div>
+
+            <div class="item">
+                <h1><%= user.loyalty.tierCounter || '0' %></h1>
+                <b>Purchases</b>
+            </div>
+        </div>        
+
+        
+        <button onclick="$('#editKiosk').show();"><%= (user.pin === null || user.phoneNumber === null) ? 'Setup Kiosk Login' : 'Edit Kiosk Login' %></button><br><br>
+        <form id="update-form">
+            <label for="email">Update Email:</label>
+            <input type="email" id="email" name="email" placeholder="Enter a new email...">
+
+            <label for="password">Update Password:</label>
+            <input type="password" id="password" name="password" placeholder="Enter a new password...">
+
+            <% if (recaptcha) { %>
+                <div class="g-recaptcha" data-sitekey="<%= recaptcha %>"></div>
+            <% } %>
+            <p class="message" id="message"></p>
+            <button type="submit">Update</button>
+        </form>
+
+        <form action="/delete" method="POST" style="text-align: center; margin-top: 10px; margin-bottom: 0px;">
+            <button type="submit" style="background: none; border: none; color: red; font-weight: 700; cursor: pointer; margin: 0px; padding: 0px;"
+                onclick="return confirm(`Are you sure you'd like to delete your account? This action is irreversible, and your points will be permanently void.`);">
+                Delete Account
+            </button>
+        </form>
+    </div>
+
+    <div id="editKiosk" class="modal">
+        <div class="modal-content">
+            <span class="close-btn" onclick="$('#editKiosk').hide();">&times;</span>
+            <h2><%= (user.pin === null || user.phoneNumber === null) ? 'Setup Kiosk Login' : 'Update Kiosk Login' %></h2>
+            <form id="kiosk-login-form">
+                <label for="phoneNumber">Phone Number:</label>
+                <input type="tel" id="phoneNumber" name="phoneNumber" placeholder="Enter your phone number..." value="<%= user.phoneNumber || '' %>" maxlength="10" required>
+    
+                <label for="pin">PIN:</label>
+                <input type="password" id="pin" name="pin" placeholder="****" maxlength="4" required>
+    
+                <label for="confirmPin">Confirm PIN:</label>
+                <input type="password" id="confirmPin" name="confirmPin" placeholder="****" maxlength="4" required>
+    
+                <button type="submit">Submit</button>
+            </form>
+            <p class="message" id="kiosk-message" style="margin-bottom: 0px;"></p>
+        </div>
+    </div>
+
+    <%- include('footer') %>
+    <script>
+        async function newUserMigrate() {
+            const hasName = <%= (user?.firstName ? 'true' : 'false') %>;
+
+            if (!hasName) {
+                const firstName = prompt("Welcome to Redbox Perks! It looks like you've signed up at your local kiosk. What's your first name?");
+
+                if(firstName) {
+                    await $.ajax({
+                        url: '/migrateName',
+                        method: 'POST',
+                        data: { firstName },
+                        dataType: 'json'
+                    });
+
+                    window.location.reload(); // reload when finished to apply changes
+                }
+            }
+        }
+        
+        setTimeout(newUserMigrate, 1000);
+    </script>
+    <script>
+        const kioskMsg = $('#kiosk-message');
+
+        $('#kiosk-login-form').on('submit', async function(event) {
+            event.preventDefault();
+            kioskMsg.text('');
+
+            const phoneNumber = $('#phoneNumber').val().trim();
+            const pin = $('#pin').val().trim();
+            const confirmPin = $('#confirmPin').val().trim();
+
+            // Validate the PIN confirmation
+            if (pin !== confirmPin) {
+                return kioskMsg.text("Your PIN and Confirm PIN doesn't match.");
+            }
+
+            // Make sure the PIN is valid
+            if(pin.length !== 4 || isNaN(Number(pin))) {
+                return kioskMsg.text("Your PIN must be a 4-digit number.");
+            }
+
+            // Make sure the phone number is valid
+            if(phoneNumber.length !== 10 || isNaN(Number(phoneNumber))) {
+                return kioskMsg.text("An invalid phone number was provided.");
+            }
+
+            try {
+                const response = await $.ajax({
+                    url: '/kiosk',
+                    method: 'POST',
+                    data: { phoneNumber, pin },
+                    dataType: 'json'
+                });
+    
+                if(response.error) {
+                    kioskMsg.text(response.error);
+                } else if(response.success == true) {
+                    window.location.reload();
+                }
+            } catch (error) {
+                kioskMsg.html('It looks like the kiosk login is currently disabled.');
+                console.error(error);
+            }
+        });
+    </script>
+    <script>    
+        const useRecaptcha = <%= recaptcha ? true : false %>;
+        const message = $('#message');
+
+        $('#update-form').on('submit', async function(event) {
+            event.preventDefault();
+            message.html('');
+    
+            const emailAddress = $('#email').val().trim();
+            const password = $('#password').val().trim();
+            let recaptchaToken = useRecaptcha && typeof grecaptcha !== 'undefined' ? grecaptcha.getResponse() : null;
+    
+            if(!recaptchaToken && useRecaptcha) {
+                return message.html('In order to verify your request, complete the reCAPTCHA.');
+            }
+
+            try {
+                const response = await $.ajax({
+                    url: '/update',
+                    method: 'POST',
+                    data: { emailAddress, password, recaptchaToken },
+                    dataType: 'json'
+                });
+    
+                if(response.error) {
+                    message.html(response.error);
+                } else if(response.success == true) {
+                    message.html('<span style="color: green;">Your details have been successfully updated!</span>');
+                }
+
+                if (useRecaptcha) grecaptcha.reset();
+            } catch (error) {
+                message.html('It looks like updates are currently disabled.');
+                console.error(error);
+            }
+        });
+    </script>    
+</body>
+</html>

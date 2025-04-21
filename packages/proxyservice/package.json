@@ -16,6 +16,8 @@
     "dependencies": {
         "@redbox-apis/common": "workspace:*",
         "@redbox-apis/db": "workspace:*",
+        "bcryptjs": "^3.0.2",
+        "dotenv": "^16.4.7",
         "celebrate": "^15.0.3",
         "express": "^4.21.1",
         "express-file-routing": "^3.0.3",

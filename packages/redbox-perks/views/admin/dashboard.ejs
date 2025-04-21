@@ -1,0 +1,544 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=0.6">
+    <title>Admin | Redbox Perks</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link rel="stylesheet" href="/style.css">
+    <style>
+        .search-container {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            position: relative;
+        }
+
+        .search-container input {
+            padding-top: 9px;
+            padding-bottom: 9px;
+            flex: 1;
+        }
+
+        .search-button {
+            position: absolute;
+            right: 10px;
+            background: none;
+            border: none;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .search-button .material-icons {
+            font-size: 20px;
+            color: grey;
+        }
+
+        .user-results {
+            overflow-y: auto;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            width: 100%;
+            height: 220px;
+        }
+
+        .user-results .result {
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+            align-items: flex-start;
+            border-bottom: 1px solid #ccc;
+            padding: 10px;
+        }
+
+        .user-results .result:last-child {
+            border-bottom: none; /* Remove the border for the last result */
+        }
+
+        .user-results .result button {
+            position: absolute;
+            top: 50%;
+            right: 10px;
+            transform: translateY(-50%);
+
+            padding: 6px 12px;
+            font-size: 14px;
+            width: auto;
+            white-space: nowrap;
+        }
+
+        .form-container {
+            text-align: center;
+            justify-content: center;
+            height: 400px;
+            display: none;
+        }
+
+        .navigation-buttons {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-top: 20px;
+            gap: 50px;
+        }
+
+        .navigation-buttons button {
+            border-radius: 100%;
+            width: 50px;
+            height: 50px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 0;
+        }
+
+        .disclaimer {
+            padding-top: 50px;
+        }
+    </style>
+</head>
+<body>
+    <%- include('../header') %>
+    <a href="/admin/logout" class="logout">Logout</a>
+
+    <div class="form-container" name="statistics" style="display: block !important;">
+        <h1>Statistics</h1>
+        <select id="timeRange">
+            <option value="7">Past 7 Days</option>
+            <option value="30">Past Month</option>
+            <option value="365">Past Year</option>
+            <option value="ytd">Year to Date</option>
+            <option value="all">All Time</option>
+        </select>
+        <div id="chart"></div>
+    </div>
+
+    <div class="form-container" name="userManagement">
+        <h1>User Management</h1>
+        <p>View, update, and modify user accounts.</p>
+    
+        <div class="search-container" style="margin-bottom: 20px;">
+            <input type="text" id="search" style="margin-bottom: 0px;" placeholder="Search">
+            <span id="searchButton" class="search-button">
+                <span class="material-icons">search</span>
+            </span>
+        </div>
+    
+        <div class="user-results"></div>
+    </div>
+    
+    <div class="form-container" name="settings">
+        <h1>Settings</h1>
+        <p>View and test your server configuration.</p><hr style="opacity: 0.5;">
+        
+        <div class="content" style="text-align: left; margin: 0px 20px; margin-top: 15px;">
+            <b style="text-decoration: underline;">Email Settings</b>
+            <p>SMTP Host: <b><%= API_CONFIGURATION.SMTP_HOSTNAME %>:<%= API_CONFIGURATION.SMTP_PORT %></b></p>
+            <p>Username: <b><%= API_CONFIGURATION.SMTP_USERNAME %></b></p>
+            <p>Authentication: <b><%= '*'.repeat(Math.min(API_CONFIGURATION.SMTP_PASSWORD.length, 20)) %></b></p>
+            <button onclick="sendTestEmail()">Send Test Email</button>
+        </div>
+
+        <div class="disclaimer">
+            <small><b>Looking to modify your configuration?</b> For your security, you'll need to update the <u>.env</u> file on your server.</small>
+        </div>
+    </div>
+
+    <div class="navigation-buttons">
+        <button id="prevButton">
+            <span class="material-icons">arrow_back</span>
+        </button>
+        <button id="nextButton">
+            <span class="material-icons">arrow_forward</span>
+        </button>
+    </div>
+
+    <div id="manageUser" class="modal">
+        <div class="modal-content">
+            <span class="close-btn" onclick="$('#manageUser').hide();">&times;</span>
+            <h2>Manage Account</h2>
+            <form id="user-update-form">
+                <label for="phoneNumber">Phone Number:</label>
+                <input type="tel" id="phoneNumber" name="phoneNumber" placeholder="Enter your phone number..." value="" maxlength="10">
+    
+                <label for="email">Email Address:</label>
+                <input type="email" id="email" name="email" placeholder="Enter your email address..." value="">
+                
+                <label for="password">Update Password:</label>
+                <input type="password" id="password" name="password" placeholder="*************">
+    
+                <label for="pin">Update PIN:</label>
+                <input type="password" id="pin" name="pin" placeholder="****" maxlength="4">
+    
+                <button type="submit">Apply Changes</button>
+                <div class='restrictions' style='text-align: center; margin-top: 10px;'>
+                    <u class='disable' style="color: rgb(187, 174, 0); margin-top: 20px; cursor: pointer;" onclick="restrictAccount('disable')">Disable Account</u>
+                    <span> / </span>
+                    <u class='delete' style="color: red; margin-top: 20px; cursor: pointer;" onclick="restrictAccount('delete')">Delete Account</u>
+                </div>
+            </form>
+            <p class="message" id="user-message" style="margin-bottom: 0px;"></p>
+        </div>
+    </div>
+
+    <%- include('../footer') %>
+    <script>
+        $(document).ready(function () {
+            // -- Tab Logic -- //
+            const $formContainers = $('.form-container');
+            const $prevButton = $('#prevButton');
+            const $nextButton = $('#nextButton');
+            let currentIndex = 0;
+
+            function updateTab() {
+                $formContainers.each(function (index) {
+                    $(this).css('display', index === currentIndex ? 'block' : 'none');
+                });
+            }
+
+            $prevButton.on('click', function () {
+                currentIndex = (currentIndex - 1 + $formContainers.length) % $formContainers.length;
+                updateTab();
+            });
+
+            $nextButton.on('click', function () {
+                currentIndex = (currentIndex + 1) % $formContainers.length;
+                updateTab();
+            });
+
+            updateTab();
+
+
+            // -- Analytics -- //
+            const salesData = <%- JSON.stringify(analyticsCache) %>;
+            let chart;
+
+            function filterData(range) {
+                const today = new Date();
+                let startDate;
+
+                if (range === 'ytd') {
+                    startDate = new Date(today.getFullYear(), 0, 1); // first day of the year
+                } else if (range === 'all') {
+                    return salesData.length > 0 ? salesData : genEmptyData(365); // return all data or placeholder if empty
+                } else {
+                    startDate = new Date();
+                    startDate.setDate(today.getDate() - parseInt(range)); // past X days
+                }
+
+                const filteredData = salesData.filter(item => new Date(item.date) >= startDate); // filter out data based on the range
+                
+                // if no data is found generate placeholder data
+                const days = range === 'ytd' ? Math.ceil((today - startDate) / (1000 * 60 * 60 * 24)) : parseInt(range);
+                return filteredData.length > 0 ? filteredData : genEmptyData(days);
+            }
+
+            function genEmptyData(days) {
+                const today = new Date();
+                return Array.from({ length: days }, (_, i) => {
+                    const d = new Date();
+                    d.setDate(today.getDate() - i);
+                    return { date: d.toISOString(), purchases: 0, rentals: 0 };
+                }).reverse();
+            }
+
+            function countTrans(data) {
+                const transCount = { purchases: {}, rentals: {} };
+
+                data.forEach(item => {
+                    const date = new Date(item.date).toISOString().split('T')[0];
+                    transCount.purchases[date] = (transCount.purchases[date] || 0) + item.purchases;
+                    transCount.rentals[date] = (transCount.rentals[date] || 0) + item.rentals;
+                });
+
+                return {
+                    purchases: Object.keys(transCount.purchases).map(date => ({
+                        date: date,
+                        purchases: transCount.purchases[date]
+                    })),
+                    rentals: Object.keys(transCount.rentals).map(date => ({
+                        date: date,
+                        rentals: transCount.rentals[date]
+                    }))
+                };
+            }
+
+            function renderChart(range) {
+                const data = filterData(range);
+                const { purchases, rentals } = countTrans(data);
+
+                if (chart) {
+                    chart.destroy();
+                }
+
+                const options = {
+                    chart: {
+                        type: "area",
+                        toolbar: { show: false },
+                        dropShadow: { enabled: false },
+                        fontFamily: "Inter, sans-serif",
+                        height: "270px",
+                        background: "transparent"
+                    },
+                    theme: {
+                        mode: (localStorage?.getItem("theme")) === 'dark_mode' ? 'dark' : 'light',
+                    },
+                    series: [
+                        {
+                            name: "Purchases",
+                            data: purchases.map(item => [new Date(item.date).getTime(), item.purchases])
+                        },
+                        {
+                            name: "Rentals",
+                            data: rentals.map(item => [new Date(item.date).getTime(), item.rentals])
+                        }
+                    ],
+                    fill: {
+                        type: "gradient",
+                        gradient: {
+                            shadeIntensity: 1,
+                            inverseColors: false,
+                            opacityFrom: 0.6,
+                            opacityTo: 0.1,
+                            stops: [20, 100, 100]
+                        }
+                    },
+                    stroke: { curve: "smooth", width: 4 },
+                    dataLabels: { enabled: false },
+                    colors: ["#0D47A1", "#E30613"],
+                    yaxis: { show: false },
+                    xaxis: {
+                        labels: { show: false },
+                        tooltip: { enabled: false },
+                        axisBorder: { show: false },
+                        axisTicks: { show: false }
+                    },
+                    tooltip: {
+                        enabled: true,
+                        x: {
+                            formatter: function (value) {
+                                return new Date(value).toISOString().split('T')[0];
+                            }
+                        }
+                    },
+                    grid: { show: false },
+                    legend: {
+                        inverseOrder: true // rental should be on top
+                    }
+                };
+
+                chart = new ApexCharts($("#chart")[0], options);
+                chart.render();
+            }
+
+            $("#timeRange").on("change", function () {
+                renderChart($(this).val());
+            });
+
+            // re-render when theme toggle is clicked
+            try {
+                $("#themeToggle").on("click", function () {
+                    const theme = localStorage.getItem("theme");
+                    if (chart) {
+                        chart.updateOptions({ theme: { mode: theme === 'dark_mode' ? 'dark' : 'light' } });
+                    }
+                });
+            } catch(error) {
+                console.log('Theme was not detected, defaulting to current mode.');
+            }
+
+            renderChart("7"); // default is past 7-days
+
+
+            // -- User Management -- //
+            const userPrecheck = <%- JSON.stringify(users) %>;
+            const $userResults = $('.user-results');
+            let isSearching = false;
+            let searchResults = [];
+            let loadedUsers = 0;
+
+            function loadUsers() {
+                const usersToLoad = (isSearching ? searchResults : userPrecheck).slice(loadedUsers, loadedUsers + 10);
+                const userElements = usersToLoad.map(user => `
+                    <div class="result">
+                        <p style="margin: 0px; color: ${user?.disabled ? 'red' : 'inherit'}">${user.identifier}</p>
+                        <small style="margin-top: 5px;">Account ID: ${user.cpn}</small>
+                        <button id="view" onclick="viewAccount('${user.cpn}')">View</button>
+                    </div>
+                `);
+                $userResults.append(userElements.join(''));
+                loadedUsers += usersToLoad.length;
+            }
+
+            window.searchUser = function(query) {
+                const results = [];
+
+                userPrecheck.forEach(user => {
+                    if (user.identifier.replace(/[^a-zA-Z0-9]/g, '').toLowerCase().includes(query.replace(/[^a-zA-Z0-9]/g, '').toLowerCase()) || user.cpn.toString() === query) {
+                        results.push(user);
+                    }
+                });
+
+                searchResults = results; // store search results
+                loadUsers(); // trigger new results
+            }
+        
+            window.viewAccount = function(cpn) {
+                $.ajax({
+                    url: '/admin/user',
+                    method: 'POST',
+                    dataType: 'json',
+                    data: { cpn },
+                    success: function(response) {
+                        if(response.error) {
+                            alert(response.error);
+                        } else {
+                            $('#manageUser').show();
+                            $('#manageUser').attr('data-cpn', cpn);
+                            $('#phoneNumber').val(response.phoneNumber || '');
+                            $('#email').val(response.emailAddress || '');
+
+                            if(response?.disabled && response.disabled === true) {
+                                $('#manageUser .restrictions .disable').text('Enable Account');
+                            } else {
+                                $('#manageUser .restrictions .disable').text('Disable Account');
+                            }
+
+                            $('#user-message').html(''); // clear previous messages
+                        }
+                    },
+                    error: function(xhr, status, error) {
+                        console.error(error);
+                        alert('An unknown server error occurred. Please check the console for more details.');
+                    }
+                });
+            };
+
+            window.restrictAccount = function(method = 'delete') {
+                const cpn = $('#manageUser').attr('data-cpn');
+
+                if ((method === 'delete' ? confirm(`Are you sure you want to delete this account? This action cannot be undone.`) : true)) {
+                    $.ajax({
+                        url: '/admin/status',
+                        method: 'POST',
+                        dataType: 'json',
+                        data: { cpn, method },
+                        success: function(response) {
+                            if(response.error) {
+                                console.error(response.error);
+                                $('#user-message').html('Failed to update this user account.');
+                            } else {
+                                $('#user-message').html(`<span style="color: green;">${response.message}</span>`);
+                                $('#manageUser').hide(); // hide the modal
+                                window.location.reload(); // reload the page to reflect changes
+                            }
+                        },
+                        error: function(xhr, status, error) {
+                            console.error(error);
+                            $('#user-message').html('An unknown server error occurred.');
+                        }
+                    });
+                }
+            }
+
+            $('#user-update-form').on('submit', async function(event) {
+                event.preventDefault();
+                $('#user-message').html('');
+
+                const cpn = $('#manageUser').attr('data-cpn');
+                const phoneNumber = $('#phoneNumber').val().trim();
+                const emailAddress = $('#email').val().trim();
+                const password = $('#password').val().trim();
+                const pin = $('#pin').val().trim();
+
+                try {
+                    const response = await $.ajax({
+                        url: '/admin/update',
+                        method: 'POST',
+                        data: { cpn, emailAddress, phoneNumber, password, pin },
+                        dataType: 'json'
+                    });
+        
+                    if(response.error) {
+                        $('#user-message').html(response.error);
+                    } else if(response.success == true) {
+                        $('#user-message').html('<span style="color: green;">Your changes have been applied successfully!</span>');
+                    }
+                } catch (error) {
+                    $('#user-message').html('An unknown server error occurred when updating.');
+                    console.error(error);
+                }
+            });
+
+            loadUsers(); // initial load
+            $userResults.on('scroll', function () {
+                if ($userResults.scrollTop() + $userResults.innerHeight() >= $userResults[0].scrollHeight) {
+                    loadUsers(); // load more users when scrolled to the bottom
+                }
+            });
+
+            $('#search').on('keypress', function (e) {
+                if (e.which === 13) { // user clicked enter keycode
+                    isSearching = false; // used to trick the search button into creating the search
+                    $('#searchButton').trigger('click'); // trigger the search button click event
+                }
+            });
+
+            $('#searchButton').on('click', function () {
+                $userResults.empty(); // clear previous results
+                $userResults.scrollTop(0); // reset scroll position
+                searchResults = []; // reset search results
+                loadedUsers = 0; // reset loaded users count
+
+                if(!isSearching) {
+                    const query = $('#search').val();
+
+                    $('#searchButton').html('<span class="material-icons">close</span>'); // change search button icon to close
+                    isSearching = true; // set search state
+                    return searchUser(query);
+                } else {
+                    isSearching = false; // reset search state
+                    $('#search').val(''); // clear search input
+                    $('#searchButton').html('<span class="material-icons">search</span>'); // reset search button icon
+
+                    loadUsers(); // load initial users
+                }
+            });
+
+            // -- Settings -- //
+            window.sendTestEmail = function() {
+                const emailAddress = prompt('Please enter the email address you would like to send a test email to:');
+                if (!emailAddress) return;
+
+                $.ajax({
+                    url: '/admin/send-test-email',
+                    method: 'POST',
+                    dataType: 'json',
+                    data: { emailAddress },
+                    success: function(response) {
+                        if(response.error) {
+                            console.error(response.error);
+                            alert('Failed to send test email. Please check the console for more details.');
+                        } else {
+                            alert('Your test email has been requested, you should receive it within the next 2 minutes.');
+                        }
+                    },
+                    error: function(xhr, status, error) {
+                        console.error(error);
+                        alert('An unknown server error occurred. Please check the console for more details.');
+                    }
+                });
+            };
+        });
+    </script>
+</body>
+</html>

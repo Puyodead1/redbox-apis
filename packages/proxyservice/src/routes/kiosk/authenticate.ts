@@ -5,10 +5,16 @@ import { KioskAuthenticateRequest } from "../../interfaces";
 import { KioskAuthenticateRequestSchema } from "../../schemas";
 import { EncryptionService, EncryptionType } from "@redbox-apis/common";
 
+import dotenv from "dotenv";
+import path from "path";
+dotenv.config({ path: "../../.env" });
+
+const dbPath = process.env.DATABASE_PATH || 'database';
+const database = path.isAbsolute(dbPath) ? dbPath : path.join('../../', dbPath);
 
 const getLocalCredentials = async (username: string, type: string) => {
     try {
-        const data = await fs.readFile("database/credentials.json", "utf8");
+        const data = await fs.readFile(path.join(database, 'credentials.json'), "utf8");
         const cred = JSON.parse(data);
         
         return cred[type]?.find((user: any) => user.username === username) || null;

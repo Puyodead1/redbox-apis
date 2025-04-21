@@ -127,3 +127,9 @@ RootCA.crt
 RootCA.key
 # ignore any generated device certificates
 certificates/
+
+# Loyalty database and configurations
+.env
+database/credentials.json
+database/transactions.json
+database/users.json

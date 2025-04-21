@@ -1,0 +1,43 @@
+<link href="https://fonts.googleapis.com/icon?family=Material+Symbols+Outlined" rel="stylesheet">
+<link rel="stylesheet" href="/theme.css">
+<style>
+    .dark-mode {
+        background: #121212;
+        color: #ffffff;
+    }
+    .toggle-btn {
+        position: absolute;
+        top: 0px;
+        left: 5px;
+        cursor: pointer;
+        font-size: 28px;
+        padding: 10px;
+        border-radius: 50%;
+        transition: background 0.3s;
+        display: inline-block;
+        font-family: 'Material Symbols Outlined';
+    }
+</style>
+
+<span id="themeToggle" class="toggle-btn"></span>
+<script>
+    $(document).ready(function () {
+        $("#themeToggle").click(function () {
+            if ($("body").hasClass("dark_mode")) {
+                $(this).text("light_mode");
+                $("body").removeClass("dark_mode").addClass("light_mode");
+                localStorage.setItem("theme", "light_mode");
+            } else {
+                $(this).text("dark_mode");
+                $("body").removeClass("light_mode").addClass("dark_mode");
+                localStorage.setItem("theme", "dark_mode");
+            }
+        });
+
+        let theme = localStorage.getItem("theme");
+        let def = 'light_mode'; // default theme
+
+        $("body").addClass(theme || def);
+        $("#themeToggle").text(theme || def);
+    });
+</script>

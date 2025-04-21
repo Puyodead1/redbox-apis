@@ -1,0 +1,109 @@
+/* Light Mode */
+body.light_mode {
+    background-color: #f4f4f9;
+    color: #333;
+}
+
+.light_mode .form-container, .light_mode .modal-content {
+    background-color: white;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.light_mode h1 {
+    color: #E30613;
+}
+
+.light_mode label {
+    color: #555;
+}
+
+.light_mode input[type="text"], 
+.light_mode input[type="email"], 
+.light_mode input[type="tel"], 
+.light_mode input[type="password"] {
+    border: 1px solid #ddd;
+    background-color: white;
+    color: #333;
+}
+
+.light_mode button {
+    background-color: #E30613;
+    color: white;
+}
+
+.light_mode button:hover {
+    background-color: #d1050f;
+}
+
+.light_mode .message {
+    color: #ff3333;
+}
+
+.light_mode button:disabled {
+    background-color: #ccc;
+}
+
+.light_mode .logout {
+    background-color: #E30613;
+    color: white;
+}
+
+.light_mode select {
+    background-color: #f0f0f0;
+    color: #333;
+}
+
+/* Dark Mode */
+body.dark_mode {
+    background-color: #121212;
+    color: #FFFFFF;
+}
+
+.dark_mode .form-container, .dark_mode .modal-content {
+    background-color: #1E1E1E;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
+}
+
+.dark_mode h1 {
+    color: #E30613;
+}
+
+.dark_mode label {
+    color: #B3B3B3;
+}
+
+.dark_mode input[type="text"], 
+.dark_mode input[type="email"], 
+.dark_mode input[type="tel"], 
+.dark_mode input[type="password"] {
+    border: 1px solid #333333;
+    background-color: #2C2C2C;
+    color: #FFFFFF;
+}
+
+.dark_mode button {
+    background-color: #BB0000;
+    color: white;
+}
+
+.dark_mode button:hover {
+    background-color: #d1050f;
+}
+
+.dark_mode .message {
+    color: #CF6679;
+}
+
+.dark_mode button:disabled {
+    background-color: #333333;
+}
+
+.dark_mode .logout {
+    background-color: #BB0000;
+    color: white;
+}
+
+.dark_mode select {
+    background-color: #2C2C2C;
+    color: #FFFFFF;
+}

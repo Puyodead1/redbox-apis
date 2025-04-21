@@ -5,13 +5,17 @@
     "description": "Reimplementation of the Redbox APIs",
     "private": true,
     "scripts": {
-        "build": "pnpm -r --workspace-concurrency Infinity --filter !db --filter !common build",
+        "build": "node ./filecheck.cjs && pnpm -r --workspace-concurrency Infinity --filter !db --filter !common build",
         "start": "pnpm -r --workspace-concurrency Infinity --filter !db --filter !common --filter !cli --parallel start",
         "clean": "pnpm -r run clean",
         "prebuild": "pnpm --filter db build && pnpm --filter common build",
         "migrate:prod": "pnpm --filter db migrate:prod",
         "migrate:dev": "pnpm --filter db migrate:dev",
         "seed": "pnpm --filter db seed"
+    },
+    "dependencies": {
+        "dotenv": "^16.4.7",
+        "@types/node": "^22.10.2"
     },
     "type": "module",
     "author": "Puyodead1",

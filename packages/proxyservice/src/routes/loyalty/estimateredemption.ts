@@ -1,0 +1,15 @@
+import { Request, Response } from "express";
+import { loyalty } from "@redbox-apis/common";
+
+export const post = [
+    async (req: Request, res: Response) => {
+        if (req.method !== "POST") return res.status(405);
+
+        return res.json({
+            "items": loyalty.estimateRedemption(req.body.ShoppingCart),
+            "kioskId": req.body.KioskId,
+            "success": true,
+            "statusCode": 200
+        });
+    },
+];

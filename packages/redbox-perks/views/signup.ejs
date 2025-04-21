@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=0.6">
+    <title>Signup | Redbox Perks</title>
+    <% if (recaptcha) { %>
+        <script src="https://www.google.com/recaptcha/api.js" async defer></script>
+    <% } %>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+    <%- include('header') %>
+    <div class="form-container">
+        <h1>Signup for Redbox Perks</h1>
+        <p style="text-align: center;">Your free Redbox account gives you perks.<br><b>Get a FREE 1-night disc rental for signing up.</b></p>
+
+        <form id="signup-form">
+            <label for="name">First Name:</label>
+            <input type="text" id="name" name="name" required placeholder="John" style="margin-bottom: 5px;"><br><br>
+
+            <label for="email">Email:</label>
+            <input type="email" id="email" name="email" required placeholder="email@example.com" style="margin-bottom: 5px;"><br><br>
+
+            <label for="password">Password:</label>
+            <input style="margin-bottom: 0px;" type="password" id="password" name="password" placeholder="*************" required><br><br>
+
+            <% if (recaptcha) { %>
+                <div class="g-recaptcha" data-sitekey="<%= recaptcha %>"></div>
+            <% } %>
+            <button type="submit">Signup</button>
+        </form>
+
+        <p class="message" id="message" style="margin-bottom: 0px;"></p>
+    </div>
+    <p style="margin-top: 10px;">Already have an account? <a href="/login">Sign in here.</a></p>
+
+    <%- include('footer') %>
+    <script>
+        const useRecaptcha = <%= recaptcha ? true : false %>;
+        const message = $('#message');
+    
+        $('#signup-form').on('submit', async function(event) {
+            event.preventDefault();
+            message.text('');
+    
+            const firstName = $('#name').val().trim();
+            const emailAddress = $('#email').val().trim();
+            const password = $('#password').val().trim();
+            let recaptchaToken = useRecaptcha && typeof grecaptcha !== 'undefined' ? grecaptcha.getResponse() : null;
+    
+            if (!firstName || !emailAddress || !password) {
+                return message.text('Please fill out all fields before submitting.');
+            } else if(!recaptchaToken && useRecaptcha) {
+                return message.text('In order to verify your request, complete the reCAPTCHA.');
+            }
+
+            try {
+                const response = await $.ajax({
+                    url: '/signup',
+                    method: 'POST',
+                    data: { firstName, emailAddress, password, recaptchaToken },
+                    dataType: 'json'
+                });
+    
+                if(response.error) {
+                    message.text(response.error);
+                    if (useRecaptcha) grecaptcha.reset();
+                } else if(response.success == true) {
+                    window.location.href = '/dashboard';
+                }
+            } catch (error) {
+                message.text('It looks like signups are currently disabled.');
+                console.error(error);
+            }
+        });
+    </script>
+</body>
+</html>

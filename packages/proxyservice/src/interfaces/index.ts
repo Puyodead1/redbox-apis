@@ -3,6 +3,19 @@
  * Do not modify this file manually
  */
 
+export interface CustomerLoginRequest {
+  ActivityId?: string;
+  CustomerProfileNumber?: string;
+  EmailAddress?: string;
+  IsEncrypted?: boolean;
+  KioskId: number;
+  LanguageCode?: string;
+  MessageId: string;
+  Password?: string;
+  PhoneNumber?: string;
+  Pin?: string;
+}
+
 export interface KioskAuthenticateRequest {
   Password: string;
   UseNtAuthentication: boolean;
