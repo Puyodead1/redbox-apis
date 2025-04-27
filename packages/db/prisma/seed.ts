@@ -1,13 +1,13 @@
 import { PrismaClient } from "@prisma/client";
+import { getEnumKey } from "./utils";
 import {
-    getEnumKey,
     PromotionActionCode,
     PromotionGetFormat,
     PromotionIntentCode,
     PromotionRentFormat,
     TitleFamily,
     TitleType,
-} from "@redbox-apis/common";
+} from "./enums";
 const prisma = new PrismaClient();
 
 async function main() {
