@@ -515,29 +515,97 @@
             });
 
             // -- Settings -- //
-            window.sendTestEmail = function() {
-                const emailAddress = prompt('Please enter the email address you would like to send a test email to:');
-                if (!emailAddress) return;
+			window.sendTestEmail = function() {
+				const emailModal = `
+					<div class="modal email-modal">
+						<div class="modal-content">
+							<span class="close-button">×</span>
+							<h2>Enter Email Address</h2>
+							<input type="email" id="testEmail" placeholder="Enter email address" required />
+							<button id="submitEmail">Send Test Email</button>
+							<div id="email-error" style="color: red; display: none;">Please enter a valid email address.</div>
+						</div>
+					</div>
+				`;
+				$('body').append(emailModal);
+				$('.email-modal').fadeIn();
 
-                $.ajax({
-                    url: '/admin/send-test-email',
-                    method: 'POST',
-                    dataType: 'json',
-                    data: { emailAddress },
-                    success: function(response) {
-                        if(response.error) {
-                            console.error(response.error);
-                            alert('Failed to send test email. Please check the console for more details.');
-                        } else {
-                            alert('Your test email has been requested, you should receive it within the next 2 minutes.');
-                        }
-                    },
-                    error: function(xhr, status, error) {
-                        console.error(error);
-                        alert('An unknown server error occurred. Please check the console for more details.');
-                    }
-                });
-            };
+				// Close modal functionality
+				function closeModal() {
+					$('.email-modal').fadeOut(function() {
+						$(this).remove();
+					});
+				}
+
+				// Close the modal when the close button is clicked
+				$('.close-button').on('click', function() {
+					closeModal();
+				});
+
+				// Handle email submission
+				$('#submitEmail').on('click', function() {
+					const emailAddress = $('#testEmail').val().trim();
+					if (!emailAddress || !validateEmail(emailAddress)) {
+						$('#email-error').show();
+						return;
+					} else {
+					    closeModal();
+					}
+					showStatusModal('Loading', 'Sending test email, please wait...');
+
+					// Send the test email via AJAX
+					$.ajax({
+						url: '/admin/send-test-email',
+						method: 'POST',
+						data: { emailAddress },
+						dataType: 'json',
+						success: function(response) {
+							if (response.success) {
+								updateStatusModal('Success', 'Test email successfully sent!');
+							} else {
+								updateStatusModal('Error', 'Failed to send the test email. Please try again.');
+							}
+						},
+						error: function(xhr, status, error) {
+							const errorMessage = `Failed to send the test email. HTTP Response Code: ${xhr.status}.`;
+							updateStatusModal('Error', errorMessage);
+						}
+					});
+
+					function updateStatusModal(type, message) {
+						$('.status-modal h2').text(type);
+						$('.status-modal p').text(message);
+					}
+				});
+			};
+
+			// Function to validate email format
+			function validateEmail(email) {
+				const regex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}$/;
+				return regex.test(email);
+			}
+
+			// Function to show a status modal (initially shows "Loading")
+			function showStatusModal(type, message) {
+				const modal = `
+					<div class="modal status-modal">
+						<div class="modal-content">
+							<span class="close-button">×</span>
+							<h2>${type}</h2>
+							<p>${message}</p>
+						</div>
+					</div>
+				`;
+				$('body').append(modal);
+				$('.status-modal').fadeIn();
+
+				// Close status modal functionality
+				$('.status-modal .close-button').on('click', function() {
+					$('.status-modal').fadeOut(function() {
+						$(this).remove();
+					});
+				});
+			}
         });
     </script>
 </body>
