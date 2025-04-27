@@ -15,23 +15,3 @@ export interface User {
   };
   promoCodes: any[];
 }
-
-export interface Store {
-  Id: number;
-  Address: string;
-  City: string;
-  State: string;
-  ZipCode: string;
-  DueTime: string;
-  MarketName: string;
-  KaseyaMarketName: string;
-  BannerId: string;
-  StateId: string;
-
-  Banner?: string;
-}
-
-export interface Banner {
-  Id: number;
-  Name: string;
-}

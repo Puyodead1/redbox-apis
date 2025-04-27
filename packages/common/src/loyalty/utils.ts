@@ -1,4 +1,4 @@
-import { User, Store, Banner } from "./types";
+import { User } from "./types";
 import path from "path";
 import fs from "fs";
 import dotenv from "dotenv";
@@ -77,16 +77,13 @@ export async function createCPN(): Promise<string> {
 // --- Stores Database --- //
 
 // Uses the Redbox database (thanks Puyo) to find the store address from ID
-export async function getStore(kioskId: string | number): Promise<Store | null> {
-  const [stores, banners]: [Store[], Banner[]] = await Promise.all([
-    fs.promises.readFile(path.join(database, "src", "stores.json"), "utf8").then(JSON.parse),
-    fs.promises.readFile(path.join(database, "src", "banners.json"), "utf8").then(JSON.parse)
-  ]);
-
-  const store = stores.find((s) => s.Id === Number(kioskId));
+import { IStore, stores, banners } from "@redbox-apis/db";
+export async function getStore(kioskId: string | number): Promise<(IStore & { Banner: string }) | null> {
+  const store = stores.find((s: any) => s.Id === Number(kioskId));
   if (!store) return null;
 
-  store.Banner = banners.find((b) => b.Id === Number(store.BannerId))?.Name || "Unknown";
-
-  return store;
+  return {
+    ...store,
+    Banner: banners.find((b: any) => b.Id === Number(store.BannerId))?.Name || "Unknown",
+  };
 }

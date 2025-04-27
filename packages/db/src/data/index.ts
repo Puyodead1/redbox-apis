@@ -2,7 +2,7 @@ import stateData from "./states.json";
 import storeData from "./stores.json";
 import bannerData from "./banners.json"
 
-interface IStore {
+export interface IStore {
     Id: number;
     Address: string;
     City: string | null;
