@@ -9,6 +9,16 @@ export interface AppConfig {
   dbConfig: DbConfig;
   iotCertificateServiceConfig: ServiceConfig;
   kioskInventoryServiceConfig: ServiceConfig;
+  loginInfo: {
+    desktop: {
+      password: string;
+      username: string;
+    }[];
+    field: {
+      password: string;
+      username: string;
+    }[];
+  };
   proxyServiceConfig: ServiceConfig;
   reelsConfig: ServiceConfig;
   transactionServiceConfig: ServiceConfig;

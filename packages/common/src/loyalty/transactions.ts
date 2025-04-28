@@ -1,13 +1,7 @@
 import { getPrisma } from "@redbox-apis/db";
 import path from "path";
 import fs from "fs";
-import dotenv from "dotenv";
 
-dotenv.config({ path: "../../.env" });
-const dbPath = process.env.DATABASE_PATH || "database";
-const database = path.isAbsolute(dbPath)
-  ? dbPath
-  : path.join(__dirname, "../../../../", dbPath);
 
 export async function createTransNumber(): Promise<string> {
   const prisma = await getPrisma();

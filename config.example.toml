@@ -1,3 +1,5 @@
+# Server Ports
+
 [adServerConfig]
 port = 3014
 host = "127.0.0.1"
@@ -28,3 +30,15 @@ host = "127.0.0.1"
 [transactionServiceConfig]
 port = 3015
 host = "127.0.0.1"
+
+# Redbox Desktop + Field Maintenance Credentials
+
+[[loginInfo.desktop]] # Redbox Desktop
+username = "admin"
+password = "1234"
+
+[[loginInfo.field]] # Field Maintenance
+username = "admin"
+password = "1234"
+
+# ... add any more logins here

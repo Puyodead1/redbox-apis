@@ -129,8 +129,7 @@ Listed are the workspace scripts, individual packages may specify their own addi
 -   `seed` - Seed the database, mainly for development, currently is just for adding promo codes for testing
 
 ## Files
-Within this project, you'll find the following files in the `database/` folder:
-- **credentials.json**: Use the credentials in this file to log in to Redbox Desktop or Field Maintenance on your kiosk. You can update these credentials at any time!
+Within this project, you'll find the following file in the `database/` folder:
 - **users.json**: This file stores user accounts for the Redbox Perks loyalty system. By default, user PIN/passwords are hashed and salted (thanks to [**bcrypt.js**](https://github.com/dcodeIO/bcrypt.js)) for extra security.
 
 *(within this folder, you'll find example files for these named `______.example.json`. to create this required files, copy them and rename to the appropriate name)*

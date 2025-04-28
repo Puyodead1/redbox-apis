@@ -133,5 +133,4 @@ certificates/
 
 # Loyalty database and configurations
 .env
-database/credentials.json
 database/users.json

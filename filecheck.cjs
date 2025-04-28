@@ -30,7 +30,7 @@ async function checkAllFiles() {
     const database = path.isAbsolute(dbPath) ? dbPath : path.join(__dirname, dbPath);
 
     // Check if each required file exists, if not, create it with default content
-    const requiredFiles = ['credentials.json', 'users.json'];
+    const requiredFiles = ['users.json'];
 
     if (!fs.existsSync(database)) {
         throw new Error("Critical error: Database path does not exist, it looks like you're missing required files. Please re-download this project.");
@@ -45,8 +45,6 @@ async function checkAllFiles() {
             let example = path.join(database, file.replace('.json', '.example.json'));
             if (fs.existsSync(example)) {
                 content = JSON.parse(fs.readFileSync(example, 'utf8'));
-            } else if(file === 'credentials.json') {
-                content = { "desktop": [], "field": [] };
             } else if(file === 'users.json') {
                 content = [];
             }

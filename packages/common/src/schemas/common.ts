@@ -156,6 +156,16 @@ export const ServiceConfigSchema = Joi.object({
 
 export const DbConfigSchema = Joi.object({}).meta({ className: "DbConfig" });
 
+const UserSchema = Joi.object({
+  username: Joi.string().required(),
+  password: Joi.string().required(),
+});
+
+const LoginInfoSchema = Joi.object({
+  desktop: Joi.array().items(UserSchema).required(),
+  field: Joi.array().items(UserSchema).required(),
+});
+
 export const AppConfigSchema = Joi.object({
   adServerConfig: ServiceConfigSchema.required(),
   dataServiceConfig: ServiceConfigSchema.required(),
@@ -165,4 +175,5 @@ export const AppConfigSchema = Joi.object({
   proxyServiceConfig: ServiceConfigSchema.required(),
   reelsConfig: ServiceConfigSchema.required(),
   transactionServiceConfig: ServiceConfigSchema.required(),
+  loginInfo: LoginInfoSchema.required(),
 }).meta({ className: "AppConfig" });
