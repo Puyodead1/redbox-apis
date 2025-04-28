@@ -122,6 +122,9 @@ dist
 .yarn/install-state.gz
 .pnp.*
 
+
+## -- Start custom ignore list --
+config.toml
 redbox.db*
 RootCA.crt
 RootCA.key

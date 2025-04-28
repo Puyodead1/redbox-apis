@@ -1,11 +1,14 @@
-import { logger, loggingMiddleware } from "@redbox-apis/common";
+import { Config, logger, loggingMiddleware } from "@redbox-apis/common";
 import { getPrisma } from "@redbox-apis/db";
 import { errors } from "celebrate";
 import express from "express";
 import { router } from "express-file-routing";
 
-const PORT = 3013;
+const config = Config.get();
 const app = express();
+
+const PORT = config.dataServiceConfig.port;
+const HOST = config.dataServiceConfig.host;
 
 (async () => {
     await getPrisma();
@@ -17,7 +20,7 @@ const app = express();
 
     app.use(errors());
 
-    app.listen(PORT, () => {
+    app.listen(PORT, HOST, () => {
         logger.info(`Server is running on port ${PORT}`);
     });
 })();

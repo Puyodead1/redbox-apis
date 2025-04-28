@@ -1,13 +1,16 @@
-import { KeyService, logger, loggingMiddleware } from "@redbox-apis/common";
+import { Config, KeyService, logger, loggingMiddleware } from "@redbox-apis/common";
 import { errors } from "celebrate";
 import express from "express";
 import { router } from "express-file-routing";
 import { EncryptionService } from "./EncryptionService";
 
-const PORT = 3018;
+const config = Config.get();
 const app = express();
 
-(async () => {
+const PORT = config.iotCertificateServiceConfig.port;
+const HOST = config.iotCertificateServiceConfig.host;
+
++(async () => {
     const keyService = new KeyService();
     const encryptionService = new EncryptionService();
 
@@ -24,7 +27,7 @@ const app = express();
 
     app.use(errors());
 
-    app.listen(PORT, () => {
+    app.listen(PORT, HOST, () => {
         logger.info(`Server is running on port ${PORT}`);
     });
 })();
