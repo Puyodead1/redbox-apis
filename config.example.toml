@@ -1,30 +1,30 @@
 [adServerConfig]
 port = 3014
-host = "localhost"
+host = "127.0.0.1"
 
 [dataServiceConfig]
 port = 3013
-host = "localhost"
+host = "127.0.0.1"
 
 [dbConfig]
 # nothing here yet
 
 [iotCertificateServiceConfig]
 port = 3018
-host = "localhost"
+host = "127.0.0.1"
 
 [kioskInventoryServiceConfig]
 port = 3017
-host = "localhost"
+host = "127.0.0.1"
 
 [proxyServiceConfig]
 port = 3012
-host = "localhost"
+host = "127.0.0.1"
 
 [reelsConfig]
 port = 3016
-host = "localhost"
+host = "127.0.0.1"
 
 [transactionServiceConfig]
 port = 3015
-host = "localhost"
+host = "127.0.0.1"
