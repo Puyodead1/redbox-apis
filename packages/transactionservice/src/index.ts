@@ -1,10 +1,13 @@
-import { logger, loggingMiddleware } from "@redbox-apis/common";
+import { Config, logger, loggingMiddleware } from "@redbox-apis/common";
 import { errors } from "celebrate";
 import express from "express";
 import { router } from "express-file-routing";
 
-const PORT = 3015;
+const config = Config.get();
 const app = express();
+
+const PORT = config.transactionServiceConfig.port;
+const HOST = config.transactionServiceConfig.host;
 
 (async () => {
     app.use(express.json());
@@ -15,7 +18,7 @@ const app = express();
 
     app.use(errors());
 
-    app.listen(PORT, () => {
+    app.listen(PORT, HOST, () => {
         logger.info(`Server is running on port ${PORT}`);
     });
 })();
