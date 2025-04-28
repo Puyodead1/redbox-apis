@@ -7,43 +7,48 @@ import { IOTCertificateGenerateRequest } from "../../interfaces";
 import { IOTCertificateGenerateRequestSchema } from "../../schemas/IOTCertificateGenerateRequestSchema";
 
 export const post = [
-    celebrate({
-        [Segments.BODY]: IOTCertificateGenerateRequestSchema,
-        [Segments.HEADERS]: Joi.object({
-            password: Joi.string().required(),
-        }).unknown(true),
-    }),
-    async (req: Request, res: Response) => {
-        if (req.method !== "POST") return res.status(405);
+  celebrate({
+    [Segments.BODY]: IOTCertificateGenerateRequestSchema,
+    [Segments.HEADERS]: Joi.object({
+      password: Joi.string().required(),
+    }).unknown(true),
+  }),
+  async (req: Request, res: Response) => {
+    if (req.method !== "POST") return res.status(405);
 
-        const body = req.body as IOTCertificateGenerateRequest;
-        const password = req.header("password");
+    const body = req.body as IOTCertificateGenerateRequest;
+    const password = req.header("password");
 
-        const encryptionService = req.app.locals.encryptionService as EncryptionService;
+    const encryptionService = req.app.locals
+      .encryptionService as EncryptionService;
 
-        const kioskId = encryptionService.decrypt(body.name);
-        const thingType = encryptionService.decrypt(body.type);
+    const kioskId = encryptionService.decrypt(body.name);
+    const thingType = encryptionService.decrypt(body.type);
 
-        logger.info(`CertificateGenerate for kioskId: ${kioskId}, type: ${thingType}, kioskPassword: ${password}`);
+    logger.info(
+      `CertificateGenerate for kioskId: ${kioskId}, type: ${thingType}, kioskPassword: ${password}`,
+    );
 
-        const generated: { deviceClientPfx: string; certificateId: string } =
-            await req.app.locals.keyService.generateDeviceCertificate(kioskId);
+    const generated: { deviceClientPfx: string; certificateId: string } =
+      await req.app.locals.keyService.generateDeviceCertificate(kioskId);
 
-        const prisma = await getPrisma();
-        await prisma.deviceCertificate.create({
-            data: {
-                certificateId: generated.certificateId,
-                deviceId: kioskId,
-                devicePfx: generated.deviceClientPfx,
-            },
-        });
+    const prisma = await getPrisma();
+    await prisma.deviceCertificate.create({
+      data: {
+        certificateId: generated.certificateId,
+        deviceId: kioskId,
+        devicePfx: generated.deviceClientPfx,
+      },
+    });
 
-        logger.debug(`Generated certificate for kioskId: ${kioskId}, certificateId: ${generated.certificateId}`);
+    logger.debug(
+      `Generated certificate for kioskId: ${kioskId}, certificateId: ${generated.certificateId}`,
+    );
 
-        return res.json({
-            DeviceCertPfxBase64: generated.deviceClientPfx,
-            CertificateId: generated.certificateId,
-            RootCa: req.app.locals.keyService.getRootCA(),
-        });
-    },
+    return res.json({
+      DeviceCertPfxBase64: generated.deviceClientPfx,
+      CertificateId: generated.certificateId,
+      RootCa: req.app.locals.keyService.getRootCA(),
+    });
+  },
 ];

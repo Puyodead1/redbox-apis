@@ -1,5 +1,5 @@
 export enum WalletType {
-    None,
-    Apple,
-    Google,
+  None,
+  Apple,
+  Google,
 }

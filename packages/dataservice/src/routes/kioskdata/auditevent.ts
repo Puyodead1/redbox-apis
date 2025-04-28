@@ -1,12 +1,10 @@
-import { celebrate, Segments } from "celebrate";
 import { Request, Response } from "express";
 import StandardResponse from "../../interfaces/StandardResponse";
-import { RebootStatusRequestSchema } from "../../schemas/RebootStatusRequestSchema";
 
 export const post = [
-  celebrate({
-    [Segments.BODY]: RebootStatusRequestSchema,
-  }),
+  // celebrate({
+  //     [Segments.BODY]: DeviceStatusRequestSchema,
+  // }),
   async (req: Request, res: Response) => {
     if (req.method !== "POST") return res.status(405);
 

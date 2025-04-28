@@ -4,7 +4,25 @@
  */
 
 export interface CardStatsRequest {
-  CardBrand: '0' | '1' | '2' | '3' | '4' | '5' | '6' | '7' | '8' | 'Unknown' | 'VISA' | 'Mastercard' | 'Amex' | 'Discover' | 'DinersClub' | 'ExpressPay' | 'DPASCL' | 'UnionPay';
+  CardBrand:
+    | "0"
+    | "1"
+    | "2"
+    | "3"
+    | "4"
+    | "5"
+    | "6"
+    | "7"
+    | "8"
+    | "Unknown"
+    | "VISA"
+    | "Mastercard"
+    | "Amex"
+    | "Discover"
+    | "DinersClub"
+    | "ExpressPay"
+    | "DPASCL"
+    | "UnionPay";
   ErrorCode: string;
   HasPayData: boolean;
   HasVasData: boolean;
@@ -12,11 +30,55 @@ export interface CardStatsRequest {
   KioskId: number;
   ManufacturerSerialNumber: string;
   RBAVersion: string;
-  ReadResult: '0' | '1' | '2' | '3' | '4' | '5' | '6' | '7' | '8' | '9' | '10' | '11' | '998' | '999' | 'GoodRead' | 'BadRead' | 'Cancelled' | 'ButtonPressed' | 'ClessCardFloorLimitExceeded' | 'MaxClessFloorLimitExceeded' | 'InvalidPrompt' | 'EncryptionFailed' | 'BadKeyCard' | 'BadFormatOf23' | 'AmountWasNotSetAndContactlessReaderWasNotEnabled' | 'AtLeastOneSpecifiedReaderIsDisabled' | 'InvalidExitCode' | 'NotPerformed';
+  ReadResult:
+    | "0"
+    | "1"
+    | "2"
+    | "3"
+    | "4"
+    | "5"
+    | "6"
+    | "7"
+    | "8"
+    | "9"
+    | "10"
+    | "11"
+    | "998"
+    | "999"
+    | "GoodRead"
+    | "BadRead"
+    | "Cancelled"
+    | "ButtonPressed"
+    | "ClessCardFloorLimitExceeded"
+    | "MaxClessFloorLimitExceeded"
+    | "InvalidPrompt"
+    | "EncryptionFailed"
+    | "BadKeyCard"
+    | "BadFormatOf23"
+    | "AmountWasNotSetAndContactlessReaderWasNotEnabled"
+    | "AtLeastOneSpecifiedReaderIsDisabled"
+    | "InvalidExitCode"
+    | "NotPerformed";
   RevisionNumber: number;
   SessionId?: string;
-  SourceType: '0' | '1' | '2' | '3' | '4' | '5' | '6' | '7' | 'Unknown' | 'Swipe' | 'EMVContact' | 'QuickChip' | 'MSDContactless' | 'EMVContactless' | 'Mobile' | 'VASOnly';
+  SourceType:
+    | "0"
+    | "1"
+    | "2"
+    | "3"
+    | "4"
+    | "5"
+    | "6"
+    | "7"
+    | "Unknown"
+    | "Swipe"
+    | "EMVContact"
+    | "QuickChip"
+    | "MSDContactless"
+    | "EMVContactless"
+    | "Mobile"
+    | "VASOnly";
   TgzVersion: string;
   VasErrorCode: string;
-  WalletFormat: '0' | '1' | '2' | 'None' | 'Apple' | 'Google';
+  WalletFormat: "0" | "1" | "2" | "None" | "Apple" | "Google";
 }

@@ -5,16 +5,16 @@ import { UpdateMerchandizingStatusRequestSchema } from "../../schemas/UpdateMerc
 import { UpdateMerchandizingStatusResponse } from "../../types";
 
 export const post = [
-    celebrate({
-        [Segments.BODY]: UpdateMerchandizingStatusRequestSchema,
-    }),
-    async (req: Request, res: Response) => {
-        if (req.method !== "POST") return res.status(405);
+  celebrate({
+    [Segments.BODY]: UpdateMerchandizingStatusRequestSchema,
+  }),
+  async (req: Request, res: Response) => {
+    if (req.method !== "POST") return res.status(405);
 
-        const body: UpdateMerchandizingStatusRequest = req.body;
+    const body: UpdateMerchandizingStatusRequest = req.body;
 
-        return res.json({
-            Data: [],
-        } as UpdateMerchandizingStatusResponse);
-    },
+    return res.json({
+      Data: [],
+    } as UpdateMerchandizingStatusResponse);
+  },
 ];

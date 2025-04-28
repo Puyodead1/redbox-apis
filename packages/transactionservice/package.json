@@ -7,8 +7,7 @@
     "scripts": {
         "build": "tsc",
         "start": "node dist/index.js",
-        "clean": "rimraf dist server.log",
-        "types": "ts-node scripts/types.ts"
+        "clean": "rimraf dist server.log"
     },
     "keywords": [],
     "author": "Puyodead1",

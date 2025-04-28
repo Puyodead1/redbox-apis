@@ -5,22 +5,22 @@ import { IPendingBannersResponse } from "../../types";
 import { banners } from "@redbox-apis/db";
 
 export const get = [
-    celebrate({
-        [Segments.QUERY]: {
-            stateid: Joi.string().required(),
-        },
-    }),
-    async (req: Request, res: Response) => {
-        if (req.method !== "GET") return res.status(405);
-
-        // TODO: I dont really see the point of implementing this
-        const stateId = req.query.stateid as string;
-
-        return res.json({
-            MessageId: v4(),
-            Success: true,
-            Errors: [],
-            Banners: banners,
-        } as IPendingBannersResponse);
+  celebrate({
+    [Segments.QUERY]: {
+      stateid: Joi.string().required(),
     },
+  }),
+  async (req: Request, res: Response) => {
+    if (req.method !== "GET") return res.status(405);
+
+    // TODO: I dont really see the point of implementing this
+    const stateId = req.query.stateid as string;
+
+    return res.json({
+      MessageId: v4(),
+      Success: true,
+      Errors: [],
+      Banners: banners,
+    } as IPendingBannersResponse);
+  },
 ];

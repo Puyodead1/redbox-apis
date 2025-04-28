@@ -1,10 +1,10 @@
 export default interface StandardResponse {
-    Success: boolean;
-    Errors: Error[];
-    StatusCode: number;
+  Success: boolean;
+  Errors: Error[];
+  StatusCode: number;
 }
 
 interface Error {
-    Code: string;
-    Message: string;
+  Code: string;
+  Message: string;
 }

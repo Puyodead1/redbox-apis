@@ -17,33 +17,39 @@ const transporter = nodemailer.createTransport({
 // --- Utility Functions ---
 function formatDate(isoString: string): string {
   const date = new Date(isoString);
-  return date.toLocaleString("en-US", {
+  return date
+    .toLocaleString("en-US", {
       year: "numeric",
       month: "numeric",
       day: "numeric",
       hour: "numeric",
       minute: "numeric",
       second: "numeric",
-      hour12: true
-  }).replace(',', '');
+      hour12: true,
+    })
+    .replace(",", "");
 }
 
 function fromCardBIN(bin?: string | number): string {
-  if(!bin) return 'Promo';
+  if (!bin) return "Promo";
   const binStr = bin.toString();
-    
-  if (/^4/.test(binStr)) return 'Visa';
-  if (/^5[1-5]/.test(binStr)) return 'Mastercard';
-  if (/^3[47]/.test(binStr)) return 'American Express';
-  if (/^6(?:011|5)/.test(binStr)) return 'Discover';
-  if (/^35/.test(binStr)) return 'JCB';
-  if (/^(?:2131|1800)/.test(binStr)) return 'JCB (Old)';
 
-  return 'Other';
+  if (/^4/.test(binStr)) return "Visa";
+  if (/^5[1-5]/.test(binStr)) return "Mastercard";
+  if (/^3[47]/.test(binStr)) return "American Express";
+  if (/^6(?:011|5)/.test(binStr)) return "Discover";
+  if (/^35/.test(binStr)) return "JCB";
+  if (/^(?:2131|1800)/.test(binStr)) return "JCB (Old)";
+
+  return "Other";
 }
 
 // --- Main Functions ---
-export async function sendSignup(email: string, password: string, kioskId: string | number) {
+export async function sendSignup(
+  email: string,
+  password: string,
+  kioskId: string | number,
+) {
   const store = await getStore(kioskId);
 
   const info = await transporter.sendMail({
@@ -53,12 +59,12 @@ export async function sendSignup(email: string, password: string, kioskId: strin
     html: `
         <p>You're in! Thanks for signing up at your local Redbox kiosk.</p>
         <p><strong>Your temporary password for your Redbox account is: <code>${password}</code></strong></p>
-        <p>You can access your online account by <a href="https://${process.env.BASE_DOMAIN || 'redbox.com'}/login">clicking here</a>.</p>
+        <p>You can access your online account by <a href="https://${process.env.BASE_DOMAIN || "redbox.com"}/login">clicking here</a>.</p>
         <p>If you didn't create this account, please reply to this email immediately to let us know.</p>
 
         <br><p>As a special thanks for signing up, you'll receive a FREE 1-night disc rental on your next purchase. Thanks for being a part of Redbox!</p>
         <small>Your sign-up was made at the following kiosk address: <strong>${store!.Address}, ${store!.City}, ${store!.State} ${store!.ZipCode}</strong> (Kiosk #${kioskId})</small>
-    `
+    `,
   });
 
   return info;
@@ -75,14 +81,29 @@ export async function sendReceipt(orderId: string | number, data: any = {}) {
     adjustedSubtotal?: string;
   } = {};
 
-  if(data?.ShoppingCart?.Groups) {
+  if (data?.ShoppingCart?.Groups) {
     transactionDetails = {
-        subtotal: data.ShoppingCart.Groups.reduce((sum: number, group: any) => sum + group.Totals.Subtotal, 0).toFixed(2),
-        tax: data.ShoppingCart.Groups.reduce((sum: number, group: any) => sum + group.Totals.TaxAmount, 0).toFixed(2),
-        total: data.ShoppingCart.Groups.reduce((sum: number, group: any) => sum + group.Totals.GrandTotal, 0).toFixed(2),
+      subtotal: data.ShoppingCart.Groups.reduce(
+        (sum: number, group: any) => sum + group.Totals.Subtotal,
+        0,
+      ).toFixed(2),
+      tax: data.ShoppingCart.Groups.reduce(
+        (sum: number, group: any) => sum + group.Totals.TaxAmount,
+        0,
+      ).toFixed(2),
+      total: data.ShoppingCart.Groups.reduce(
+        (sum: number, group: any) => sum + group.Totals.GrandTotal,
+        0,
+      ).toFixed(2),
 
-        discount: data.ShoppingCart.Discounts.reduce((sum: number, item: any) => sum + item.Amount, 0).toFixed(2),
-        adjustedSubtotal: data.ShoppingCart.Groups.reduce((sum: number, group: any) => sum + group.Totals.DiscountedSubtotal, 0).toFixed(2),
+      discount: data.ShoppingCart.Discounts.reduce(
+        (sum: number, item: any) => sum + item.Amount,
+        0,
+      ).toFixed(2),
+      adjustedSubtotal: data.ShoppingCart.Groups.reduce(
+        (sum: number, group: any) => sum + group.Totals.DiscountedSubtotal,
+        0,
+      ).toFixed(2),
     };
   }
 
@@ -115,22 +136,22 @@ export async function sendReceipt(orderId: string | number, data: any = {}) {
             </tr>
             <tr>
                 <td><b>Order Total:</b></td>
-                <td>${transactionDetails?.total || '0.00'}</td>
+                <td>${transactionDetails?.total || "0.00"}</td>
             </tr>
             <tr>
                 <td><b>Payment Card:</b></td>
-                <td>${fromCardBIN(data?.CreditCard?.BIN)}....${data?.CreditCard?.LastFour || '0000'}</td>
+                <td>${fromCardBIN(data?.CreditCard?.BIN)}....${data?.CreditCard?.LastFour || "0000"}</td>
             </tr>
             <tr>
                 <td><b>Redbox Location:</b></td>
-                <td>${store?.Banner || 'Unknown'} <a href="${data.KioskId ? ('http://www.redbox.com/movies/kiosk/' + data.KioskId) : 'http://www.redbox.com/'}">(see available movies)</a></tr>
+                <td>${store?.Banner || "Unknown"} <a href="${data.KioskId ? "http://www.redbox.com/movies/kiosk/" + data.KioskId : "http://www.redbox.com/"}">(see available movies)</a></tr>
             <tr>
                 <td/>
-                <td>${store?.Address || 'Address not found'}</td>
+                <td>${store?.Address || "Address not found"}</td>
             </tr>
             <tr>
                 <td/>
-                <td>${(store!.City && store!.State && store!.ZipCode) ? (store!.City + ', ' + store!.State + ' ' + store!.ZipCode) : ''}</td>
+                <td>${store!.City && store!.State && store!.ZipCode ? store!.City + ", " + store!.State + " " + store!.ZipCode : ""}</td>
             </tr>
         </table>
         <table id="TransactionTable" style="width:100%;" cellSpacing="0" cellPadding="0" border="0">
@@ -158,12 +179,12 @@ export async function sendReceipt(orderId: string | number, data: any = {}) {
             <tr>
                 <td colspan="2"></td>
                 <td>Subtotal:</td>
-                <td align="left">${transactionDetails?.subtotal || '0.00'}</td>
+                <td align="left">${transactionDetails?.subtotal || "0.00"}</td>
             </tr>
             <tr>
                 <td colspan="2"></td>
                 <td>Promo Savings:</td>
-                <td align="left">${transactionDetails?.discount || '0.00'}</td>
+                <td align="left">${transactionDetails?.discount || "0.00"}</td>
             </tr>
             <tr>
                 <td colspan="2"></td>
@@ -175,12 +196,12 @@ export async function sendReceipt(orderId: string | number, data: any = {}) {
                 <td colspan="2">Reserve it online to guarantee it's there: <a href="http://www.redbox.com">www.redbox.com</a></td>
                 </td>
                 <td>Adjusted Subtotal:</td>
-                <td align="left">${transactionDetails?.adjustedSubtotal || '0.00'}</td>
+                <td align="left">${transactionDetails?.adjustedSubtotal || "0.00"}</td>
             </tr>
             <tr>
                 <td colspan="2"></td>
                 <td>Tax:</td>
-                <td align="left">${transactionDetails?.tax || '0.00'}</td>
+                <td align="left">${transactionDetails?.tax || "0.00"}</td>
             </tr>
             <tr>
                 <td colspan="2"></td>
@@ -191,7 +212,7 @@ export async function sendReceipt(orderId: string | number, data: any = {}) {
             <tr>
                 <td colspan="2"></td>
                 <td>TOTAL CHARGE:</td>
-                <td align="left">${transactionDetails?.total || '0.00'}</td>
+                <td align="left">${transactionDetails?.total || "0.00"}</td>
             </tr>
         </table><b>Questions? Comments? Talk to redbox!</b>
         <hr class="ThinHr" />
@@ -213,34 +234,34 @@ export async function sendReceipt(orderId: string | number, data: any = {}) {
     </html>
     `;
 
-    let lineItems = '';
-    if(data?.ShoppingCart?.Groups) {
-        data.ShoppingCart.Groups.forEach((group: any) => {
-            group.Items.forEach((item: any) => {
-                lineItems += `
+    let lineItems = "";
+    if (data?.ShoppingCart?.Groups) {
+      data.ShoppingCart.Groups.forEach((group: any) => {
+        group.Items.forEach((item: any) => {
+          lineItems += `
                 <tr class="LineItem">
                     <td>${item.ProductName}</td>
                     <td align="left">${item.Barcode}</td>
-                    <td align="left">${group.GroupType === 1 ? 'Rental' : 'Purchase'}</td>
+                    <td align="left">${group.GroupType === 1 ? "Rental" : "Purchase"}</td>
                     <td align="left">$${group.GroupType === 1 ? item.Pricing.InitialNight.toFixed(2) : item.Pricing.Purchase.toFixed(2)}</td>
                     <td> </td>
                 </tr>
                 `;
-            });
         });
+      });
     }
-    html = html.replace('--- INSERT LINE ITEMS HERE ---', lineItems);
+    html = html.replace("--- INSERT LINE ITEMS HERE ---", lineItems);
 
     const info = await transporter.sendMail({
-        from: `"Redbox Receipts" <${process.env.SMTP_USERNAME}>`,
-        to: data.Email,
-        subject: `Redbox Receipt for ${orderId}`,
-        html: html
+      from: `"Redbox Receipts" <${process.env.SMTP_USERNAME}>`,
+      to: data.Email,
+      subject: `Redbox Receipt for ${orderId}`,
+      html: html,
     });
 
     return info;
   } catch (error) {
-      console.log(error);
-      throw error;
+    console.log(error);
+    throw error;
   }
 }

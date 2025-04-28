@@ -10,5 +10,17 @@ export interface RebootStatusRequest {
   ExpectedTime?: Date;
   Id?: string;
   KioskId: number;
-  Type: 'Scheduled' | 'Manual' | 'Automatic' | 'Disconnect' | 'FileUpdate' | 'OfflineCommandFailure' | 0 | 1 | 2 | 3 | 4 | 5;
+  Type:
+    | "Scheduled"
+    | "Manual"
+    | "Automatic"
+    | "Disconnect"
+    | "FileUpdate"
+    | "OfflineCommandFailure"
+    | 0
+    | 1
+    | 2
+    | 3
+    | 4
+    | 5;
 }

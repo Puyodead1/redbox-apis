@@ -11,16 +11,16 @@ const PORT = config.dataServiceConfig.port;
 const HOST = config.dataServiceConfig.host;
 
 (async () => {
-    await getPrisma();
-    app.use(express.json());
+  await getPrisma();
+  app.use(express.json());
 
-    loggingMiddleware(app, logger);
+  loggingMiddleware(app, logger);
 
-    app.use("/api", await router());
+  app.use("/api", await router());
 
-    app.use(errors());
+  app.use(errors());
 
-    app.listen(PORT, HOST, () => {
-        logger.info(`Server is running on port ${PORT}`);
-    });
+  app.listen(PORT, HOST, () => {
+    logger.info(`Server is running on port ${PORT}`);
+  });
 })();

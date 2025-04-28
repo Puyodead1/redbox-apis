@@ -1,4 +1,4 @@
 export interface DiscountValidationCampaignTitlesResult {
-    Include: boolean;
-    Titles: number[];
+  Include: boolean;
+  Titles: number[];
 }

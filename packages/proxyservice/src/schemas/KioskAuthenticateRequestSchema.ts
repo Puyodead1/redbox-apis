@@ -1,7 +1,9 @@
 import { Joi } from "celebrate";
 
 export const KioskAuthenticateRequestSchema = Joi.object({
-    Username: Joi.string().required(),
-    Password: Joi.string().required(),
-    UseNtAuthentication: Joi.boolean().required(),
-}).unknown().meta({ className: "KioskAuthenticateRequest" });
+  Username: Joi.string().required(),
+  Password: Joi.string().required(),
+  UseNtAuthentication: Joi.boolean().required(),
+})
+  .unknown()
+  .meta({ className: "KioskAuthenticateRequest" });

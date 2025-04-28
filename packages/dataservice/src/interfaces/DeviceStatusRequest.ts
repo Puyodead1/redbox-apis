@@ -7,7 +7,23 @@ export interface DeviceStatusRequest {
   Assembly: string;
   EMVClessVersion: string;
   EMVContactVersion: string;
-  ErrorState: 'None' | 'FailedToInitializeConnection' | 'FailedToUpdateDevice' | 'NoDeviceFound' | 'ConnectionError' | 'EncryptionError' | 'Tampered' | 'Unknown' | 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7;
+  ErrorState:
+    | "None"
+    | "FailedToInitializeConnection"
+    | "FailedToUpdateDevice"
+    | "NoDeviceFound"
+    | "ConnectionError"
+    | "EncryptionError"
+    | "Tampered"
+    | "Unknown"
+    | 0
+    | 1
+    | 2
+    | 3
+    | 4
+    | 5
+    | 6
+    | 7;
   Id?: number;
   InjectedKeys: string;
   LocalTime: Date;

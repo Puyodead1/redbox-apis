@@ -1,5 +1,5 @@
 export enum TitleFamily {
-    All,
-    Movies,
-    Games,
+  All,
+  Movies,
+  Games,
 }

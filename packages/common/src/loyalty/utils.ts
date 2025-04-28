@@ -5,14 +5,19 @@ import dotenv from "dotenv";
 
 dotenv.config({ path: "../../.env" });
 const dbPath = process.env.DATABASE_PATH || "database";
-const database = path.isAbsolute(dbPath) ? dbPath : path.join(__dirname, "../../../../", dbPath);
+const database = path.isAbsolute(dbPath)
+  ? dbPath
+  : path.join(__dirname, "../../../../", dbPath);
 
 // --- Users Database --- //
 
 // Read users from users.json
 export async function readUsers(): Promise<User[]> {
-  const data = await fs.promises.readFile(path.join(database, "users.json"), "utf8");
-  
+  const data = await fs.promises.readFile(
+    path.join(database, "users.json"),
+    "utf8",
+  );
+
   try {
     return JSON.parse(data);
   } catch {
@@ -22,14 +27,18 @@ export async function readUsers(): Promise<User[]> {
 
 // Save users to users.json
 export async function saveUsers(users: User[]): Promise<void> {
-  await fs.promises.writeFile(path.join(database, "users.json"), JSON.stringify(users, null, 2), "utf8");
+  await fs.promises.writeFile(
+    path.join(database, "users.json"),
+    JSON.stringify(users, null, 2),
+    "utf8",
+  );
 }
 
 // Update a specific user in the database (based on their profile number)
 export async function updateUser(user: User): Promise<User | null> {
   const users = await readUsers();
   const userIndex = users.findIndex((u) => u.cpn === user.cpn);
-  
+
   if (userIndex === -1) {
     return null;
   }
@@ -41,19 +50,25 @@ export async function updateUser(user: User): Promise<User | null> {
 }
 
 // Search for a user by its email
-export async function getUserByEmail(emailAddress: string): Promise<User | undefined> {
+export async function getUserByEmail(
+  emailAddress: string,
+): Promise<User | undefined> {
   const users = await readUsers();
   return users.find((user) => user.emailAddress === emailAddress);
 }
 
 // Search for a user by its phone number
-export async function getUserByPhoneNumber(phoneNumber: string): Promise<User | undefined> {
+export async function getUserByPhoneNumber(
+  phoneNumber: string,
+): Promise<User | undefined> {
   const users = await readUsers();
   return users.find((user) => user.phoneNumber === phoneNumber);
 }
 
 // Search for a user by its profile number
-export async function getUserByProfileNumber(cpn: string): Promise<User | undefined> {
+export async function getUserByProfileNumber(
+  cpn: string,
+): Promise<User | undefined> {
   const users = await readUsers();
   return users.find((user) => user.cpn === cpn);
 }
@@ -73,17 +88,20 @@ export async function createCPN(): Promise<string> {
   return userCpn;
 }
 
-
 // --- Stores Database --- //
 
 // Uses the Redbox database (thanks Puyo) to find the store address from ID
 import { IStore, stores, banners } from "@redbox-apis/db";
-export async function getStore(kioskId: string | number): Promise<(IStore & { Banner: string }) | null> {
+export async function getStore(
+  kioskId: string | number,
+): Promise<(IStore & { Banner: string }) | null> {
   const store = stores.find((s: any) => s.Id === Number(kioskId));
   if (!store) return null;
 
   return {
     ...store,
-    Banner: banners.find((b: any) => b.Id === Number(store.BannerId))?.Name || "Unknown",
+    Banner:
+      banners.find((b: any) => b.Id === Number(store.BannerId))?.Name ||
+      "Unknown",
   };
 }

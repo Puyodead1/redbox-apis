@@ -6,43 +6,43 @@ import { KioskStatisticsRequest } from "../../interfaces";
 import { KioskStatisticsRequestSchema } from "../../schemas/KioskStatisticsSchema";
 
 export const post = [
-    celebrate({
-        [Segments.BODY]: KioskStatisticsRequestSchema,
-    }),
-    async (req: Request, res: Response) => {
-        if (req.method !== "POST") return res.status(405);
+  celebrate({
+    [Segments.BODY]: KioskStatisticsRequestSchema,
+  }),
+  async (req: Request, res: Response) => {
+    if (req.method !== "POST") return res.status(405);
 
-        const { KioskId, Statistics }: KioskStatisticsRequest = req.body;
-        const prisma = await getPrisma();
+    const { KioskId, Statistics }: KioskStatisticsRequest = req.body;
+    const prisma = await getPrisma();
 
-        // merge existing kiosk statistics with new statistics
-        const existingStatistics = await prisma.statistics.findFirst({
-            where: {
-                KioskId,
-            },
-        });
+    // merge existing kiosk statistics with new statistics
+    const existingStatistics = await prisma.statistics.findFirst({
+      where: {
+        KioskId,
+      },
+    });
 
-        if (existingStatistics) {
-            logger.info(`Updating statistics for kiosk ${KioskId}`);
-            await prisma.statistics.update({
-                where: {
-                    KioskId: existingStatistics.KioskId,
-                },
-                data: {
-                    ...existingStatistics,
-                    ...Statistics,
-                },
-            });
-        } else {
-            logger.info(`Creating statistics for kiosk ${KioskId}`);
-            await prisma.statistics.create({
-                data: {
-                    KioskId,
-                    ...Statistics,
-                },
-            });
-        }
+    if (existingStatistics) {
+      logger.info(`Updating statistics for kiosk ${KioskId}`);
+      await prisma.statistics.update({
+        where: {
+          KioskId: existingStatistics.KioskId,
+        },
+        data: {
+          ...existingStatistics,
+          ...Statistics,
+        },
+      });
+    } else {
+      logger.info(`Creating statistics for kiosk ${KioskId}`);
+      await prisma.statistics.create({
+        data: {
+          KioskId,
+          ...Statistics,
+        },
+      });
+    }
 
-        return res.sendStatus(200);
-    },
+    return res.sendStatus(200);
+  },
 ];

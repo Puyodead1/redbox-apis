@@ -1,5 +1,5 @@
 export default interface DefaultPromo {
-    PromoCode: string;
-    PromotionIntentCode: string;
-    Amount?: number;
+  PromoCode: string;
+  PromotionIntentCode: string;
+  Amount?: number;
 }
