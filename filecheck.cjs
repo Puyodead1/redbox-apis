@@ -55,6 +55,15 @@ async function checkAllFiles() {
         }
     }
 
+    // check for toml
+    if (!fs.existsSync('./config.toml')) {
+        if (fs.existsSync('./config.example.toml')) {
+            fs.copyFileSync('./config.example.toml', './config.toml');
+        } else {
+            throw new Error('A config.toml file was not found. Please create it manually.');
+        }
+    }
+    
     if(criticalError) throw new Error("Critical error: .env file not found. Please create it manually.");
 }
 
