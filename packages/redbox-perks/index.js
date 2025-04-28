@@ -122,15 +122,13 @@ async function verifyRecaptcha(recaptchaToken) {
 }
 
 // Generate analytics from authorized transactions
+const { getPrisma } = require("../db");
 const analyticsCache = [];
 
 async function generateAnalytics() {
     try {
-        const data = JSON.parse(await fs.promises.readFile(path.join(database, 'transactions.json'), "utf8"));
-        const transactions = Object.keys(data).map(transactionId => ({
-            transactionId,
-            ...data[transactionId]
-        }));
+        const prisma = await getPrisma();
+        const transactions = await prisma.transaction.findMany();
     
         analyticsCache.length = 0; // clear the cache
         transactions.forEach(transaction => {

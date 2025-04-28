@@ -12,6 +12,17 @@ datasource db {
 //   Inventory String
 // }
 
+model Transaction {
+  transactionId         String   @id
+  email                 String?
+  kioskId               Int?
+  transactionDate       String?
+  customerProfileNumber String?
+  items                 Json
+  discounts             Json
+  cardInformation       Json
+}
+
 model Statistics {
   KioskId              Int     @unique
   Damaged              String?

@@ -1,3 +1,4 @@
+import { getPrisma } from "@redbox-apis/db";
 import path from 'path';
 import fs from 'fs';
 import dotenv from 'dotenv';
@@ -7,12 +8,18 @@ const dbPath = process.env.DATABASE_PATH || 'database';
 const database = path.isAbsolute(dbPath) ? dbPath : path.join(__dirname, "../../../../", dbPath);
 
 export async function createTransNumber(): Promise<string> {
-    const transactions = JSON.parse(await fs.promises.readFile(path.join(database, 'transactions.json'), "utf8"));
+    const prisma = await getPrisma();
     let orderId: string | null = null;
 
     while (!orderId) {
         let newId = Math.random().toString().slice(2, 12); // create a 10-digit order number
-        if (!transactions[newId]) {
+        const existing = await prisma.transaction.findUnique({
+            where: {
+                transactionId: newId
+            }
+        });
+
+        if (!existing) {
             orderId = newId;
         }
     }
@@ -21,7 +28,7 @@ export async function createTransNumber(): Promise<string> {
 }
 
 export async function logTransaction(orderId: string | number, trans: any = {}): Promise<any> {
-    let data = JSON.parse(await fs.promises.readFile(path.join(database, 'transactions.json'), "utf8"));
+    const prisma = await getPrisma();
     let items: { Rental: any[]; Purchased: any[] } = {
         Rental: [],
         Purchased: []
@@ -41,26 +48,28 @@ export async function logTransaction(orderId: string | number, trans: any = {}):
         });
     }
 
-    data[orderId] = {
-        email: trans?.Email,
-        kioskId: trans?.KioskId,
-        transactionDate: trans?.TransactionDate || new Date().toISOString(),
-        customerProfileNumber: trans?.CustomerProfileNumber,
-        items: items,
-        discounts: trans?.ShoppingCart?.Discounts || [],
-        cardInformation: trans?.CreditCard || {}
-    };
-
-    await fs.promises.writeFile(path.join(database, 'transactions.json'), JSON.stringify(data, null, 2), "utf8");
-    return data;
+    await prisma.transaction.create({
+        data: {
+            transactionId: orderId.toString(),
+            email: trans?.Email,
+            kioskId: trans?.KioskId ? Number(trans.KioskId) : null,
+            transactionDate: trans?.TransactionDate || new Date().toISOString(),
+            customerProfileNumber: trans?.CustomerProfileNumber,
+            items: items,
+            discounts: trans?.ShoppingCart?.Discounts || [],
+            cardInformation: trans?.CreditCard || {}
+        }
+    });
+    return true;
 }
 
 export async function returnedDisc(kioskId: string | number, barcode: string, date: string): Promise<any | null> {
-    const data = JSON.parse(await fs.promises.readFile(path.join(database, 'transactions.json'), "utf8"));
+    const prisma = await getPrisma();
     if(!barcode || !date) return [];
     
     // Find all transactions containing the disc barcode and hasn't been returned yet (at the same kiosk)
-    const transactions = Object.values(data).filter((transaction: any) =>
+    const data = await prisma.transaction.findMany();
+    const transactions = data.filter((transaction: any) =>
         transaction.items.Rental.some((item: any) => item.Barcode === barcode.toString() && !item.returnedDate && transaction.kioskId === kioskId)
     );
     
@@ -75,16 +84,22 @@ export async function returnedDisc(kioskId: string | number, barcode: string, da
         new Date(current.transactionDate) > new Date(latest.transactionDate) ? current : latest
     );
     
-    transactions.forEach((transaction: any) => {
-        transaction.items.Rental.forEach((item: any) => {
-            if (transaction === latestTransaction) { // if it's the latest transaction
+    for (const transaction of transactions) {
+        (transaction.items as any).Rental.forEach((item: any) => {
+            if (transaction.transactionId === latestTransaction.transactionId) { // if it's the latest transaction
                 item.returnedDate = date; // use the return date
             } else { // if it's some old, uncaught transaction
                 item.returnedDate = latestTransaction.transactionDate; // Use the newest transaction as the return date for the old transactions (we're doing this cause if the server is down then it won't mark transactions as complete, so this is just a safety mechanism if there's other old transactions with the same DVD)
             }
         });
-    });
+        
+        await prisma.transaction.update({
+            where: { transactionId: transaction.transactionId },
+            data: {
+                items: transaction.items as any // fuck you ts, i know what im doing... leave me aloneee
+            }
+        });
+    }      
     
-    await fs.promises.writeFile(path.join(database, 'transactions.json'), JSON.stringify(data, null, 2), 'utf8');
     return transactions; // will be used for rewards later
 }
