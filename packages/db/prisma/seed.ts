@@ -1,4 +1,5 @@
 import { PrismaClient } from "@prisma/client";
+import chalk from "chalk";
 import { getEnumKey } from "./utils";
 import {
   PromotionActionCode,
@@ -8,11 +9,31 @@ import {
   TitleFamily,
   TitleType,
 } from "./enums";
+
 const prisma = new PrismaClient();
 
+async function upsertPromo(promo: any) {
+  const existing = await prisma.promoCode.findUnique({
+    where: { code: promo.code },
+  });
+
+  if (existing) {
+    await prisma.promoCode.update({
+      where: { code: promo.code },
+      data: promo,
+    });
+    console.log(chalk.yellow(`🛠️  Updated promo: ${promo.code}`));
+  } else {
+    await prisma.promoCode.create({
+      data: promo,
+    });
+    console.log(chalk.green(`✅ Created promo: ${promo.code}`));
+  }
+}
+
 async function main() {
-  const promo1 = await prisma.promoCode.create({
-    data: {
+  const promos = [
+    {
       code: "DVDONME",
       actionType: getEnumKey(PromotionActionCode, PromotionActionCode.Rental),
       allowFullDiscount: true,
@@ -21,18 +42,12 @@ async function main() {
       rentFormat: getEnumKey(PromotionRentFormat, PromotionRentFormat.Dvd),
       getQty: 0,
       getFormat: getEnumKey(PromotionGetFormat, PromotionGetFormat.Dvd),
-      promotionIntent: getEnumKey(
-        PromotionIntentCode,
-        PromotionIntentCode.FirstNightDVD,
-      ),
+      promotionIntent: getEnumKey(PromotionIntentCode, PromotionIntentCode.FirstNightDVD),
       amount: 0,
       campaignTitles: [],
       productTypeId: TitleFamily.Movies,
     },
-  });
-
-  const promo2 = await prisma.promoCode.create({
-    data: {
+    {
       code: "BLURAYONME",
       actionType: getEnumKey(PromotionActionCode, PromotionActionCode.Rental),
       allowFullDiscount: true,
@@ -41,18 +56,12 @@ async function main() {
       rentFormat: getEnumKey(PromotionRentFormat, PromotionRentFormat.BluRay),
       getQty: 0,
       getFormat: getEnumKey(PromotionGetFormat, PromotionGetFormat.BluRay),
-      promotionIntent: getEnumKey(
-        PromotionIntentCode,
-        PromotionIntentCode.FirstNightBluray,
-      ),
+      promotionIntent: getEnumKey(PromotionIntentCode, PromotionIntentCode.FirstNightBluray),
       amount: 0,
       campaignTitles: [],
       productTypeId: TitleFamily.Movies,
     },
-  });
-
-  const promo3 = await prisma.promoCode.create({
-    data: {
+    {
       code: "4KONME",
       actionType: getEnumKey(PromotionActionCode, PromotionActionCode.Rental),
       allowFullDiscount: true,
@@ -61,18 +70,12 @@ async function main() {
       rentFormat: getEnumKey(PromotionRentFormat, PromotionRentFormat.FourKUhd),
       getQty: 0,
       getFormat: getEnumKey(PromotionGetFormat, PromotionGetFormat.FourKUhd),
-      promotionIntent: getEnumKey(
-        PromotionIntentCode,
-        PromotionIntentCode.FirstNightFreeItem,
-      ),
+      promotionIntent: getEnumKey(PromotionIntentCode, PromotionIntentCode.FirstNightFreeItem),
       amount: 0,
       campaignTitles: [],
       productTypeId: TitleFamily.Movies,
     },
-  });
-
-  const promo4 = await prisma.promoCode.create({
-    data: {
+    {
       code: "GAMEONME",
       actionType: getEnumKey(PromotionActionCode, PromotionActionCode.Rental),
       allowFullDiscount: true,
@@ -93,18 +96,12 @@ async function main() {
       rentFormat: getEnumKey(PromotionRentFormat, PromotionRentFormat.Game),
       getQty: 0,
       getFormat: getEnumKey(PromotionGetFormat, PromotionGetFormat.Game),
-      promotionIntent: getEnumKey(
-        PromotionIntentCode,
-        PromotionIntentCode.FirstNightGame,
-      ),
+      promotionIntent: getEnumKey(PromotionIntentCode, PromotionIntentCode.FirstNightGame),
       amount: 0,
       campaignTitles: [],
       productTypeId: TitleFamily.Games,
     },
-  });
-
-  const promo5 = await prisma.promoCode.create({
-    data: {
+    {
       code: "FREEGAME",
       actionType: getEnumKey(PromotionActionCode, PromotionActionCode.Rental),
       allowFullDiscount: true,
@@ -113,18 +110,12 @@ async function main() {
       rentFormat: getEnumKey(PromotionRentFormat, PromotionRentFormat.Any),
       getQty: 0,
       getFormat: getEnumKey(PromotionGetFormat, PromotionGetFormat.Any),
-      promotionIntent: getEnumKey(
-        PromotionIntentCode,
-        PromotionIntentCode.FirstNightGameGameRequired,
-      ),
+      promotionIntent: getEnumKey(PromotionIntentCode, PromotionIntentCode.FirstNightGameGameRequired),
       amount: 0,
       campaignTitles: [],
       productTypeId: TitleFamily.All,
     },
-  });
-
-  const promo6 = await prisma.promoCode.create({
-    data: {
+    {
       code: "HALFOFF",
       actionType: getEnumKey(PromotionActionCode, PromotionActionCode.Rental),
       allowFullDiscount: true,
@@ -133,18 +124,12 @@ async function main() {
       rentFormat: getEnumKey(PromotionRentFormat, PromotionRentFormat.Any),
       getQty: 0,
       getFormat: getEnumKey(PromotionGetFormat, PromotionGetFormat.Any),
-      promotionIntent: getEnumKey(
-        PromotionIntentCode,
-        PromotionIntentCode.PercentOffCartTotal,
-      ),
+      promotionIntent: getEnumKey(PromotionIntentCode, PromotionIntentCode.PercentOffCartTotal),
       amount: 50,
       campaignTitles: [],
       productTypeId: TitleFamily.All,
     },
-  });
-
-  const promo7 = await prisma.promoCode.create({
-    data: {
+    {
       code: "ONEDOLLAROFF",
       actionType: getEnumKey(PromotionActionCode, PromotionActionCode.Rental),
       allowFullDiscount: true,
@@ -153,18 +138,12 @@ async function main() {
       rentFormat: getEnumKey(PromotionRentFormat, PromotionRentFormat.Any),
       getQty: 0,
       getFormat: getEnumKey(PromotionGetFormat, PromotionGetFormat.Any),
-      promotionIntent: getEnumKey(
-        PromotionIntentCode,
-        PromotionIntentCode.FixedValue,
-      ),
+      promotionIntent: getEnumKey(PromotionIntentCode, PromotionIntentCode.FixedValue),
       amount: 1.0,
       campaignTitles: [],
       productTypeId: TitleFamily.All,
     },
-  });
-
-  const promo8 = await prisma.promoCode.create({
-    data: {
+    {
       code: "FREESHIT",
       actionType: getEnumKey(PromotionActionCode, PromotionActionCode.Rental),
       allowFullDiscount: true,
@@ -173,18 +152,12 @@ async function main() {
       rentFormat: getEnumKey(PromotionRentFormat, PromotionRentFormat.Any),
       getQty: 0,
       getFormat: getEnumKey(PromotionGetFormat, PromotionGetFormat.Any),
-      promotionIntent: getEnumKey(
-        PromotionIntentCode,
-        PromotionIntentCode.PercentOffCartTotal,
-      ),
+      promotionIntent: getEnumKey(PromotionIntentCode, PromotionIntentCode.PercentOffCartTotal),
       amount: 100,
       campaignTitles: [],
       productTypeId: TitleFamily.All,
     },
-  });
-
-  const promo9 = await prisma.promoCode.create({
-    data: {
+    {
       code: "AVA2",
       actionType: getEnumKey(PromotionActionCode, PromotionActionCode.Rental),
       allowFullDiscount: true,
@@ -193,18 +166,12 @@ async function main() {
       rentFormat: getEnumKey(PromotionRentFormat, PromotionRentFormat.Any),
       getQty: 0,
       getFormat: getEnumKey(PromotionGetFormat, PromotionGetFormat.Any),
-      promotionIntent: getEnumKey(
-        PromotionIntentCode,
-        PromotionIntentCode.FirstNightFreeItem,
-      ),
+      promotionIntent: getEnumKey(PromotionIntentCode, PromotionIntentCode.FirstNightFreeItem),
       amount: 0,
       campaignTitles: [310582, 410582],
       productTypeId: TitleFamily.Movies,
     },
-  });
-
-  const promo10 = await prisma.promoCode.create({
-    data: {
+    {
       code: "RENT1GET2",
       actionType: getEnumKey(PromotionActionCode, PromotionActionCode.Rental),
       allowFullDiscount: true,
@@ -213,18 +180,12 @@ async function main() {
       rentFormat: getEnumKey(PromotionRentFormat, PromotionRentFormat.Any),
       getQty: 2,
       getFormat: getEnumKey(PromotionGetFormat, PromotionGetFormat.Any),
-      promotionIntent: getEnumKey(
-        PromotionIntentCode,
-        PromotionIntentCode.RxGx,
-      ),
+      promotionIntent: getEnumKey(PromotionIntentCode, PromotionIntentCode.RxGx),
       amount: 0,
       campaignTitles: [],
       productTypeId: TitleFamily.Movies,
     },
-  });
-
-  const promo11 = await prisma.promoCode.create({
-    data: {
+    {
       code: "FREEITEM",
       actionType: getEnumKey(PromotionActionCode, PromotionActionCode.Rental),
       allowFullDiscount: true,
@@ -233,18 +194,12 @@ async function main() {
       rentFormat: getEnumKey(PromotionRentFormat, PromotionRentFormat.Any),
       getQty: 0,
       getFormat: getEnumKey(PromotionGetFormat, PromotionGetFormat.Any),
-      promotionIntent: getEnumKey(
-        PromotionIntentCode,
-        PromotionIntentCode.FirstNightFreeItem,
-      ),
+      promotionIntent: getEnumKey(PromotionIntentCode, PromotionIntentCode.FirstNightFreeItem),
       amount: 0,
       campaignTitles: [],
       productTypeId: TitleFamily.Movies,
     },
-  });
-
-  const promo12 = await prisma.promoCode.create({
-    data: {
+    {
       code: "FUCKBILL",
       actionType: getEnumKey(PromotionActionCode, PromotionActionCode.Rental),
       allowFullDiscount: true,
@@ -253,30 +208,18 @@ async function main() {
       rentFormat: getEnumKey(PromotionRentFormat, PromotionRentFormat.Any),
       getQty: 0,
       getFormat: getEnumKey(PromotionGetFormat, PromotionGetFormat.Any),
-      promotionIntent: getEnumKey(
-        PromotionIntentCode,
-        PromotionIntentCode.PercentOffCartTotal,
-      ),
+      promotionIntent: getEnumKey(PromotionIntentCode, PromotionIntentCode.PercentOffCartTotal),
       amount: 200,
       campaignTitles: [],
       productTypeId: TitleFamily.All,
     },
-  });
+  ];
 
-  console.log({
-    promo1,
-    promo2,
-    promo3,
-    promo4,
-    promo5,
-    promo6,
-    promo7,
-    promo8,
-    promo9,
-    promo10,
-    promo11,
-    promo12,
-  });
+  for (const promo of promos) {
+    await upsertPromo(promo);
+  }
+
+  console.log(chalk.green("\n✅ Promo seeding complete.\n"));
 }
 
 main()
