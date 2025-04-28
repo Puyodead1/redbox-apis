@@ -86,10 +86,12 @@ export async function returnedDisc(kioskId: string | number, barcode: string, da
     
     for (const transaction of transactions) {
         (transaction.items as any).Rental.forEach((item: any) => {
-            if (transaction.transactionId === latestTransaction.transactionId) { // if it's the latest transaction
-                item.returnedDate = date; // use the return date
-            } else { // if it's some old, uncaught transaction
-                item.returnedDate = latestTransaction.transactionDate; // Use the newest transaction as the return date for the old transactions (we're doing this cause if the server is down then it won't mark transactions as complete, so this is just a safety mechanism if there's other old transactions with the same DVD)
+            if (item.Barcode === barcode.toString() && !item.returnedDate) { // this is important or else all items will be marked as returned
+                if (transaction.transactionId === latestTransaction.transactionId) { // if it's the latest transaction
+                    item.returnedDate = date; // use the return date
+                } else { // if it's some old, uncaught transaction
+                    item.returnedDate = latestTransaction.transactionDate; // Use the newest transaction as the return date for the old transactions (we're doing this cause if the server is down then it won't mark transactions as complete, so this is just a safety mechanism if there's other old transactions with the same DVD)
+                }
             }
         });
         
