@@ -1,10 +1,11 @@
 import { User } from "./types";
 import { EncryptionService, EncryptionType } from "../";
 import {
-  readUsers,
-  saveUsers,
   updateUser,
+  createUser,
   createCPN,
+  getUserByEmail,
+  getUserByPhoneNumber,
   getUserByProfileNumber,
 } from "./utils";
 import bcrypt from "bcryptjs";
@@ -178,7 +179,6 @@ export async function updateRewards(barcode: string, transaction: any) {
 export async function createAccount(
   data: any,
 ): Promise<{ success: boolean; reason?: string; data?: any }> {
-  const users = await readUsers();
 
   const tempPassword = Array.from({ length: 10 }, () =>
     "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*()_-+=<>?".charAt(
@@ -190,7 +190,7 @@ export async function createAccount(
     ? encService.decrypt(data.Pin, EncryptionType.LOCAL)
     : null;
 
-  if (data.Email && users.find((user) => user.emailAddress === data.Email)) {
+  if (data.Email && await getUserByEmail(data.Email)) {
     // if email address already in use
     return {
       success: false,
@@ -201,7 +201,7 @@ export async function createAccount(
 
   if (
     data.MobilePhoneNumber &&
-    users.find((user) => user.phoneNumber === data.MobilePhoneNumber)
+    await getUserByPhoneNumber(data.MobilePhoneNumber)
   ) {
     // if mobile number already in use
     return {
@@ -219,7 +219,7 @@ export async function createAccount(
     };
   }
 
-  const newUser = {
+  const newUser = await createUser({
     cpn: await createCPN(),
     signupDate: new Date().toISOString(),
     firstName: null,
@@ -234,9 +234,8 @@ export async function createAccount(
       tierCounter: 0, // this is their purchase count
     },
     promoCodes: [],
-  };
+  });
 
-  users.push(newUser);
   let result = {
     success: true,
     data: {
@@ -245,6 +244,5 @@ export async function createAccount(
     },
   };
 
-  await saveUsers(users);
   return result;
 }

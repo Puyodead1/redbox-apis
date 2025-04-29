@@ -6,12 +6,10 @@ import {
 } from "@redbox-apis/common";
 import { celebrate, Segments } from "celebrate";
 import { Request, Response } from "express";
-import fs from "fs/promises";
 import { KioskAuthenticateRequest } from "../../interfaces";
 import { KioskAuthenticateRequestSchema } from "../../schemas";
 
 import dotenv from "dotenv";
-import path from "path";
 import { v4 } from "uuid";
 dotenv.config({ path: "../../.env" });
 

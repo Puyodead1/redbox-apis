@@ -25,34 +25,6 @@ async function checkAllFiles() {
     checkEnvVariables('./'); // Check for the root directory
     checkEnvVariables('./packages/redbox-perks'); // Check for the redbox-perks project
 
-    require('dotenv').config();
-    const dbPath = process.env.DATABASE_PATH || 'database';
-    const database = path.isAbsolute(dbPath) ? dbPath : path.join(__dirname, dbPath);
-
-    // Check if each required file exists, if not, create it with default content
-    const requiredFiles = ['users.json'];
-
-    if (!fs.existsSync(database)) {
-        throw new Error("Critical error: Database path does not exist, it looks like you're missing required files. Please re-download this project.");
-    }
-
-    for (const file of requiredFiles) {
-        const filePath = path.join(database, file);
-        if (!fs.existsSync(filePath)) {
-            let content = {};
-
-            // check if .example.json exists
-            let example = path.join(database, file.replace('.json', '.example.json'));
-            if (fs.existsSync(example)) {
-                content = JSON.parse(fs.readFileSync(example, 'utf8'));
-            } else if(file === 'users.json') {
-                content = [];
-            }
-
-            fs.writeFileSync(filePath, JSON.stringify(content, null, 2), 'utf8');
-        }
-    }
-
     // check for toml
     if (!fs.existsSync('./config.toml')) {
         if (fs.existsSync('./config.example.toml')) {

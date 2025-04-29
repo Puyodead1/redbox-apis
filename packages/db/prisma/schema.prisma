@@ -23,6 +23,20 @@ model Transaction {
   cardInformation       Json
 }
 
+model User {
+  cpn           String   @id
+  signupDate    String
+  firstName     String?
+  emailAddress  String?  @unique
+  phoneNumber   String?  @unique
+  password      String      // required, but temp one created upon signup at kiosk
+  pin           String?
+  hashed        Boolean
+  loyalty       Json
+  promoCodes    Json
+  disabled      Boolean?
+}
+
 model Statistics {
   KioskId              Int     @unique
   Damaged              String?

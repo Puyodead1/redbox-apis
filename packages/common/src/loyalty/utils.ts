@@ -1,86 +1,91 @@
+import { getPrisma } from "@redbox-apis/db";
 import { User } from "./types";
-import path from "path";
-import fs from "fs";
-import dotenv from "dotenv";
-
-dotenv.config({ path: "../../.env" });
-const dbPath = process.env.DATABASE_PATH || "database";
-const database = path.isAbsolute(dbPath)
-  ? dbPath
-  : path.join(__dirname, "../../../../", dbPath);
 
 // --- Users Database --- //
 
-// Read users from users.json
-export async function readUsers(): Promise<User[]> {
-  const data = await fs.promises.readFile(
-    path.join(database, "users.json"),
-    "utf8",
-  );
-
+// Search for user in Prisma database
+export async function getUser(key?: string, value?: any): Promise<User | User[] | null> {
   try {
-    return JSON.parse(data);
-  } catch {
-    return [];
-  }
-}
+      const prisma = await getPrisma();
+      if (!key && !value) return (await prisma.user.findMany()) as User[]; // return all users if no key/value is provided
 
-// Save users to users.json
-export async function saveUsers(users: User[]): Promise<void> {
-  await fs.promises.writeFile(
-    path.join(database, "users.json"),
-    JSON.stringify(users, null, 2),
-    "utf8",
-  );
+      const user = await prisma.user.findUnique({
+          where: {
+              [key as string]: value
+          } as any
+      });
+
+      return user as User | null;
+  } catch (error) {
+      console.error(error);
+      return [];
+  }
 }
 
 // Update a specific user in the database (based on their profile number)
 export async function updateUser(user: User): Promise<User | null> {
-  const users = await readUsers();
-  const userIndex = users.findIndex((u) => u.cpn === user.cpn);
+  const prisma = await getPrisma();
 
-  if (userIndex === -1) {
+  try {
+    const { cpn, ...dataNoCPN } = user;
+    const updatedUser = await prisma.user.update({
+      where: { cpn },
+      data: dataNoCPN
+    });
+
+    return updatedUser as User;
+  } catch(error) {
     return null;
   }
+}
 
-  users[userIndex] = user;
-  await saveUsers(users);
+// Create a user in the database and return the user object
+export async function createUser(user: User): Promise<User | null> {
+  const prisma = await getPrisma();
 
-  return user;
+  try {
+    const newUser = await prisma.user.create({
+      data: {
+        ...user
+      }
+    });
+
+    return newUser as User;
+  } catch(error) {
+    return null;
+  }
 }
 
 // Search for a user by its email
 export async function getUserByEmail(
   emailAddress: string,
 ): Promise<User | undefined> {
-  const users = await readUsers();
-  return users.find((user) => user.emailAddress === emailAddress);
+  return await getUser("emailAddress", emailAddress) as User | undefined;
 }
 
 // Search for a user by its phone number
 export async function getUserByPhoneNumber(
   phoneNumber: string,
 ): Promise<User | undefined> {
-  const users = await readUsers();
-  return users.find((user) => user.phoneNumber === phoneNumber);
+  return await getUser("phoneNumber", phoneNumber) as User | undefined;
 }
 
 // Search for a user by its profile number
 export async function getUserByProfileNumber(
   cpn: string,
 ): Promise<User | undefined> {
-  const users = await readUsers();
-  return users.find((user) => user.cpn === cpn);
+  return await getUser("cpn", cpn) as User | undefined;
 }
 
 // Creates a user ID, checks for one that's unused
 export async function createCPN(): Promise<string> {
-  const users = await readUsers();
   let userCpn: string | null = null;
 
   while (!userCpn) {
     let newCpn = Math.random().toString().slice(2, 12); // create a 10-digit user id
-    if (users.find((user) => user.cpn === newCpn) == null) {
+    const existingUser = await getUser('cpn', newCpn);
+
+    if (!existingUser) {
       userCpn = newCpn;
     }
   }

@@ -15,8 +15,7 @@
     "format": "pnpm exec prettier --write \"packages/**/*.ts\""
   },
   "dependencies": {
-    "@types/node": "^22.10.2",
-    "dotenv": "^16.4.7"
+    "@types/node": "^22.10.2"
   },
   "type": "module",
   "author": "Puyodead1",

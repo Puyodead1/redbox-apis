@@ -17,7 +17,6 @@ pnpm install
 
 Next, you'll need to configure a few environment variables (`.env`).
 ```bash
-DATABASE_PATH="./database" # Path to the database folder (transactions, users, and credentials)
 BASE_DOMAIN="example.com" # Replace this with your hosted web-server domain (optional, used for signup emails)
 
 # These details are required to send and receive Redbox receipts, and signup information.
@@ -127,9 +126,3 @@ Listed are the workspace scripts, individual packages may specify their own addi
 -   `migrate:prod` - Run migrations for a production database
 -   `migrate:dev` - Run migrations for a development database
 -   `seed` - Seed the database, mainly for development, currently is just for adding promo codes for testing
-
-## Files
-Within this project, you'll find the following file in the `database/` folder:
-- **users.json**: This file stores user accounts for the Redbox Perks loyalty system. By default, user PIN/passwords are hashed and salted (thanks to [**bcrypt.js**](https://github.com/dcodeIO/bcrypt.js)) for extra security.
-
-*(within this folder, you'll find example files for these named `______.example.json`. to create this required files, copy them and rename to the appropriate name)*

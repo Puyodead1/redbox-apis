@@ -131,6 +131,5 @@ RootCA.key
 # ignore any generated device certificates
 certificates/
 
-# Loyalty database and configurations
+# Loyalty configurations
 .env
-database/users.json

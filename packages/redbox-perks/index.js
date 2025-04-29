@@ -6,15 +6,13 @@ const axios = require('axios');
 const fs = require('fs');
 const path = require('path');
 require('dotenv').config({ path: "./.env" });
+const { getPrisma } = require("../db");
 
 const app = express();
 const RATE_LIMITING = process.env.RATE_LIMITING === 'true' ? true : false;
 app.locals.recaptcha = process.env.USE_RECAPTCHA === 'true' ? process.env.RECAPTCHA_PUBLIC_KEY : null;
 
 const API_CONFIGURATION = require('dotenv').parse(fs.readFileSync(path.join(__dirname, '../../', '.env')));
-
-const dbPath = API_CONFIGURATION.DATABASE_PATH || 'database';
-const database = path.isAbsolute(dbPath) ? dbPath : path.join(__dirname, '../../', dbPath);
 
 const GENERAL_RATE_LIMIT = rateLimit({
     windowMs: 24 * 60 * 60 * 1000, // 24 hours
@@ -64,39 +62,35 @@ app.use(session({ // login sessions
     }
 }));
 
-// Read users from users.json
-async function readUsers() {
+// Search for a user in Prisma database
+async function getUser(key, value) {
     try {
-        const data = await fs.promises.readFile(path.join(database, 'users.json'), 'utf8');
-
-        try {
-            return JSON.parse(data);
-        } catch(error) {
-            return [];
-        }
-    } catch (error) {
-        console.error("Error occurred when reading user database: ", error);
-        return [];
-    }
-}
-
-// Save users to users.json
-async function saveUsers(users) {
-    try {
-        await fs.promises.writeFile(path.join(database, 'users.json'), JSON.stringify(users, null, 2), 'utf8');
+        const prisma = await getPrisma();
+        if(!key && !value) return await prisma.user.findMany(); // return all users if no key/value is provided
+    
+        const user = await prisma.user.findUnique({
+            where: {
+                [key]: value
+            }
+        });
+    
+        return user;
     } catch(error) {
-        console.error("Error occurred when saving user database: ", error);
+        console.error(error);
+        return []; // return an empty array if there was an error
     }
 }
 
 // Creates a user ID, checks for one that's unused
 async function createCPN() {
-    const users = await readUsers();
+    const prisma = await getPrisma();
     let userCpn = null;
 
     while (!userCpn) {
         let newCpn = Math.random().toString().slice(2, 12); // create a 10-digit user id
-        if (users.find(user => user.cpn === newCpn) == null) {
+        const existingUser = await getUser('cpn', newCpn);
+
+        if (!existingUser) {
             userCpn = newCpn;
         }
     }
@@ -122,7 +116,6 @@ async function verifyRecaptcha(recaptchaToken) {
 }
 
 // Generate analytics from authorized transactions
-const { getPrisma } = require("../db");
 const analyticsCache = [];
 
 async function generateAnalytics() {
@@ -165,7 +158,6 @@ const rejectLoggedIn = (req, res, next) => {
 
 // Aceepts logged-in users to access the dashboard page and other pages
 const acceptLoggedIn = async (req, res, next) => {
-    console.log(req.path);
     const isAdminPath = req.path === '/admin' || req.path.startsWith('/admin/');
 
     if (!req.session[isAdminPath ? 'admin' : 'user']) {
@@ -178,7 +170,7 @@ const acceptLoggedIn = async (req, res, next) => {
 
     // Check if the users account was terminated before allowing access
     if (!isAdminPath) {
-        const user = await readUsers().then(users => users.find(user => user.cpn === req.session.user));
+        const user = await getUser('cpn', req.session.user);
         
         if (!user || user?.disabled) {
             delete req.session.user; // remove the session if the user doesn't exist or is disabled
@@ -207,8 +199,8 @@ app.get('/signup', rejectLoggedIn, (req, res) => {
 });
 
 app.get('/dashboard', acceptLoggedIn, async (req, res) => {
-    const users = await readUsers();
-    const user = users.find(user => user.cpn === req.session.user);
+    const prisma = await getPrisma();
+    const user = await getUser('cpn', req.session.user);
 
     res.render('dashboard', { user });
 });
@@ -223,9 +215,15 @@ app.get('/logout', acceptLoggedIn, (req, res) => {
 
 // Delete the user's account completely
 app.post('/delete', acceptLoggedIn, async (req, res) => {
-    const users = await readUsers();
-    const newUsers = users.filter(user => user.cpn !== req.session.user); // filter out the user from the users database (removing them)
-    await saveUsers(newUsers);
+    try {
+        const prisma = await getPrisma();
+
+        await prisma.user.delete({
+            where: { cpn: req.session.user }
+        });
+    } catch (error) {
+        console.error('It looks like the account MAY not have been deleted. Error:', error);
+    }
 
     delete req.session.user;
     res.redirect('/login/?deleted=true'); // deleted param for success message
@@ -247,7 +245,7 @@ app.post('/login', rejectLoggedIn, (RATE_LIMITING ? LOGIN_RATE_LIMIT : (req, res
     }
 
     // Check if the user exists
-    const user = await readUsers().then(users => users.find(user => user.emailAddress === email));
+    const user = await getUser('emailAddress', email);
     if (!user) {
         return res.json({ error: 'It looks like your email or password provided is incorrect.' });
     }
@@ -288,30 +286,31 @@ app.post('/signup', rejectLoggedIn, (RATE_LIMITING ? SIGNUP_RATE_LIMIT : (req, r
     }
 
     // Check if the email is taken (already has an account)
-    const users = await readUsers();
-    if (users.find(user => user.emailAddress === email)) {
+    if (await getUser('emailAddress', email)) {
         return res.json({ error: "It looks like there's already an account under this email." });
     }
 
-    const newUser = {
-        "cpn": await createCPN(),
-        "signupDate": new Date().toISOString(),
-        "firstName": firstName,
-        "emailAddress": email,
-        "phoneNumber": null,
-        "password": await bcrypt.hash(password, 10), // hash the password w/ bcrypt
-        "pin": null,
-        "hashed": true, // migrate to bcrypt for hashing (safe storage of passwords)
-        "loyalty": {
-            "pointBalance": process.env.NEW_POINT_BALANCE || 2000, // Get a FREE 1-night disc rental for signing up.
-            "currentTier": process.env.NEW_TIER_DEFAULT || "Member", // this is their tier (calculated based on purchases)
-            "tierCounter": 0 // this is their purchase count
+    // continue with signup process
+    const prisma = await getPrisma();
+    const newUser = await prisma.user.create({
+        data: {
+            "cpn": await createCPN(),
+            "signupDate": new Date().toISOString(),
+            "firstName": firstName,
+            "emailAddress": email,
+            "phoneNumber": null,
+            "password": await bcrypt.hash(password, 10), // hash the password w/ bcrypt
+            "pin": null,
+            "hashed": true, // migrate to bcrypt for hashing (safe storage of passwords)
+            "loyalty": {
+                "pointBalance": process.env.NEW_POINT_BALANCE || 2000, // Get a FREE 1-night disc rental for signing up.
+                "currentTier": process.env.NEW_TIER_DEFAULT || "Member", // this is their tier (calculated based on purchases)
+                "tierCounter": 0 // this is their purchase count
+            },
+            "promoCodes": []
         },
-        "promoCodes": []
-    };
-    users.push(newUser);
+    });
 
-    await saveUsers(users);
     req.session.user = newUser.cpn;
     res.json({ success: true, message: 'Congratulations! Your Perks account has been successfully created.' });
 });
@@ -319,19 +318,21 @@ app.post('/signup', rejectLoggedIn, (RATE_LIMITING ? SIGNUP_RATE_LIMIT : (req, r
 // If a user signs up at kiosk, we don't know their name! This fixes that problem.
 app.post("/migrateName", acceptLoggedIn, (RATE_LIMITING ? UPDATE_RATE_LIMIT : (req, res, next) => next()), async (req, res) => {
     const { firstName } = req.body;
-    const users = await readUsers();
 
     // Check if they have all the fields
     if(!firstName) {
         return res.json({ error: 'It looks like your request was malformed. Please refresh the page and try again!' });
     }
 
-    const user = users.find(user => user.cpn === req.session.user);
+    const user = await getUser('cpn', req.session.user);
     if(!user) return res.json({ error: "It looks like you aren't signed in. Please refresh the page and try again!" });
     if(user.firstName !== null) return res.json({ error: "It looks like you've already set your name. Please contact support to update your name." });
 
-    user.firstName = firstName;
-    await saveUsers(users);
+    const prisma = await getPrisma();
+    await prisma.user.update({
+        where: { cpn: req.session.user },
+        data: { firstName }
+    });
 
     res.json({ success: true });
 });
@@ -346,19 +347,20 @@ app.post("/update", acceptLoggedIn, (RATE_LIMITING ? UPDATE_RATE_LIMIT : (req, r
         return res.json({ error: 'It looks like the reCAPTCHA verification failed. Please try again.' });
     }
 
-    const users = await readUsers();
-    const user = users.find(user => user.cpn === req.session.user);
+    const prisma = await getPrisma();
+    const user = await getUser('cpn', req.session.user);
     const passwordMatch = user.hashed ? (await bcrypt.compare(password, (user.password || ''))) : ((user.password || '') === password); // check if password changed at all
 
     if(email.length !== 0 && !(email === user.emailAddress)) {
         if(!isValidEmail(email)) return res.json({ error: 'Please enter a valid email address.' });
 
-        if(users.find(user => user.emailAddress === email)) {
+        if(await getUser('emailAddress', email)) {
             return res.json({ error: 'This email already has an account.' });
         } else {
-            user.emailAddress = email;
-
-            await saveUsers(users);
+            await prisma.user.update({
+                where: { cpn: req.session.user },
+                data: { emailAddress: email }
+            });
         }
     }
 
@@ -368,9 +370,10 @@ app.post("/update", acceptLoggedIn, (RATE_LIMITING ? UPDATE_RATE_LIMIT : (req, r
         } else if(password.length > 30) {
             return res.json({ error: 'Password must be less than 30 characters long.' });
         } else {
-            user.password = user.hashed ? await bcrypt.hash(password, 10) : password; // update the password w/ bcrypt (or plain-text if hashing disabled)
-
-            await saveUsers(users);
+            await prisma.user.update({
+                where: { cpn: req.session.user },
+                data: { password: (user.hashed ? await bcrypt.hash(password, 10) : password) } // update the password w/ bcrypt (or plain-text if hashing disabled)
+            });
         }
     }
 
@@ -381,25 +384,27 @@ app.post("/update", acceptLoggedIn, (RATE_LIMITING ? UPDATE_RATE_LIMIT : (req, r
 app.post("/kiosk", acceptLoggedIn, (RATE_LIMITING ? UPDATE_RATE_LIMIT : (req, res, next) => next()), async (req, res) => {
     const { phoneNumber, pin } = req.body;
 
-    const users = await readUsers();
-    const user = users.find(user => user.cpn === req.session.user);
+    const user = await getUser('cpn', req.session.user);
     const pinMatch = user.hashed ? (await bcrypt.compare(pin, (user.pin || ''))) : ((user.pin || '') === pin); // check if PIN changed at all
     const numberMatch = user.phoneNumber === phoneNumber; // check if number changed at all
+    const prisma = await getPrisma();
 
     if(phoneNumber.length === 10 && !isNaN(Number(phoneNumber)) && !numberMatch) {
-        if(users.find(user => user.phoneNumber === phoneNumber)) {
+        if(await getUser('phoneNumber', phoneNumber)) {
             return res.json({ error: 'This phone number is already linked to another account.' });
         } else {
-            user.phoneNumber = phoneNumber;
-
-            await saveUsers(users);
+            await prisma.user.update({
+                where: { cpn: req.session.user },
+                data: { phoneNumber }
+            });
         }
     }
 
     if(pin.length === 4 && !isNaN(Number(pin)) && !pinMatch) {
-        user.pin = user.hashed ? await bcrypt.hash(pin, 10) : pin; // update the PIN w/ bcrypt (or plain-text if hashing disabled)
-
-        await saveUsers(users);
+        await prisma.user.update({
+            where: { cpn: req.session.user },
+            data: { pin: (user.hashed ? await bcrypt.hash(pin, 10) : pin) } // update the PIN w/ bcrypt (or plain-text if hashing disabled)
+        });
     }
 
     res.json({ success: true });
@@ -412,7 +417,7 @@ app.get('/admin', rejectLoggedIn, (req, res) => {
 });
 
 app.get('/admin/dashboard', acceptLoggedIn, async (req, res) => {
-    let users = await readUsers();
+    let users = await getUser(); // get all users from Prisma
     users = users.map(user => ({
         // strip of sensitive information, also good to truncate / make it smaller data
         cpn: user.cpn,
@@ -457,7 +462,7 @@ app.post('/admin', rejectLoggedIn, (RATE_LIMITING ? LOGIN_RATE_LIMIT : (req, res
 // Get the user data information for the admin dashboard
 app.post('/admin/user', acceptLoggedIn, async (req, res) => {
     const { cpn } = req.body;
-    const user = await readUsers().then(users => users.find(user => user.cpn === cpn));
+    const user = await getUser('cpn', cpn);
     if(!user) return res.json({ error: 'It looks like this user no longer exists.' });
     
     delete user.password;
@@ -471,8 +476,7 @@ app.post('/admin/user', acceptLoggedIn, async (req, res) => {
 app.post('/admin/update', acceptLoggedIn, async (req, res) => {
     const { cpn, emailAddress, phoneNumber, password, pin } = req.body;
 
-    const users = await readUsers();
-    const user = users.find(user => user.cpn === cpn);
+    const user = await getUser('cpn', cpn);
     if(!user) return res.json({ error: 'It looks like this user no longer exists.' });
 
     // Check if email is valid, update if valid
@@ -480,10 +484,13 @@ app.post('/admin/update', acceptLoggedIn, async (req, res) => {
     if(emailAddress.length !== 0 && !emailMatch) {
         if(!isValidEmail(emailAddress)) {
             return res.json({ error: "It looks like you entered an invalid email! Please try again." });
-        } else if(users.find(user => user.emailAddress === emailAddress)) {
+        } else if(await getUser('emailAddress', emailAddress)) {
             return res.json({ error: "It looks like there's already an account under this email." });
         } else {
-            user.emailAddress = emailAddress;
+            await prisma.user.update({
+                where: { cpn },
+                data: { emailAddress }
+            });
         }
     }
 
@@ -492,10 +499,13 @@ app.post('/admin/update', acceptLoggedIn, async (req, res) => {
     if(phoneNumber.length !== 0 && !numberMatch) {
         if(phoneNumber.length !== 10 || isNaN(Number(phoneNumber))) {
             return res.json({ error: "A valid U.S. phone number was not entered." });
-        } else if(users.find(user => user.phoneNumber === phoneNumber)) {
+        } else if(await getUser('phoneNumber', phoneNumber)) {
             return res.json({ error: "This phone number is already linked to another account." });
         } else {
-            user.phoneNumber = phoneNumber;
+            await prisma.user.update({
+                where: { cpn },
+                data: { phoneNumber }
+            });
         }
     }
 
@@ -505,7 +515,10 @@ app.post('/admin/update', acceptLoggedIn, async (req, res) => {
         if(pin.length !== 4 || isNaN(Number(pin))) {
             return res.json({ error: "It looks like this PIN is not supported." });
         } else {
-            user.pin = (user.hashed ? await bcrypt.hash(pin, 10) : pin); // update the PIN w/ bcrypt, or plain if disabled
+            await prisma.user.update({
+                where: { cpn },
+                data: { pin: (user.hashed ? await bcrypt.hash(pin, 10) : pin) } // update the PIN w/ bcrypt, or plain if disabled
+            });
         }
     }
 
@@ -517,28 +530,35 @@ app.post('/admin/update', acceptLoggedIn, async (req, res) => {
         } else if(password.length > 30) {
             return res.json({ error: 'Password must be less than 30 characters long.' });
         } else {
-            user.password = (user.hashed ? await bcrypt.hash(password, 10) : password); // update the password w/ bcrypt, or plain if disabled
+            await prisma.user.update({
+                where: { cpn },
+                data: { password: (user.hashed ? await bcrypt.hash(password, 10) : password) } // update the password w/ bcrypt, or plain if disabled
+            });
         }
     }
 
-    await saveUsers(users);
     return res.json({ success: true, message: 'This user account has been updated successfully.' });
 });
 
 // Delete the user account or disable it (punish accounts)
 app.post('/admin/status', acceptLoggedIn, async (req, res) => {
     const { cpn, method } = req.body;
-
-    const users = await readUsers();
-    const user = users.find(user => user.cpn === cpn);
+    
+    const user = await getUser('cpn', cpn);
     if(!user) return res.json({ error: 'It looks like this user no longer exists.' });
 
     if(method === 'delete') {
-        await saveUsers(users.filter(user => user.cpn !== cpn)); // filter out the user to remove them
+        const prisma = await getPrisma();
+        await prisma.user.delete({
+            where: { cpn },
+        });
         return res.json({ success: true, message: 'This user account has been permanently deleted.' });
     } else if(method === 'disable') {
-        user.disabled = !user.disabled; // toggle the disabled status
-        await saveUsers(users);
+        const prisma = await getPrisma();
+        await prisma.user.update({
+            where: { cpn },
+            data: { disabled: !user.disabled } // toggle the disabled status
+        });
         return res.json({ success: true, message: 'This user account has been successfully ' + (user.disabled ? 'disabled' : 'enabled') + '.' });
     } else {
         return res.json({ error: 'It looks like your request was malformed. Please refresh the page and try again!' });
