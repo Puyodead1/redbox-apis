@@ -112,6 +112,11 @@ During the following steps, use the ports found below. Finally, restart your Red
 -   Kiosk Inventory: 3017
 -   IOT Certificate Service: 3018
 
+## Legacy Database - Migration
+If your project currently uses the legacy database (which utilized the `database/` folder), it's required that you migrate to database usage by using the command: `pnpm perks:migrate`.
+
+This will push any migrations to your existing Prisma database, and transfer all of your data over. It will then proceed to delete the `database/` folder and perform a clean-up. After this command is ran, no further action is needed from your end.
+
 ## Development
 -   If you modify something in `db` or `common`, you can rebuild those quicker with the following command: `pnpm prebuild`
 -   To run a script on a specific package, use the following operation: `pnpm --filter <package name> run <script name> [any args]`
