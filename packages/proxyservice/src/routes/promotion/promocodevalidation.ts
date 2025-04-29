@@ -35,8 +35,6 @@ export const post = [
 
     return res.json({
       MessageId: v4(),
-      Success: true,
-      Errors: [],
       KioskId,
       Error: "",
       Amount: promoCode.amount,
@@ -45,12 +43,10 @@ export const post = [
       RentFormat: promoCode.rentFormat,
       GetQty: promoCode.getQty,
       GetFormat: promoCode.getFormat,
-      CampaignTitles: promoCode.campaignTitles
-        ? {
-            Include: true,
-            Titles: promoCode.campaignTitles,
-          }
-        : [],
+      CampaignTitles: promoCode.campaignTitles as {
+        Include: boolean;
+        Titles: never[];
+      },
       ProductTypeId: promoCode.productTypeId,
       FormatIds: promoCode.formatIds,
       ActionType: promoCode.actionType,

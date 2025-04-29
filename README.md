@@ -131,3 +131,6 @@ Listed are the workspace scripts, individual packages may specify their own addi
 -   `migrate:prod` - Run migrations for a production database
 -   `migrate:dev` - Run migrations for a development database
 -   `seed` - Seed the database, mainly for development, currently is just for adding promo codes for testing
+
+### Seeding
+We use seeding to add initial data to a database, this is called seeding it. Currently, we use this to add different types of promo codes for testing. If you want to test/use these promo codes, just run the `seed` script.

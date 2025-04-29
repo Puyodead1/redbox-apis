@@ -1,8 +1,9 @@
-import { BaseResponse } from "@redbox-apis/common";
 import DefaultPromo from "./DefaultPromo";
 import { DiscountValidationCampaignTitlesResult } from "./DiscountValidationCampaignTitlesResult";
 
-export default interface PromoCodeValidationResponse extends BaseResponse {
+export default interface PromoCodeValidationResponse {
+  MessageId: string;
+  KioskId: number;
   Error: string;
   Amount: number;
   PromotionIntentCode: string;
@@ -10,9 +11,9 @@ export default interface PromoCodeValidationResponse extends BaseResponse {
   RentFormat: string;
   GetQty?: number;
   GetFormat: string;
-  CampaignTitles: DiscountValidationCampaignTitlesResult[];
+  CampaignTitles: DiscountValidationCampaignTitlesResult;
   ProductTypeId?: number;
-  FormatIds: number[];
+  FormatIds?: number[] | null;
   ActionType: string;
   AllowFullDiscount: boolean;
   DefaultPromo: DefaultPromo;

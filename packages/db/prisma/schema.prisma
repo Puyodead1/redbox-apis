@@ -13,7 +13,7 @@ datasource db {
 // }
 
 model Transaction {
-  transactionId         String   @id
+  transactionId         String  @id
   email                 String?
   kioskId               Int?
   transactionDate       String?
@@ -24,17 +24,17 @@ model Transaction {
 }
 
 model User {
-  cpn           String   @id
-  signupDate    String
-  firstName     String?
-  emailAddress  String?  @unique
-  phoneNumber   String?  @unique
-  password      String      // required, but temp one created upon signup at kiosk
-  pin           String?
-  hashed        Boolean
-  loyalty       Json
-  promoCodes    Json
-  disabled      Boolean?
+  cpn          String   @id
+  signupDate   String
+  firstName    String?
+  emailAddress String?  @unique
+  phoneNumber  String?  @unique
+  password     String // required, but temp one created upon signup at kiosk
+  pin          String?
+  hashed       Boolean
+  loyalty      Json
+  promoCodes   Json
+  disabled     Boolean?
 }
 
 model Statistics {
@@ -64,9 +64,9 @@ model PromoCode {
   rentFormat        String
   getQty            Int?
   getFormat         String
-  campaignTitles    Json // array of DiscountValidationCampaignTitlesResult
+  campaignTitles    Json? // DiscountValidationCampaignTitlesResult
   productTypeId     Int?
-  formatIds         Json // int array
+  formatIds         Json? // int array
   actionType        String
   allowFullDiscount Boolean
   defaultPromo      Json? // DefaultPromo
