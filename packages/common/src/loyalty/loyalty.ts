@@ -179,7 +179,6 @@ export async function updateRewards(barcode: string, transaction: any) {
 export async function createAccount(
   data: any,
 ): Promise<{ success: boolean; reason?: string; data?: any }> {
-
   const tempPassword = Array.from({ length: 10 }, () =>
     "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*()_-+=<>?".charAt(
       Math.floor(Math.random() * 70),
@@ -190,7 +189,7 @@ export async function createAccount(
     ? encService.decrypt(data.Pin, EncryptionType.LOCAL)
     : null;
 
-  if (data.Email && await getUserByEmail(data.Email)) {
+  if (data.Email && (await getUserByEmail(data.Email))) {
     // if email address already in use
     return {
       success: false,
@@ -201,7 +200,7 @@ export async function createAccount(
 
   if (
     data.MobilePhoneNumber &&
-    await getUserByPhoneNumber(data.MobilePhoneNumber)
+    (await getUserByPhoneNumber(data.MobilePhoneNumber))
   ) {
     // if mobile number already in use
     return {

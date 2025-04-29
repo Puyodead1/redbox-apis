@@ -19,7 +19,12 @@ const getLocalCredentials = async (username: string, type: LoginType) => {
     const config = Config.get();
     const cred = config.loginInfo?.[type];
 
-    return cred?.find((user: { username: string; password: string }) => user.username === username) || null;
+    return (
+      cred?.find(
+        (user: { username: string; password: string }) =>
+          user.username === username,
+      ) || null
+    );
   } catch (error) {
     return null;
   }

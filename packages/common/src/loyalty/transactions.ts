@@ -2,7 +2,6 @@ import { getPrisma } from "@redbox-apis/db";
 import path from "path";
 import fs from "fs";
 
-
 export async function createTransNumber(): Promise<string> {
   const prisma = await getPrisma();
   let orderId: string | null = null;
