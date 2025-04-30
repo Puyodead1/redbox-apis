@@ -5,6 +5,7 @@ const bcrypt = require('bcryptjs');
 const axios = require('axios');
 const fs = require('fs');
 const path = require('path');
+const { SMTPClient } = require('emailjs');
 require('dotenv').config({ path: "./.env" });
 const { getPrisma } = require("../db");
 
@@ -565,38 +566,60 @@ app.post('/admin/status', acceptLoggedIn, async (req, res) => {
     }
 });
 
-// Send a test email to the admin to verify the SMTP server is working
 app.post('/admin/send-test-email', acceptLoggedIn, async (req, res) => {
-    const { emailAddress } = req.body;
+  const { emailAddress } = req.body;
 
-    try {
-        const transporter = require('nodemailer').createTransport({
-            host: API_CONFIGURATION.SMTP_HOSTNAME,
-            port: Number(API_CONFIGURATION.SMTP_PORT),
-            secure: true,
-            auth: {
-                user: API_CONFIGURATION.SMTP_USERNAME,
-                pass: API_CONFIGURATION.SMTP_PASSWORD,
-            },
-        });
+  const client = new SMTPClient({
+    user: API_CONFIGURATION.SMTP_USERNAME,
+    password: API_CONFIGURATION.SMTP_PASSWORD,
+    host: API_CONFIGURATION.SMTP_HOSTNAME,
+    port: Number(API_CONFIGURATION.SMTP_PORT),
+    ssl: API_CONFIGURATION.SMTP_SSL === "true",
+    tls: API_CONFIGURATION.SMTP_TLS === "true",
+  });
 
-        await transporter.sendMail({
-            from: `"Redbox Perks" <${API_CONFIGURATION.SMTP_USERNAME}>`,
-            to: emailAddress,
-            subject: `Your email server is live!`,
-            html: `
-                <p>Success! Your email service has been successfully set up.</p>
-                <p>If you see this message, your email server is working correctly.</p>
-                <p>This is a test email sent from the Redbox Perks system to verify your email configuration.</p>
-                <br>
-                <p>Thank you for using Redbox Perks!</p>
-            `,
-        });
-    } catch (error) {
-        return res.json({ error: error.toString() });
-    }
+  const maskedPassword = '*'.repeat(API_CONFIGURATION.SMTP_PASSWORD.length);
 
-    res.json({ success: true });
+  const message = {
+    from: `Redbox Perks <${API_CONFIGURATION.SMTP_USERNAME}>`,
+    to: emailAddress,
+    subject: 'Your email server is live!',
+    text: `Success! Your email service has been successfully set up.
+  
+  If you see this message, your email server is working correctly.
+  This is a test email sent from the Redbox Perks system to verify your email configuration.
+  
+  Thank you for using Redbox Perks!`,
+    attachment: [
+      {
+        data: `
+          <h1>Success!</h1>
+          <p>Your email service has been <strong>successfully set up</strong>.</p>
+          <p>If you're reading this, your email server is working correctly.</p>
+          <p>This is a test email sent from the <b>Redbox Perks</b> system to verify your email configuration.</p>
+          <p><strong>SMTP Credentials</strong></p>
+          <ul>
+              <li><strong>Host:</strong> ${API_CONFIGURATION.SMTP_HOSTNAME}</li>
+              <li><strong>Port:</strong> ${API_CONFIGURATION.SMTP_PORT}</li>
+              <li><strong>Username:</strong> ${API_CONFIGURATION.SMTP_USERNAME}</li>
+              <li><strong>Password:</strong> ${maskedPassword}</li>
+              <li><strong>SSL:</strong> ${API_CONFIGURATION.SMTP_SSL}</li>
+              <li><strong>TLS:</strong> ${API_CONFIGURATION.SMTP_TLS}</li>
+          </ul>
+          <p>Thank you for using Redbox Perks!</p>
+        `,
+        alternative: true,
+      }
+    ]
+  };
+
+  try {
+    const result = await client.sendAsync(message);
+    res.json({ success: true, result });
+  } catch (error) {
+    console.log('SMTP Error:', error?.message || error.toString());
+    res.json({ error: error?.message || error.toString() });
+  }
 });
 
 app.use((req, res, next) => {

@@ -1,17 +1,16 @@
-import nodemailer from "nodemailer";
+import { SMTPClient } from "emailjs";
 import { getStore } from "./utils";
 import dotenv from "dotenv";
 dotenv.config({ path: "../../.env" });
 
 // --- Transporter Setup ---
-const transporter = nodemailer.createTransport({
+const client = new SMTPClient({
+  user: process.env.SMTP_USERNAME,
+  password: process.env.SMTP_PASSWORD,
   host: process.env.SMTP_HOSTNAME,
   port: Number(process.env.SMTP_PORT),
-  secure: true,
-  auth: {
-    user: process.env.SMTP_USERNAME,
-    pass: process.env.SMTP_PASSWORD,
-  },
+  ssl: process.env.SMTP_SSL === "true",
+  tls: process.env.SMTP_TLS === "true",
 });
 
 // --- Utility Functions ---
@@ -51,25 +50,36 @@ export async function sendSignup(
   kioskId: string | number,
 ) {
   const store = await getStore(kioskId);
+  try {
+    const store = await getStore(kioskId);
 
-  const info = await transporter.sendMail({
-    from: `"Redbox Perks" <${process.env.SMTP_USERNAME}>`,
-    to: email,
-    subject: `Welcome to Redbox Perks!`,
-    html: `
-        <p>You're in! Thanks for signing up at your local Redbox kiosk.</p>
-        <p><strong>Your temporary password for your Redbox account is: <code>${password}</code></strong></p>
-        <p>You can access your online account by <a href="https://${process.env.BASE_DOMAIN || "redbox.com"}/login">clicking here</a>.</p>
-        <p>If you didn't create this account, please reply to this email immediately to let us know.</p>
-
-        <br><p>As a special thanks for signing up, you'll receive a FREE 1-night disc rental on your next purchase. Thanks for being a part of Redbox!</p>
-        <small>Your sign-up was made at the following kiosk address: <strong>${store!.Address}, ${store!.City}, ${store!.State} ${store!.ZipCode}</strong> (Kiosk #${kioskId})</small>
-    `,
-  });
-
-  return info;
+    const message = await client.sendAsync({
+      from: `Redbox Perks <${process.env.SMTP_USERNAME}>`,
+      to: email,
+      subject: `Welcome to Redbox Perks!`,
+      text: `You're in! Thanks for signing up at your local Redbox kiosk.\nYour temporary password for your Redbox account is: ${password}\n\nYou can access your online account by clicking here: https://${process.env.BASE_DOMAIN || "redbox.com"}/login\n\nIf you didn't create this account, please reply to this email immediately to let us know.\n\nThanks for being a part of Redbox!`,
+      attachment: [
+        {
+          data: `
+            <p>You're in! Thanks for signing up at your local Redbox kiosk.</p>
+            <p><strong>Your temporary password for your Redbox account is: <code>${password}</code></strong></p>
+            <p>You can access your online account by <a href="https://${process.env.BASE_DOMAIN || "redbox.com"}/login">clicking here</a>.</p>
+            <p>If you didn't create this account, please reply to this email immediately to let us know.</p>
+            <br><p>As a special thanks for signing up, you'll receive a FREE 1-night disc rental on your next purchase. Thanks for being a part of Redbox!</p>
+            <small>Your sign-up was made at the following kiosk address: <strong>${store!.Address}, ${store!.City}, ${store!.State} ${store!.ZipCode}</strong> (Kiosk #${kioskId})</small>
+          `,
+          alternative: true,
+        },
+      ],
+    });
+    console.log("Email sent successfully to ${email}:", message);
+    return message;
+  } catch (error) {
+    console.log("Error sending email:", error);
+  }
 }
 
+// --- Main Function to Send Receipt ---
 export async function sendReceipt(orderId: string | number, data: any = {}) {
   if (!data?.Email) return false;
   const store = data.KioskId ? await getStore(data.KioskId) : null;
@@ -239,29 +249,33 @@ export async function sendReceipt(orderId: string | number, data: any = {}) {
       data.ShoppingCart.Groups.forEach((group: any) => {
         group.Items.forEach((item: any) => {
           lineItems += `
-                <tr class="LineItem">
-                    <td>${item.ProductName}</td>
-                    <td align="left">${item.Barcode}</td>
-                    <td align="left">${group.GroupType === 1 ? "Rental" : "Purchase"}</td>
-                    <td align="left">$${group.GroupType === 1 ? item.Pricing.InitialNight.toFixed(2) : item.Pricing.Purchase.toFixed(2)}</td>
-                    <td> </td>
-                </tr>
-                `;
+            <tr class="LineItem">
+              <td>${item.ProductName}</td>
+              <td align="left">${item.Barcode}</td>
+              <td align="left">${group.GroupType === 1 ? "Rental" : "Purchase"}</td>
+              <td align="left">$${group.GroupType === 1 ? item.Pricing.InitialNight.toFixed(2) : item.Pricing.Purchase.toFixed(2)}</td>
+              <td> </td>
+            </tr>
+          `;
         });
       });
     }
     html = html.replace("--- INSERT LINE ITEMS HERE ---", lineItems);
 
-    const info = await transporter.sendMail({
-      from: `"Redbox Receipts" <${process.env.SMTP_USERNAME}>`,
+    const message = {
+      from: `Redbox Receipts <${process.env.SMTP_USERNAME}>`,
       to: data.Email,
       subject: `Redbox Receipt for ${orderId}`,
-      html: html,
-    });
-
-    return info;
+      text: `Here is your receipt for the order ID: ${orderId}`,
+      attachment: [
+        { data: html, alternative: true },
+      ],
+    };
+    const result = await client.sendAsync(message);
+    console.log("Email sent successfully:", result);
+    return result;
   } catch (error) {
-    console.log(error);
+    console.log("Error sending receipt:", error);
     throw error;
   }
 }

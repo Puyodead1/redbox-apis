@@ -33,11 +33,11 @@
       "bcryptjs": "^3.0.2",
       "dotenv": "^16.4.7",
       "ejs": "^3.1.10",
+      "emailjs": "^4.0.3",
       "express": "^4.21.2",
       "express-rate-limit": "^7.5.0",
       "express-session": "^1.18.1",
-      "@types/nodemailer": "^6.4.17",
-      "nodemailer": "^6.10.1"
+      "@types/nodemailer": "^6.4.17"
     }
   }
   
