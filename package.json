@@ -16,8 +16,9 @@
     "perks:migrate": "pnpm migrate:prod && node ./perksmigrate.cjs"
   },
   "dependencies": {
-    "dotenv": "^16.4.7",
-    "@types/node": "^22.10.2"
+    "@types/node": "^24.1.0",
+    "dotenv": "^17.2.1",
+    "on-headers": "^1.1.0"
   },
   "type": "module",
   "author": "Puyodead1",
