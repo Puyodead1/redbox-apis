@@ -31,6 +31,10 @@ host = "127.0.0.1"
 port = 3015
 host = "127.0.0.1"
 
+[mqttConfig]
+port = 3019
+host = "127.0.0.1"
+
 # Redbox Desktop + Field Maintenance Credentials
 
 [[loginInfo.desktop]] # Redbox Desktop

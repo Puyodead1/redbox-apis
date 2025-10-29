@@ -19,6 +19,7 @@ export interface AppConfig {
       username: string;
     }[];
   };
+  mqttConfig: ServiceConfig;
   proxyServiceConfig: ServiceConfig;
   reelsConfig: ServiceConfig;
   transactionServiceConfig: ServiceConfig;

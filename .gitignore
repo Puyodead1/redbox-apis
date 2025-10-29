@@ -126,8 +126,8 @@ dist
 ## -- Start custom ignore list --
 config.toml
 redbox.db*
-RootCA.crt
-RootCA.key
+*.crt
+*.key
 # ignore any generated device certificates
 certificates/
 

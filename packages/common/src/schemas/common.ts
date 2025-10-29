@@ -175,5 +175,6 @@ export const AppConfigSchema = Joi.object({
   proxyServiceConfig: ServiceConfigSchema.required(),
   reelsConfig: ServiceConfigSchema.required(),
   transactionServiceConfig: ServiceConfigSchema.required(),
+  mqttConfig: ServiceConfigSchema.required(),
   loginInfo: LoginInfoSchema.required(),
 }).meta({ className: "AppConfig" });
