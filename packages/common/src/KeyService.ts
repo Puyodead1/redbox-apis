@@ -19,13 +19,16 @@ export class KeyService {
   private rootPrivateKey!: forge.pki.PrivateKey;
 
   /**
-   * Check if the root CA exists on the file system
-   * @returns Boolean indicating if the root CA exists
+   * Check if a key pair exists on the file system
+   * @returns Boolean indicating if key pair files exist
    */
-  public async rootCAExists(): Promise<boolean> {
+  public async keyPairExists(
+    certPath: string,
+    keyPath: string,
+  ): Promise<boolean> {
     try {
-      await fs.access(this.ROOT_CA_PATH);
-      await fs.access(this.ROOT_CA_KEY_PATH);
+      await fs.access(certPath);
+      await fs.access(keyPath);
 
       return true;
     } catch (error) {
@@ -34,13 +37,77 @@ export class KeyService {
   }
 
   /**
+   * Return the a certificate as a PEM string
+   * @returns The certificate as a PEM string
+   */
+  public getCertificatePEM(cert: forge.pki.Certificate): string {
+    return forge.pki.certificateToPem(cert).replaceAll("\r\n", "\n");
+  }
+
+  /**
+   * Load a key pair from the file system, optionally generating it if it does not exist
+   * @param keyPairName Name of the key pair for logging purposes
+   * @param certPath Path to the certificate file
+   * @param keyPath Path to the private key file
+   * @param generateIfNotExists Whether to generate the key pair if it does not exist
+   * @param commonName Common name to use for the certificate if generating
+   */
+  public async loadKeyPair(
+    keyPairName = "Unknown",
+    certPath: string,
+    keyPath: string,
+    generateIfNotExists = true,
+    commonName = "Redbox APIs", // Default common name for the certificate
+  ): Promise<{
+    certificate: string;
+    privateKey: string;
+  }> {
+    logger.info(`[KeyService] Loading ${keyPairName} Key Pair`);
+
+    if (!(await this.keyPairExists(certPath, keyPath))) {
+      if (generateIfNotExists) {
+        logger.info(
+          `[KeyService] ${keyPairName} Key Pair does not exist, generating...`,
+        );
+        const { certificate, privateKey } =
+          await this.generateSignedCertificate(commonName, certPath, keyPath);
+        logger.info(`[KeyService] ${keyPairName} Key Pair generated`);
+        return {
+          certificate: certificate,
+          privateKey: privateKey,
+        };
+      } else
+        throw new Error(
+          `[KeyService] ${keyPairName} Key Pair does not exist and generation is disabled.`,
+        );
+    } else {
+      const certificateStr = await fs.readFile(certPath, "utf-8");
+      const privateKeyStr = await fs.readFile(keyPath, "utf-8");
+
+      // TODO: we could maybe return this also? idk, depends on how we want to use this
+      // this.rootCertificate = forge.pki.certificateFromPem(certificateStr);
+      // this.rootPrivateKey = forge.pki.privateKeyFromPem(privateKeyStr);
+      return {
+        certificate: certificateStr,
+        privateKey: privateKeyStr,
+      };
+    }
+  }
+
+  /**
+   * Check if the root CA exists on the file system
+   * @returns Boolean indicating if the root CA exists
+   */
+  public async rootCAExists(): Promise<boolean> {
+    return await this.keyPairExists(this.ROOT_CA_PATH, this.ROOT_CA_KEY_PATH);
+  }
+
+  /**
    * Return the root CA certificate as a PEM string
    * @returns The root CA certificate as a PEM string
    */
-  public getRootCA(): string {
-    return forge.pki
-      .certificateToPem(this.rootCertificate)
-      .replaceAll("\r\n", "\n");
+  public getRootCert(): string {
+    return this.getCertificatePEM(this.rootCertificate);
   }
 
   /**
@@ -109,6 +176,68 @@ export class KeyService {
   }
 
   /**
+   * Generate a new certificate and private key signed by the root CA
+   */
+  public async generateSignedCertificate(
+    commonName: string,
+    certPath: string,
+    keyPath: string,
+  ): Promise<{
+    certificate: string;
+    privateKey: string;
+  }> {
+    if (!this.rootCertificate || !this.rootPrivateKey) {
+      throw new Error("Root CA must be generated or loaded before signing");
+    }
+
+    const keys = forge.pki.rsa.generateKeyPair(2048);
+    const cert = forge.pki.createCertificate();
+
+    cert.publicKey = keys.publicKey;
+    cert.serialNumber = "02";
+    cert.validity.notBefore = new Date();
+    cert.validity.notAfter = new Date();
+    cert.validity.notAfter.setFullYear(
+      cert.validity.notBefore.getFullYear() + 10,
+    );
+
+    const attrs = [
+      { name: "commonName", value: commonName },
+      {
+        name: "organizationName",
+        value: "Redbox APIs",
+      },
+    ];
+
+    cert.setSubject(attrs);
+    cert.setIssuer(this.rootCertificate.subject.attributes);
+
+    cert.setExtensions([
+      {
+        name: "basicConstraints",
+        cA: false,
+      },
+      {
+        name: "keyUsage",
+        keyCertSign: true,
+        cRLSign: true,
+        digitalSignature: true,
+        keyEncipherment: true,
+      },
+    ]);
+
+    cert.sign(this.rootPrivateKey, forge.md.sha256.create());
+
+    await fs.writeFile(certPath, forge.pki.certificateToPem(cert));
+    await fs.writeFile(keyPath, forge.pki.privateKeyToPem(keys.privateKey));
+
+    return {
+      certificate: forge.pki.certificateToPem(cert),
+      privateKey: forge.pki.privateKeyToPem(keys.privateKey),
+    };
+  }
+
+  /**
    * Load the root CA from the file system, generating it if it does not exist
    */
   public async loadRootCA(): Promise<void> {
@@ -161,12 +290,23 @@ export class KeyService {
       {
         name: "keyUsage",
         digitalSignature: true,
+        keyEncipherment: true,
       },
     ]);
 
     cert.sign(this.rootPrivateKey, forge.md.sha256.create());
 
     const certificateId = generateCertificateId();
+
+    const rootPath = findRoot(__dirname);
+    if (!rootPath) throw new Error("Could not find root path");
+    const certificatesPath = path.join(rootPath, "certificates");
+    await fs.mkdir(certificatesPath, { recursive: true });
+    const certPath = path.join(certificatesPath, `${kioskId}.crt`);
+    const keyPath = path.join(certificatesPath, `${kioskId}.key`);
+
+    await fs.writeFile(certPath, forge.pki.certificateToPem(cert));
+    await fs.writeFile(keyPath, forge.pki.privateKeyToPem(keys.privateKey));
 
     const hashService = new HashService();
     const password = await hashService.getCertificatePassword(kioskId);
@@ -229,7 +369,7 @@ export class KeyService {
     const data = {
       CertificateId: generatedCert.certificateId,
       DeviceCertPfxBase64: generatedCert.deviceClientPfx,
-      RootCa: await this.getRootCA(),
+      RootCa: await this.getRootCert(),
     };
     const rootPath = findRoot(__dirname);
     if (!rootPath) throw new Error("Could not find root path");

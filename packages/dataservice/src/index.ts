@@ -21,6 +21,6 @@ const HOST = config.dataServiceConfig.host;
   app.use(errors());
 
   app.listen(PORT, HOST, () => {
-    logger.info(`Server is running on port ${PORT}`);
+    logger.info(`Server is listening on  ${HOST}:${PORT}`);
   });
 })();

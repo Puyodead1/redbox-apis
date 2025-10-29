@@ -1,27 +1,22 @@
 {
-  "name": "@redbox-apis/cli",
+  "name": "@redbox-apis/mqtt-broker",
   "private": true,
   "version": "1.0.0",
-  "description": "Redbox API Management CLI",
+  "description": "",
   "main": "dist/index.js",
   "scripts": {
     "build": "tsc",
     "start": "node dist/index.js",
-    "clean": "rimraf dist",
-    "dev": "ts-node src/index.ts"
+    "clean": "rimraf dist server.log"
   },
   "keywords": [],
   "author": "Puyodead1",
   "license": "GPL-3.0-or-later",
   "dependencies": {
     "@redbox-apis/common": "workspace:*",
-    "@redbox-apis/db": "workspace:^",
-    "commander": "^13.1.0"
+    "aedes": "^0.51.3"
   },
   "devDependencies": {
-    "@types/commander": "^2.12.5",
-    "@types/node": "^22.10.2",
-    "install": "^0.13.0",
     "rimraf": "^6.0.1",
     "ts-node": "^10.9.2",
     "typescript": "^5.6.3"

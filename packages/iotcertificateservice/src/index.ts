@@ -15,7 +15,7 @@ const app = express();
 const PORT = config.iotCertificateServiceConfig.port;
 const HOST = config.iotCertificateServiceConfig.host;
 
-+(async () => {
+(async () => {
   const keyService = new KeyService();
   const encryptionService = new EncryptionService();
 
@@ -33,6 +33,6 @@ const HOST = config.iotCertificateServiceConfig.host;
   app.use(errors());
 
   app.listen(PORT, HOST, () => {
-    logger.info(`Server is running on port ${PORT}`);
+    logger.info(`Server is listening on  ${HOST}:${PORT}`);
   });
 })();
