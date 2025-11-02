@@ -2,7 +2,7 @@ export * from "./config";
 export * from "./EncryptionService";
 export * from "./HashService";
 export * from "./interfaces";
-export * from "./KeyService";
+export * from "./certificates";
 export * from "./logger";
 export * as loyalty from "./loyalty";
 export * from "./middleware";

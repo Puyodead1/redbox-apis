@@ -8,9 +8,12 @@ export class IoTCreateCertificateCommand extends BaseCommand {
   async action(kioskId: string): Promise<void> {
     console.log(`Generating a device certificate for kiosk '${kioskId}'`);
     const generatedCert =
-      await this.context.keyService.generateDeviceCertificate(kioskId);
-    await this.context.keyService.saveDeviceCertificate(kioskId, generatedCert);
-    const path = await this.context.keyService.exportDeviceCertificate(
+      await this.context.certManager.generateDeviceCertificate(kioskId);
+    await this.context.certManager.saveDeviceCertificate(
+      kioskId,
+      generatedCert,
+    );
+    const path = await this.context.certManager.exportDeviceCertificate(
       kioskId,
       generatedCert,
     );

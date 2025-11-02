@@ -29,6 +29,7 @@ export const post = [
       `CertificateGenerate for kioskId: ${kioskId}, type: ${thingType}, kioskPassword: ${password}`,
     );
 
+    // TODO: fix, use certManager instead of keyService
     const generated: { deviceClientPfx: string; certificateId: string } =
       await req.app.locals.keyService.generateDeviceCertificate(kioskId);
 
@@ -48,7 +49,7 @@ export const post = [
     return res.json({
       DeviceCertPfxBase64: generated.deviceClientPfx,
       CertificateId: generated.certificateId,
-      RootCa: req.app.locals.keyService.getRootCA(),
+      RootCa: req.app.locals.certManager.root.getCertificatePEM(),
     });
   },
 ];

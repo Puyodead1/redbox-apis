@@ -1,4 +1,4 @@
-import { KeyService } from "@redbox-apis/common";
+import { CertificateManager } from "@redbox-apis/common";
 import { program } from "commander";
 import { loadCommands } from "./commands";
 import Context from "./context";
@@ -9,10 +9,10 @@ import Context from "./context";
     .description("Management CLI for Redbox API")
     .version("1.0.0");
 
-  const keyService = new KeyService();
-  await keyService.loadRootCA();
+  const certManager = new CertificateManager();
+  await certManager.ensureAll();
 
-  const context = new Context(keyService);
+  const context = new Context(certManager);
   console.debug("[Context] Initialized");
   console.debug("[Commands] Loading...");
   const commands = loadCommands(context);

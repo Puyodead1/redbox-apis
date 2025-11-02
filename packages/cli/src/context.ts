@@ -1,5 +1,5 @@
-import { KeyService } from "@redbox-apis/common";
+import { CertificateManager } from "@redbox-apis/common";
 
 export default class Context {
-  constructor(public readonly keyService: KeyService) {}
+  constructor(public readonly certManager: CertificateManager) {}
 }

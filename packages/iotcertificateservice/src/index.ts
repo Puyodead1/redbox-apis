@@ -1,6 +1,6 @@
 import {
   Config,
-  KeyService,
+  CertificateManager,
   logger,
   loggingMiddleware,
 } from "@redbox-apis/common";
@@ -16,13 +16,13 @@ const PORT = config.iotCertificateServiceConfig.port;
 const HOST = config.iotCertificateServiceConfig.host;
 
 (async () => {
-  const keyService = new KeyService();
+  const certManager = new CertificateManager();
   const encryptionService = new EncryptionService();
 
-  await keyService.loadRootCA();
+  await certManager.ensureAll();
 
   app.locals.encryptionService = encryptionService;
-  app.locals.keyService = keyService;
+  app.locals.certManager = certManager;
 
   app.use(express.json());
 

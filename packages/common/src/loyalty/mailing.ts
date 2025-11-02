@@ -1,7 +1,8 @@
 import { SMTPClient } from "emailjs";
 import { getStore } from "./utils";
 import dotenv from "dotenv";
-dotenv.config({ path: "../../.env" });
+import { getPathRelativeRoot } from "../utils";
+dotenv.config({ path: getPathRelativeRoot(".env") });
 
 // --- Transporter Setup ---
 const client = new SMTPClient({
@@ -57,16 +58,24 @@ export async function sendSignup(
       from: `Redbox Perks <${process.env.SMTP_USERNAME}>`,
       to: email,
       subject: `Welcome to Redbox Perks!`,
-      text: `You're in! Thanks for signing up at your local Redbox kiosk.\nYour temporary password for your Redbox account is: ${password}\n\nYou can access your online account by clicking here: https://${process.env.BASE_DOMAIN || "redbox.com"}/login\n\nIf you didn't create this account, please reply to this email immediately to let us know.\n\nThanks for being a part of Redbox!`,
+      text: `You're in! Thanks for signing up at your local Redbox kiosk.\nYour temporary password for your Redbox account is: ${password}\n\nYou can access your online account by clicking here: https://${
+        process.env.BASE_DOMAIN || "redbox.com"
+      }/login\n\nIf you didn't create this account, please reply to this email immediately to let us know.\n\nThanks for being a part of Redbox!`,
       attachment: [
         {
           data: `
             <p>You're in! Thanks for signing up at your local Redbox kiosk.</p>
             <p><strong>Your temporary password for your Redbox account is: <code>${password}</code></strong></p>
-            <p>You can access your online account by <a href="https://${process.env.BASE_DOMAIN || "redbox.com"}/login">clicking here</a>.</p>
+            <p>You can access your online account by <a href="https://${
+              process.env.BASE_DOMAIN || "redbox.com"
+            }/login">clicking here</a>.</p>
             <p>If you didn't create this account, please reply to this email immediately to let us know.</p>
             <br><p>As a special thanks for signing up, you'll receive a FREE 1-night disc rental on your next purchase. Thanks for being a part of Redbox!</p>
-            <small>Your sign-up was made at the following kiosk address: <strong>${store!.Address}, ${store!.City}, ${store!.State} ${store!.ZipCode}</strong> (Kiosk #${kioskId})</small>
+            <small>Your sign-up was made at the following kiosk address: <strong>${
+              store!.Address
+            }, ${store!.City}, ${store!.State} ${
+            store!.ZipCode
+          }</strong> (Kiosk #${kioskId})</small>
           `,
           alternative: true,
         },
@@ -142,7 +151,9 @@ export async function sendReceipt(orderId: string | number, data: any = {}) {
             </tr>
             <tr>
                 <td><b>Receipt Date:</b></td>
-                <td>${formatDate(data?.TransactionDate || new Date().toISOString())}</td>
+                <td>${formatDate(
+                  data?.TransactionDate || new Date().toISOString(),
+                )}</td>
             </tr>
             <tr>
                 <td><b>Order Total:</b></td>
@@ -150,18 +161,28 @@ export async function sendReceipt(orderId: string | number, data: any = {}) {
             </tr>
             <tr>
                 <td><b>Payment Card:</b></td>
-                <td>${fromCardBIN(data?.CreditCard?.BIN)}....${data?.CreditCard?.LastFour || "0000"}</td>
+                <td>${fromCardBIN(data?.CreditCard?.BIN)}....${
+      data?.CreditCard?.LastFour || "0000"
+    }</td>
             </tr>
             <tr>
                 <td><b>Redbox Location:</b></td>
-                <td>${store?.Banner || "Unknown"} <a href="${data.KioskId ? "http://www.redbox.com/movies/kiosk/" + data.KioskId : "http://www.redbox.com/"}">(see available movies)</a></tr>
+                <td>${store?.Banner || "Unknown"} <a href="${
+      data.KioskId
+        ? "http://www.redbox.com/movies/kiosk/" + data.KioskId
+        : "http://www.redbox.com/"
+    }">(see available movies)</a></tr>
             <tr>
                 <td/>
                 <td>${store?.Address || "Address not found"}</td>
             </tr>
             <tr>
                 <td/>
-                <td>${store!.City && store!.State && store!.ZipCode ? store!.City + ", " + store!.State + " " + store!.ZipCode : ""}</td>
+                <td>${
+                  store!.City && store!.State && store!.ZipCode
+                    ? store!.City + ", " + store!.State + " " + store!.ZipCode
+                    : ""
+                }</td>
             </tr>
         </table>
         <table id="TransactionTable" style="width:100%;" cellSpacing="0" cellPadding="0" border="0">
@@ -206,7 +227,9 @@ export async function sendReceipt(orderId: string | number, data: any = {}) {
                 <td colspan="2">Reserve it online to guarantee it's there: <a href="http://www.redbox.com">www.redbox.com</a></td>
                 </td>
                 <td>Adjusted Subtotal:</td>
-                <td align="left">${transactionDetails?.adjustedSubtotal || "0.00"}</td>
+                <td align="left">${
+                  transactionDetails?.adjustedSubtotal || "0.00"
+                }</td>
             </tr>
             <tr>
                 <td colspan="2"></td>
@@ -252,8 +275,14 @@ export async function sendReceipt(orderId: string | number, data: any = {}) {
             <tr class="LineItem">
               <td>${item.ProductName}</td>
               <td align="left">${item.Barcode}</td>
-              <td align="left">${group.GroupType === 1 ? "Rental" : "Purchase"}</td>
-              <td align="left">$${group.GroupType === 1 ? item.Pricing.InitialNight.toFixed(2) : item.Pricing.Purchase.toFixed(2)}</td>
+              <td align="left">${
+                group.GroupType === 1 ? "Rental" : "Purchase"
+              }</td>
+              <td align="left">$${
+                group.GroupType === 1
+                  ? item.Pricing.InitialNight.toFixed(2)
+                  : item.Pricing.Purchase.toFixed(2)
+              }</td>
               <td> </td>
             </tr>
           `;
@@ -267,9 +296,7 @@ export async function sendReceipt(orderId: string | number, data: any = {}) {
       to: data.Email,
       subject: `Redbox Receipt for ${orderId}`,
       text: `Here is your receipt for the order ID: ${orderId}`,
-      attachment: [
-        { data: html, alternative: true },
-      ],
+      attachment: [{ data: html, alternative: true }],
     };
     const result = await client.sendAsync(message);
     console.log("Email sent successfully:", result);

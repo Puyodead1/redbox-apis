@@ -3,22 +3,19 @@
  * Do not modify this file manually
  */
 
+export interface AlternativeName {
+  type: 'dns' | 'dn' | 'email' | 'ip' | 'url' | 'guid' | 'upn' | 'id';
+  value: string;
+}
+
 export interface AppConfig {
   adServerConfig: ServiceConfig;
+  caConfig: CaConfig;
   dataServiceConfig: ServiceConfig;
   dbConfig: DbConfig;
   iotCertificateServiceConfig: ServiceConfig;
   kioskInventoryServiceConfig: ServiceConfig;
-  loginInfo: {
-    desktop: {
-      password: string;
-      username: string;
-    }[];
-    field: {
-      password: string;
-      username: string;
-    }[];
-  };
+  loginInfo: LoginInfo;
   mqttConfig: ServiceConfig;
   proxyServiceConfig: ServiceConfig;
   reelsConfig: ServiceConfig;
@@ -45,6 +42,25 @@ export interface BlurayUpsell {
   TypeId?: number;
 }
 
+export interface CaCertificateConfig {
+  alternative_names?: AlternativeName[];
+  common_name: string;
+  country: string;
+  crl_distribution_points?: string[];
+  locality?: string;
+  organization: string;
+  organizational_unit?: string;
+  state?: string;
+  validity_years: number;
+}
+
+export interface CaConfig {
+  brokerConfig: CaCertificateConfig;
+  crlConfig: CrlConfig;
+  deviceConfig: CaCertificateConfig;
+  rootCaConfig: CaCertificateConfig;
+}
+
 export interface CreditCard {
   BIN?: string;
   CardId?: string;
@@ -67,6 +83,10 @@ export interface CreditCard {
   PostalCode: string;
   ReaderSerialNumber?: string;
   Track2?: string;
+}
+
+export interface CrlConfig {
+  validity_years: number;
 }
 
 export interface DbConfig {}
@@ -108,6 +128,11 @@ export interface LineItemGroup {
   GroupType: number;
   Items?: LineItem[];
   Totals: Totals;
+}
+
+export interface LoginInfo {
+  desktop: User[];
+  field: User[];
 }
 
 export interface MessageBase {
@@ -184,4 +209,9 @@ export interface Totals {
   Subtotal: number;
   TaxAmount: number;
   TaxRate: number;
+}
+
+export interface User {
+  password: string;
+  username: string;
 }
