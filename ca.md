@@ -45,3 +45,11 @@ importing the Root CA:
 - Click `OK`
 - Click Next
 - Click Finish
+
+### Configuration Changes
+
+To get the kiosk to actually use your custom MQTT Broker, you will need to
+modify `C:\Program Files\Redbox\REDS\Update Client\bin\appsettings.json`<br> !!!
+Please make a backup first !!!<br><br> Change `IoTBrokerEndpoint`
+
+// TODO: unsure if changing `IoTCertificateServiceUrl` is required here or not
