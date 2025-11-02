@@ -142,7 +142,11 @@ custom API!
 - Reels: 3016
 - Kiosk Inventory: 3017
 - IOT Certificate Service: 3018
-- MQTT Broker: 3019
+- MQTT Broker: 8883
+
+### Certificate Authority
+
+See [Certificate Authority](/ca.md)
 
 ## Legacy Database - Migration
 

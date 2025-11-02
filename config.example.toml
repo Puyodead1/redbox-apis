@@ -35,22 +35,34 @@ host = "127.0.0.1"
 port = 3019
 host = "127.0.0.1"
 
-# Certificate Authority Configuration
+# Root Certificate Authority Configuration
 [caConfig.rootCaConfig]
 common_name = "UnRedbox Root CA 1"
 organization = "UnRedbox"
 country = "US"
 validity_years = 25
 
+# Broker Certificate Configuration (MQTT Broker Cert)
 [caConfig.brokerConfig]
-common_name = "*.iot.unredbox.local"
+# set this to whatever your mqtt broker domain is
+# aws used a wildcard `*.iot.unredbox.local` to cover all their customer domains, we dont really need that
+common_name = "athena.local" # example for my local network
 organizational_unit = "UnRedbox APIs"
 organization = "UnRedbox"
 locality = "Oakbrook Terrace"
 state = "IL"
 country = "US"
 validity_years = 20
+alternative_names = [
+    { type = "dns", value = "athena.local" },         # change to match your common name and any alternative names
+    { type = "dns", value = "*.iot.unredbox.local" },
+    { type = "dns", value = "iot.unredbox.local" },
+]
+crl_distribution_points = [
+    "http://athena.local:3018/api/crl.pem", # only change the domain name and the port (if you change it)
+]
 
+# Device Certificate Configuration (Kiosk Certs)
 [caConfig.deviceConfig]
 common_name = "UnRedbox IoT Certificate"
 organizational_unit = "UnRedbox APIs"
@@ -60,8 +72,11 @@ state = "IL"
 country = "US"
 validity_years = 20
 
-# Redbox Desktop + Field Maintenance Credentials
+# Certificate Revocation List Configuration
+[caConfig.crlConfig]
+validity_years = 1
 
+# Redbox Desktop + Field Maintenance Credentials
 [[loginInfo.desktop]] # Redbox Desktop
 username = "admin"
 password = "1234"
