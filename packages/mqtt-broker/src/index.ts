@@ -1,11 +1,5 @@
 import { Config, CertificateManager, logger } from "@redbox-apis/common";
 import Aedes from "aedes";
-import {
-  SSL_OP_NO_TICKET,
-  SSL_OP_NO_SSLv2,
-  SSL_OP_NO_SSLv3,
-  SSL_OP_NO_RENEGOTIATION,
-} from "constants";
 import tls from "tls";
 
 const config = Config.get();
@@ -30,13 +24,7 @@ const HOST = config.mqttConfig.host;
       key,
       ca,
       requestCert: true,
-      rejectUnauthorized: false,
-      honorCipherOrder: true,
-      secureOptions:
-        SSL_OP_NO_TICKET |
-        SSL_OP_NO_SSLv2 |
-        SSL_OP_NO_SSLv3 |
-        SSL_OP_NO_RENEGOTIATION,
+      rejectUnauthorized: true,
     },
     (socket: any) => {
       aedes.handle(socket);
