@@ -35,6 +35,31 @@ host = "127.0.0.1"
 port = 3019
 host = "127.0.0.1"
 
+# Certificate Authority Configuration
+[caConfig.rootCaConfig]
+common_name = "UnRedbox Root CA 1"
+organization = "UnRedbox"
+country = "US"
+validity_years = 25
+
+[caConfig.brokerConfig]
+common_name = "*.iot.unredbox.local"
+organizational_unit = "UnRedbox APIs"
+organization = "UnRedbox"
+locality = "Oakbrook Terrace"
+state = "IL"
+country = "US"
+validity_years = 20
+
+[caConfig.deviceConfig]
+common_name = "UnRedbox IoT Certificate"
+organizational_unit = "UnRedbox APIs"
+organization = "UnRedbox"
+locality = "Oakbrook Terrace"
+state = "IL"
+country = "US"
+validity_years = 20
+
 # Redbox Desktop + Field Maintenance Credentials
 
 [[loginInfo.desktop]] # Redbox Desktop

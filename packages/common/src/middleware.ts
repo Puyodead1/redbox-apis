@@ -1,15 +1,20 @@
 import { Application, NextFunction, Request, Response } from "express";
 import { Logger } from "winston";
+import morgan from "morgan";
+
+// export const loggingMiddleware = (app: Application, logger: Logger) => {
+//   app.use((req: Request, res: Response, next: NextFunction) => {
+//     logger.verbose("Request received", {
+//       timestamp: new Date().toISOString(),
+//       method: req.method,
+//       url: req.originalUrl,
+//       headers: req.headers,
+//       body: req.body,
+//     });
+//     next();
+//   });
+// };
 
 export const loggingMiddleware = (app: Application, logger: Logger) => {
-  app.use((req: Request, res: Response, next: NextFunction) => {
-    logger.verbose("Request received", {
-      timestamp: new Date().toISOString(),
-      method: req.method,
-      url: req.originalUrl,
-      headers: req.headers,
-      body: req.body,
-    });
-    next();
-  });
+  app.use(morgan("dev"));
 };

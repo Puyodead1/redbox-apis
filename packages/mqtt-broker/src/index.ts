@@ -1,43 +1,44 @@
-import { Config, KeyService, logger } from "@redbox-apis/common";
+import { Config, CertificateManager, logger } from "@redbox-apis/common";
 import Aedes from "aedes";
-import fs from "fs";
+import {
+  SSL_OP_NO_TICKET,
+  SSL_OP_NO_SSLv2,
+  SSL_OP_NO_SSLv3,
+  SSL_OP_NO_RENEGOTIATION,
+} from "constants";
 import tls from "tls";
 
 const config = Config.get();
 const PORT = config.mqttConfig.port;
 const HOST = config.mqttConfig.host;
-const CERT_PATH = "../../mqtt.crt";
-const KEY_PATH = "../../mqtt.key";
 
 (async () => {
-  const keyService = new KeyService();
+  const certManager = new CertificateManager();
   const aedes = new Aedes();
 
-  // await keyService.loadRootCA();
-  // const keyPair = await keyService.loadKeyPair(
-  //   "MQTT Broker",
-  //   CERT_PATH,
-  //   KEY_PATH,
-  //   true,
-  //   "Redbox API MQTT Broker",
-  // );
+  await certManager.ensureAll();
+
+  const [cert, key, ca] = await Promise.all([
+    certManager.broker.getCertificatePEM(),
+    certManager.broker.getPrivateKeyPEM(),
+    certManager.root.getCertificatePEM(),
+  ]);
 
   const server = tls.createServer(
     {
-      key: fs.readFileSync(KEY_PATH),
-      cert: fs.readFileSync("../../fullchain.crt"),
-      ca: [fs.readFileSync("../../RootCA.crt")],
+      cert,
+      key,
+      ca,
       requestCert: true,
       rejectUnauthorized: false,
       honorCipherOrder: true,
+      secureOptions:
+        SSL_OP_NO_TICKET |
+        SSL_OP_NO_SSLv2 |
+        SSL_OP_NO_SSLv3 |
+        SSL_OP_NO_RENEGOTIATION,
     },
     (socket: any) => {
-      console.log("TLS connection from", socket.remoteAddress);
-      if (socket.authorized) {
-        console.log("✅ Client cert verified");
-      } else {
-        console.warn("⚠️ Client not authorized:", socket.authorizationError);
-      }
       aedes.handle(socket);
     },
   );

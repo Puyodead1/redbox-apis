@@ -10,7 +10,8 @@ import {
 } from "./utils";
 import bcrypt from "bcryptjs";
 import dotenv from "dotenv";
-dotenv.config({ path: "../../.env" });
+import { getPathRelativeRoot } from "../utils";
+dotenv.config({ path: getPathRelativeRoot(".env") });
 
 type Tier = "Member" | "Star" | "Superstar" | "Legend";
 

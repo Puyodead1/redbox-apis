@@ -3,6 +3,7 @@ import {
   BaseResponse,
   EncryptionService,
   EncryptionType,
+  getPathRelativeRoot,
 } from "@redbox-apis/common";
 import { celebrate, Segments } from "celebrate";
 import { Request, Response } from "express";
@@ -11,7 +12,7 @@ import { KioskAuthenticateRequestSchema } from "../../schemas";
 
 import dotenv from "dotenv";
 import { v4 } from "uuid";
-dotenv.config({ path: "../../.env" });
+dotenv.config({ path: getPathRelativeRoot(".env") });
 
 type LoginType = "desktop" | "field";
 const getLocalCredentials = async (username: string, type: LoginType) => {
@@ -59,7 +60,9 @@ export const post = [
       return res.json({ success: true });
     } else {
       console.log(
-        `A new login has been rejected for ${UseNtAuthentication ? "Redbox Desktop" : "Field Maintenance"}.`,
+        `A new login has been rejected for ${
+          UseNtAuthentication ? "Redbox Desktop" : "Field Maintenance"
+        }.`,
       );
       console.log(
         `Username: ${Username} (${credentials ? "found" : "not found"})`,

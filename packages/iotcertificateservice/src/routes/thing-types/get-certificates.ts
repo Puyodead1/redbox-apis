@@ -49,7 +49,7 @@ export const post = [
     return res.json({
       DeviceCertPfxBase64: certificate.devicePfx,
       CertificateId: certificate.certificateId,
-      RootCa: req.app.locals.keyService.getRootCA(),
+      RootCa: req.app.locals.certManager.root.getCertificatePEM(),
     });
   },
 ];

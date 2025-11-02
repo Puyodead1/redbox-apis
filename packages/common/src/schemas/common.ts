@@ -156,15 +156,45 @@ export const ServiceConfigSchema = Joi.object({
 
 export const DbConfigSchema = Joi.object({}).meta({ className: "DbConfig" });
 
-const UserSchema = Joi.object({
+export const UserSchema = Joi.object({
   username: Joi.string().required(),
   password: Joi.string().required(),
-});
+}).meta({ className: "User" });
 
-const LoginInfoSchema = Joi.object({
+export const LoginInfoSchema = Joi.object({
   desktop: Joi.array().items(UserSchema).required(),
   field: Joi.array().items(UserSchema).required(),
-});
+}).meta({ className: "LoginInfo" });
+
+export const AlternativeNameSchema = Joi.object({
+  type: Joi.string()
+    .valid("dns", "dn", "email", "ip", "url", "guid", "upn", "id")
+    .required(),
+  value: Joi.string().required(),
+}).meta({ className: "AlternativeName" });
+
+export const CaCertificateConfigSchema = Joi.object({
+  common_name: Joi.string().required(),
+  organization: Joi.string().required(),
+  organizational_unit: Joi.string(),
+  country: Joi.string().length(2).required(),
+  state: Joi.string(),
+  locality: Joi.string(),
+  validity_years: Joi.number().required(),
+  alternative_names: Joi.array().items(AlternativeNameSchema).optional(),
+  crl_distribution_points: Joi.array().items(Joi.string()).optional(),
+}).meta({ className: "CaCertificateConfig" });
+
+export const CrlConfigSchema = Joi.object({
+  validity_years: Joi.number().required(),
+}).meta({ className: "CrlConfig" });
+
+export const CAConfigSchema = Joi.object({
+  rootCaConfig: CaCertificateConfigSchema.required(),
+  brokerConfig: CaCertificateConfigSchema.required(),
+  deviceConfig: CaCertificateConfigSchema.required(),
+  crlConfig: CrlConfigSchema.required(),
+}).meta({ className: "CaConfig" });
 
 export const AppConfigSchema = Joi.object({
   adServerConfig: ServiceConfigSchema.required(),
@@ -177,4 +207,5 @@ export const AppConfigSchema = Joi.object({
   transactionServiceConfig: ServiceConfigSchema.required(),
   mqttConfig: ServiceConfigSchema.required(),
   loginInfo: LoginInfoSchema.required(),
+  caConfig: CAConfigSchema.required(),
 }).meta({ className: "AppConfig" });

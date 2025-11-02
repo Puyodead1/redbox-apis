@@ -129,7 +129,7 @@ redbox.db*
 *.crt
 *.key
 # ignore any generated device certificates
-certificates/
+/certificates/
 
 # Loyalty configurations
 .env
