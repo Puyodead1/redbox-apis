@@ -16,15 +16,15 @@
   "dependencies": {
     "@redbox-apis/common": "workspace:*",
     "@redbox-apis/db": "workspace:^",
-    "commander": "^13.1.0"
+    "commander": "^14.0.2"
   },
   "devDependencies": {
     "@types/commander": "^2.12.5",
-    "@types/node": "^22.10.2",
+    "@types/node": "^24.10.0",
     "install": "^0.13.0",
-    "rimraf": "^6.0.1",
+    "rimraf": "^6.1.0",
     "ts-node": "^10.9.2",
-    "typescript": "^5.6.3"
+    "typescript": "^5.9.3"
   },
   "engines": {
     "node": ">=20"
