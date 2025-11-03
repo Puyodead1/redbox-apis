@@ -16,19 +16,19 @@
   "dependencies": {
     "@redbox-apis/common": "workspace:*",
     "@redbox-apis/db": "workspace:*",
-    "bcryptjs": "^3.0.2",
-    "dotenv": "^16.4.7",
+    "bcryptjs": "^3.0.3",
     "celebrate": "^15.0.3",
-    "express": "^4.21.1",
-    "express-file-routing": "^3.0.3",
-    "uuid": "^11.0.3"
+    "dotenv": "^17.2.3",
+    "express": "^5.1.0",
+    "express-file-routing": "^3.1.0",
+    "uuid": "^13.0.0"
   },
   "devDependencies": {
-    "@types/express": "^5.0.0",
-    "joi-to-typescript": "^4.14.0",
-    "rimraf": "^6.0.1",
+    "@types/express": "^5.0.5",
+    "joi-to-typescript": "^4.15.0",
+    "rimraf": "^6.1.0",
     "ts-node": "^10.9.2",
-    "typescript": "^5.6.3"
+    "typescript": "^5.9.3"
   },
   "engines": {
     "node": ">=20"
