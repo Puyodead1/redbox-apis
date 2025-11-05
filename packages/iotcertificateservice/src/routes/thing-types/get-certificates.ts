@@ -42,10 +42,6 @@ export const post = [
       });
     }
 
-    logger.debug(
-      `Generated certificate for kioskId: ${kioskId}, certificateId: ${certificate.certificateId}`,
-    );
-
     return res.json({
       DeviceCertPfxBase64: certificate.devicePfx,
       CertificateId: certificate.certificateId,
