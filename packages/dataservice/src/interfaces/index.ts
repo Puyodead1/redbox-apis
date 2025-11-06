@@ -3,8 +3,13 @@
  * Do not modify this file manually
  */
 
-export * from "./CardStatsRequest";
-export * from "./DeviceStatusRequest";
-export * from "./KioskAlertRequest";
-export * from "./KioskStatistics";
-export * from "./RebootStatusRequest";
+export * from './AuditEventRequest';
+export * from './CardStatsRequest';
+export * from './DeviceStatusRequest';
+export * from './KioskAlertRequest';
+export * from './KioskEventsRequest';
+export * from './KioskFunctionCheckRequest';
+export * from './KioskPropertiesRequest';
+export * from './KioskStatisticsRequest';
+export * from './KioskVersionRequest';
+export * from './RebootStatusRequest';

@@ -1,3 +1,5 @@
+// This file was manually created
+
 export enum CardSourceType {
   Unknown,
   Swipe,

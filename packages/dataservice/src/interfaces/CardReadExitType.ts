@@ -1,3 +1,5 @@
+// This file was manually created
+
 export enum CardReadExitType {
   GoodRead = 0,
   BadRead = 1,

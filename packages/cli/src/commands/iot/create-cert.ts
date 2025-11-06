@@ -1,3 +1,4 @@
+import { logger } from "@redbox-apis/common";
 import { Command } from "commander";
 import { BaseCommand } from "../base";
 
@@ -6,7 +7,7 @@ export class IoTCreateCertificateCommand extends BaseCommand {
   description = "Generate a new device certificate";
 
   async action(kioskId: string): Promise<void> {
-    console.log(`Generating a device certificate for kiosk '${kioskId}'`);
+    logger.info(`Generating a device certificate for kiosk '${kioskId}'`);
     const generatedCert =
       await this.context.certManager.generateDeviceCertificate(kioskId);
     await this.context.certManager.saveDeviceCertificate(
@@ -17,7 +18,7 @@ export class IoTCreateCertificateCommand extends BaseCommand {
       kioskId,
       generatedCert,
     );
-    console.log(`Device Certificate saved to '${path}'`);
+    logger.info(`Device Certificate saved to '${path}'`);
   }
 
   protected setup(cmd: Command): void {

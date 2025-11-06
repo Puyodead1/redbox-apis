@@ -3,14 +3,14 @@
  * Do not modify this file manually
  */
 
-export interface KioskAlertRequest {
-  AlertMessage?: string;
-  AlertType?: number;
-  CreatedOn?: string;
+export interface AuditEventRequest {
   CreatedOnLocal?: string;
+  EventType?: string;
   KioskId?: number;
+  LogDate?: string;
+  Message?: string;
   MessageId?: string;
   SendToTable?: boolean;
-  SubAlertType?: string;
-  UniqueId?: string;
+  Source?: string;
+  Username?: string;
 }

@@ -1,9 +1,10 @@
 import {
-  Config,
   BaseResponse,
+  Config,
   EncryptionService,
   EncryptionType,
   getPathRelativeRoot,
+  logger,
 } from "@redbox-apis/common";
 import { celebrate, Segments } from "celebrate";
 import { Request, Response } from "express";
@@ -51,7 +52,7 @@ export const post = [
       encService.decrypt(Password, EncryptionType.LOCAL) ===
         credentials.password
     ) {
-      console.log(
+      logger.info(
         `A new login has been authorized for ${
           UseNtAuthentication ? "Redbox Desktop" : "Field Maintenance"
         } (user ${Username}).`,
@@ -59,15 +60,15 @@ export const post = [
 
       return res.json({ success: true });
     } else {
-      console.log(
+      logger.info(
         `A new login has been rejected for ${
           UseNtAuthentication ? "Redbox Desktop" : "Field Maintenance"
         }.`,
       );
-      console.log(
+      logger.info(
         `Username: ${Username} (${credentials ? "found" : "not found"})`,
       );
-      console.log(
+      logger.info(
         "Password:",
         encService.decrypt(Password, EncryptionType.LOCAL),
       );

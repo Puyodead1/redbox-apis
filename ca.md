@@ -18,16 +18,7 @@ Note that configuration changes for the certificate information will NOT apply
 to certificates already generated! You will need to delete them and let the
 server regenerate them.
 
-### Generate Device Certificates
-
-After you have the main certificates generated, you'll also need the device
-certificates that go on the kiosk. <br>Currently, you will need to generate it
-and place it on the kiosk manually. <br>The API comes with a command line tool,
-`pnpm --filter cli start create-cert <kiosk id>`.<br> The generated file is at
-`/certificates/devices/<kiosk id>_iotcertificatedata.json`, this file needs to
-be placed on the kiosk at `C:\ProgramData\Redbox\UpdateClient\IoT`.
-
-In the future, the kiosk should be able to grab it on its own.
+The kiosk will automatically obtain a new certificate and connect to MQTT.
 
 ### Install Root CA
 
@@ -49,7 +40,8 @@ importing the Root CA:
 ### Configuration Changes
 
 To get the kiosk to actually use your custom MQTT Broker, you will need to
-modify `C:\Program Files\Redbox\REDS\Update Client\bin\appsettings.Production.json`<br> !!!
-Please make a backup first !!!<br><br> Change `IoTBrokerEndpoint`
+modify
+`C:\Program Files\Redbox\REDS\Update Client\bin\appsettings.Production.json`<br>
+!!! Please make a backup first !!!<br><br> Change `IoTBrokerEndpoint`
 
 // TODO: unsure if changing `IoTCertificateServiceUrl` is required here or not

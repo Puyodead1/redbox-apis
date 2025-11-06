@@ -1,3 +1,4 @@
+import { logger } from "@redbox-apis/common";
 import { stores } from "@redbox-apis/db";
 import { celebrate, Joi, Segments } from "celebrate";
 import { Request, Response } from "express";
@@ -18,8 +19,8 @@ export const get = [
     const stateId = req.query.stateid as string;
     const bannerId = req.query.bannerid as string;
 
-    console.log(`stateId from query: ${stateId}`);
-    console.log(`bannerId from query: ${bannerId}`);
+    logger.debug(`GetPendingKiosks - stateId from query: ${stateId}`);
+    logger.debug(`GetPendingKiosks - bannerId from query: ${bannerId}`);
 
     // Filter kiosks based on the stateId and bannerId from the query
     const filteredKiosks = stores

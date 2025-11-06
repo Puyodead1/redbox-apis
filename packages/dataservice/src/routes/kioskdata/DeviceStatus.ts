@@ -1,7 +1,7 @@
 import { celebrate, Segments } from "celebrate";
 import { Request, Response } from "express";
-import StandardResponse from "../../interfaces/StandardResponse";
 import { DeviceStatusRequestSchema } from "../../schemas/DeviceStatusRequestSchema";
+import StandardResponse from "../../schemas/StandardResponse";
 
 export const post = [
   celebrate({

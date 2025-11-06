@@ -3,7 +3,7 @@ import { getPrisma } from "@redbox-apis/db";
 import { celebrate, Segments } from "celebrate";
 import { Request, Response } from "express";
 import { KioskStatisticsRequest } from "../../interfaces";
-import { KioskStatisticsRequestSchema } from "../../schemas/KioskStatisticsSchema";
+import { KioskStatisticsRequestSchema } from "../../schemas/KioskStatisticsRequestSchema";
 
 export const post = [
   celebrate({
@@ -13,6 +13,12 @@ export const post = [
     if (req.method !== "POST") return res.status(405);
 
     const { KioskId, Statistics }: KioskStatisticsRequest = req.body;
+    if (!KioskId) {
+      logger.warn(
+        "No KioskId provided in kiosk statistics request, tf are we supposed to do??",
+      );
+      return res.status(400).json({ error: "no kiosk id??" });
+    }
     const prisma = await getPrisma();
 
     // merge existing kiosk statistics with new statistics

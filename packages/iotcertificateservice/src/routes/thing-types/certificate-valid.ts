@@ -26,10 +26,6 @@ export const post = [
     const thingType = encryptionService.decrypt(body.type);
     const certificateId = encryptionService.decrypt(body.certificateId);
 
-    logger.info(
-      `CertificateIsValid for kioskId: ${kioskId}, type: ${thingType}, certificateId: ${certificateId}, password: ${password}`,
-    );
-
     const prisma = await getPrisma();
     const certificate = await prisma.deviceCertificate.findFirst({
       where: {
@@ -44,6 +40,10 @@ export const post = [
       );
       return res.send("false");
     }
+
+    logger.verbose(
+      `CertificateIsValid succeeded for kioskId: ${kioskId}, type: ${thingType}, certificateId: ${certificateId}, kioskPassword: ${password}`,
+    );
 
     return res.send("true");
   },

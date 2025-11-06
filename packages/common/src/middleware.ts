@@ -1,6 +1,6 @@
 import { Application, NextFunction, Request, Response } from "express";
-import { Logger } from "winston";
 import morgan from "morgan";
+import { Logger } from "winston";
 
 // export const loggingMiddleware = (app: Application, logger: Logger) => {
 //   app.use((req: Request, res: Response, next: NextFunction) => {
@@ -16,5 +16,13 @@ import morgan from "morgan";
 // };
 
 export const loggingMiddleware = (app: Application, logger: Logger) => {
-  app.use(morgan("dev"));
+  app.use(morgan("combined"));
+  app.use((req: Request, res: Response, next: NextFunction) => {
+    logger.debug("----------------------------------");
+    logger.debug(req.url);
+    logger.debug(JSON.stringify(req.headers, null, 4));
+    if (req.body) logger.debug(JSON.stringify(req.body, null, 4));
+    logger.debug("----------------------------------");
+    next();
+  });
 };

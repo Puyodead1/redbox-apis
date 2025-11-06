@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import StandardResponse from "../../interfaces/StandardResponse";
+import StandardResponse from "../../schemas/StandardResponse";
 
 export const post = [
   // celebrate({

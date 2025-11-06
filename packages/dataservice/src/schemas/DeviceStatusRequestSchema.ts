@@ -3,18 +3,16 @@ import { ErrorState } from "../interfaces/ErrorState";
 
 export const DeviceStatusRequestSchema = Joi.object({
   Id: Joi.number().optional(),
-  Serial: Joi.string().required(),
-  MfgSerial: Joi.string().required(),
-  LocalTime: Joi.date().iso().required(),
-  Assembly: Joi.string().required(),
-  RBA: Joi.string().required(),
-  TgzVersion: Joi.string().required(),
-  RevisionNumber: Joi.number().required(),
-  EMVContactVersion: Joi.string().required(),
-  EMVClessVersion: Joi.string().required(),
-  SupportsVas: Joi.boolean().required(),
-  InjectedKeys: Joi.string().required(),
-  ErrorState: Joi.number()
-    .valid(...Object.values(ErrorState))
-    .required(),
+  Serial: Joi.string(),
+  MfgSerial: Joi.string(),
+  LocalTime: Joi.string(), // TODO: validate
+  Assembly: Joi.string(),
+  RBA: Joi.string(),
+  TgzVersion: Joi.string(),
+  RevisionNumber: Joi.number(),
+  EMVContactVersion: Joi.string(),
+  EMVClessVersion: Joi.string(),
+  SupportsVas: Joi.boolean(),
+  InjectedKeys: Joi.string(),
+  ErrorState: Joi.number().valid(...Object.values(ErrorState)),
 }).meta({ className: "DeviceStatusRequest" });

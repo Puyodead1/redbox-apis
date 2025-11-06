@@ -209,3 +209,9 @@ export const AppConfigSchema = Joi.object({
   loginInfo: LoginInfoSchema.required(),
   caConfig: CAConfigSchema.required(),
 }).meta({ className: "AppConfig" });
+
+export const KioskBaseRequestSchema = Joi.object({
+  MessageId: Joi.string(),
+  KioskId: Joi.number(),
+  SendToTable: Joi.boolean().optional(),
+}).meta({ className: "KioskBaseRequest" });

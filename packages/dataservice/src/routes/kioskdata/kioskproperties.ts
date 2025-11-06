@@ -1,15 +1,14 @@
 import { celebrate, Segments } from "celebrate";
 import { Request, Response } from "express";
-import { CardStatsRequestSchema } from "../../schemas/CardStatsRequestSchema";
+import { KioskPropertiesRequestSchema } from "../../schemas/KioskPropertiesRequestSchema";
 import StandardResponse from "../../schemas/StandardResponse";
 
 export const post = [
   celebrate({
-    [Segments.BODY]: CardStatsRequestSchema,
+    [Segments.BODY]: KioskPropertiesRequestSchema,
   }),
   async (req: Request, res: Response) => {
     if (req.method !== "POST") return res.status(405);
-
     res.json({
       Success: true,
       Errors: [],

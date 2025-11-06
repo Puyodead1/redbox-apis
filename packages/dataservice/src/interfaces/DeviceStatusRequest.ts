@@ -4,33 +4,17 @@
  */
 
 export interface DeviceStatusRequest {
-  Assembly: string;
-  EMVClessVersion: string;
-  EMVContactVersion: string;
-  ErrorState:
-    | "None"
-    | "FailedToInitializeConnection"
-    | "FailedToUpdateDevice"
-    | "NoDeviceFound"
-    | "ConnectionError"
-    | "EncryptionError"
-    | "Tampered"
-    | "Unknown"
-    | 0
-    | 1
-    | 2
-    | 3
-    | 4
-    | 5
-    | 6
-    | 7;
+  Assembly?: string;
+  EMVClessVersion?: string;
+  EMVContactVersion?: string;
+  ErrorState?: 'None' | 'FailedToInitializeConnection' | 'FailedToUpdateDevice' | 'NoDeviceFound' | 'ConnectionError' | 'EncryptionError' | 'Tampered' | 'Unknown' | 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7;
   Id?: number;
-  InjectedKeys: string;
-  LocalTime: Date;
-  MfgSerial: string;
-  RBA: string;
-  RevisionNumber: number;
-  Serial: string;
-  SupportsVas: boolean;
-  TgzVersion: string;
+  InjectedKeys?: string;
+  LocalTime?: string;
+  MfgSerial?: string;
+  RBA?: string;
+  RevisionNumber?: number;
+  Serial?: string;
+  SupportsVas?: boolean;
+  TgzVersion?: string;
 }

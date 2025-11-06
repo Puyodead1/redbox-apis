@@ -1,4 +1,4 @@
-import { Config, CertificateManager, logger } from "@redbox-apis/common";
+import { CertificateManager, Config, logger } from "@redbox-apis/common";
 import Aedes from "aedes";
 import tls from "tls";
 
@@ -93,7 +93,7 @@ const HOST = config.mqttConfig.host;
 
   aedes.on("publish", async (packet, client) => {
     if (!client) return; // ignore broker
-    console.log(packet);
+    logger.debug(packet);
 
     const topic = packet.topic;
     const message = packet.payload.toString();

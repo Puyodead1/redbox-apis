@@ -25,13 +25,8 @@ export const post = [
     const kioskId = encryptionService.decrypt(body.name);
     const thingType = encryptionService.decrypt(body.type);
 
-    logger.info(
-      `CertificateGenerate for kioskId: ${kioskId}, type: ${thingType}, kioskPassword: ${password}`,
-    );
-
-    // TODO: fix, use certManager instead of keyService
     const generated: { deviceClientPfx: string; certificateId: string } =
-      await req.app.locals.keyService.generateDeviceCertificate(kioskId);
+      await req.app.locals.certManager.generateDeviceCertificate(kioskId);
 
     const prisma = await getPrisma();
     await prisma.deviceCertificate.create({
@@ -42,8 +37,8 @@ export const post = [
       },
     });
 
-    logger.debug(
-      `Generated certificate for kioskId: ${kioskId}, certificateId: ${generated.certificateId}`,
+    logger.info(
+      `Certificates - Generated certificate for kiosk ${kioskId}, certificateId: ${generated.certificateId}`,
     );
 
     return res.json({

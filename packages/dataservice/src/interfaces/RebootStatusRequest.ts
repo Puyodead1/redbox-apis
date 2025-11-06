@@ -4,23 +4,11 @@
  */
 
 export interface RebootStatusRequest {
-  ConnectTime?: Date;
-  DeviceTime?: Date;
-  DisconnectTime?: Date;
-  ExpectedTime?: Date;
+  ConnectTime?: string;
+  DeviceTime?: string;
+  DisconnectTime?: string;
+  ExpectedTime?: string;
   Id?: string;
-  KioskId: number;
-  Type:
-    | "Scheduled"
-    | "Manual"
-    | "Automatic"
-    | "Disconnect"
-    | "FileUpdate"
-    | "OfflineCommandFailure"
-    | 0
-    | 1
-    | 2
-    | 3
-    | 4
-    | 5;
+  KioskId?: number;
+  Type?: 'Scheduled' | 'Manual' | 'Automatic' | 'Disconnect' | 'FileUpdate' | 'OfflineCommandFailure' | 0 | 1 | 2 | 3 | 4 | 5;
 }

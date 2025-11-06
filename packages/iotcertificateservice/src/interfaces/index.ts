@@ -3,5 +3,6 @@
  * Do not modify this file manually
  */
 
-export * from "./IOTCertificateGenerateRequest";
-export * from "./IOTCertificateValidRequest";
+export * from './IOTCertificateGenerateRequest';
+export * from './IOTCertificatesRequest';
+export * from './IOTCertificateValidRequest';

@@ -108,6 +108,12 @@ export interface Discount {
   Status: number;
 }
 
+export interface KioskBaseRequest {
+  KioskId?: number;
+  MessageId?: string;
+  SendToTable?: boolean;
+}
+
 export interface LineItem {
   Barcode: string;
   BlurayUpsell?: BlurayUpsell;

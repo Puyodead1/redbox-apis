@@ -3,14 +3,13 @@
  * Do not modify this file manually
  */
 
-export interface KioskAlertRequest {
-  AlertMessage?: string;
-  AlertType?: number;
+export interface KioskPropertiesRequest {
   CreatedOn?: string;
   CreatedOnLocal?: string;
   KioskId?: number;
   MessageId?: string;
+  Properties?: {
+    [pattern: string]: string;
+  };
   SendToTable?: boolean;
-  SubAlertType?: string;
-  UniqueId?: string;
 }

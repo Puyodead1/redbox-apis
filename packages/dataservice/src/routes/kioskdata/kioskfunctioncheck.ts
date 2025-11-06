@@ -1,14 +1,16 @@
+import { logger } from "@redbox-apis/common";
 import { celebrate, Segments } from "celebrate";
 import { Request, Response } from "express";
-import { CardStatsRequestSchema } from "../../schemas/CardStatsRequestSchema";
+import { KioskVersionRequestSchema } from "../../schemas/KioskVersionRequestSchema";
 import StandardResponse from "../../schemas/StandardResponse";
 
 export const post = [
   celebrate({
-    [Segments.BODY]: CardStatsRequestSchema,
+    [Segments.BODY]: KioskVersionRequestSchema,
   }),
   async (req: Request, res: Response) => {
     if (req.method !== "POST") return res.status(405);
+    logger.debug(req.body);
 
     res.json({
       Success: true,
