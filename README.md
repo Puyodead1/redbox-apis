@@ -75,6 +75,7 @@ custom API!
 - Reels: 3016
 - Kiosk Inventory: 3017
 - IOT Certificate Service: 3018
+- Loyalty Web UI: 3019
 - MQTT Broker: 8883
 
 ### Certificate Authority

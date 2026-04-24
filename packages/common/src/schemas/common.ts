@@ -154,6 +154,13 @@ export const ServiceConfigSchema = Joi.object({
   host: Joi.string().required(),
 }).meta({ className: "ServiceConfig" });
 
+// Loyalty web config
+export const LoyaltyWebConfigSchema = Joi.object({
+  port: Joi.number().required(),
+  host: Joi.string().required(),
+  enabled: Joi.boolean().optional(),
+}).meta({ className: "LoyaltyWebConfig" });
+
 export const DbConfigSchema = Joi.object({}).meta({ className: "DbConfig" });
 
 export const UserSchema = Joi.object({
@@ -203,6 +210,7 @@ export const AppConfigSchema = Joi.object({
   iotCertificateServiceConfig: ServiceConfigSchema.required(),
   kioskInventoryServiceConfig: ServiceConfigSchema.required(),
   proxyServiceConfig: ServiceConfigSchema.required(),
+  loyaltyWebConfig: LoyaltyWebConfigSchema.required(),
   reelsConfig: ServiceConfigSchema.required(),
   transactionServiceConfig: ServiceConfigSchema.required(),
   mqttConfig: ServiceConfigSchema.required(),

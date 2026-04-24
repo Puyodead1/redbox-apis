@@ -353,6 +353,9 @@ importers:
 
   packages/redbox-perks:
     dependencies:
+      '@redbox-apis/common':
+        specifier: workspace:^
+        version: link:../common
       '@types/node':
         specifier: ^24.10.0
         version: 24.10.0

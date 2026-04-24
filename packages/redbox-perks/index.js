@@ -1,4 +1,5 @@
 const { rateLimit } = require('express-rate-limit');
+const { Config } = require("@redbox-apis/common");
 const session = require('express-session');
 const express = require('express');
 const bcrypt = require('bcryptjs');
@@ -626,11 +627,18 @@ app.use((req, res, next) => {
     res.status(404).redirect('/');
 });
 
-app.listen(process.env.SERVER_PORT, async () => {
-    console.log(`The Redbox Perks website is sucessfully live at port ${process.env.SERVER_PORT}! 🎉`);
+const config = Config.get();
+const PORT = config.loyaltyWebConfig.port;
+const HOST = config.loyaltyWebConfig.host;
+const ENABLED = config.loyaltyWebConfig.enabled ?? false;
+
+if (ENABLED) {
+  app.listen(PORT, HOST, async () => {
+    console.log(`The Redbox Perks website is sucessfully live at ${HOST}:${PORT}! 🎉`);
     console.log('Generating analytics from recent authorized transactions... this may take a second!');
     await generateAnalytics();
     console.log('Analytics have been updated, transactions re-checked every 5 minutes.');
 
     setInterval(generateAnalytics, 5 * 60 * 1000); // every 5 minutes
-});
+  });
+}

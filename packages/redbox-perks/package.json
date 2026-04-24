@@ -28,6 +28,7 @@
   },
   "homepage": "https://github.com/BrianWalczak/RedboxAPI#readme",
   "dependencies": {
+    "@redbox-apis/common": "workspace:^",
     "@types/node": "^24.10.0",
     "@types/nodemailer": "^7.0.3",
     "axios": "^1.13.1",

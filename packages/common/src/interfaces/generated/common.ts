@@ -16,6 +16,7 @@ export interface AppConfig {
   iotCertificateServiceConfig: ServiceConfig;
   kioskInventoryServiceConfig: ServiceConfig;
   loginInfo: LoginInfo;
+  loyaltyWebConfig: LoyaltyWebConfig;
   mqttConfig: ServiceConfig;
   proxyServiceConfig: ServiceConfig;
   reelsConfig: ServiceConfig;
@@ -139,6 +140,12 @@ export interface LineItemGroup {
 export interface LoginInfo {
   desktop: User[];
   field: User[];
+}
+
+export interface LoyaltyWebConfig {
+  enabled?: boolean;
+  host: string;
+  port: number;
 }
 
 export interface MessageBase {

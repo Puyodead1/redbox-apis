@@ -1,39 +1,43 @@
 # Server Ports
-
-[adServerConfig]
-port = 3014
+[proxyServiceConfig]
+port = 3012
 host = "127.0.0.1"
 
 [dataServiceConfig]
 port = 3013
 host = "127.0.0.1"
 
-[dbConfig]
-# nothing here yet
-
-[iotCertificateServiceConfig]
-port = 3018
-host = "127.0.0.1"
-
-[kioskInventoryServiceConfig]
-port = 3017
-host = "127.0.0.1"
-
-[proxyServiceConfig]
-port = 3012
-host = "127.0.0.1"
-
-[reelsConfig]
-port = 3016
+[adServerConfig]
+port = 3014
 host = "127.0.0.1"
 
 [transactionServiceConfig]
 port = 3015
 host = "127.0.0.1"
 
+[reelsConfig]
+port = 3016
+host = "127.0.0.1"
+
+[kioskInventoryServiceConfig]
+port = 3017
+host = "127.0.0.1"
+
+[iotCertificateServiceConfig]
+port = 3018
+host = "127.0.0.1"
+
+[loyaltyWebConfig] # Web UI is completely optional.
+port = 3019
+host = "127.0.0.1"
+enabled = true
+
 [mqttConfig]
 port = 8883
 host = "127.0.0.1"
+
+[dbConfig]
+# nothing here yet
 
 # Root Certificate Authority Configuration
 [caConfig.rootCaConfig]
