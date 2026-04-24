@@ -1,5 +1,5 @@
 import { User } from "./types";
-import { EncryptionService, EncryptionType } from "../";
+import { Config, EncryptionService, EncryptionType } from "../";
 import {
   updateUser,
   createUser,
@@ -14,6 +14,7 @@ import { getPathRelativeRoot } from "../utils";
 dotenv.config({ path: getPathRelativeRoot(".env") });
 
 type Tier = "Member" | "Star" | "Superstar" | "Legend";
+const LOYALTY_CONFIG = Config.get().loyaltyConfig;
 
 /*
     Earn 150 points per night when you rent a disc
@@ -28,14 +29,14 @@ type Tier = "Member" | "Star" | "Superstar" | "Legend";
 */
 const TIER_MULTIPLIER: { [key: string]: number } = {
   // points per $1.00 spent based on tier (for used disc purchases)
-  Member: Number(process.env.EARNING_MEMBER || 50),
-  Star: Number(process.env.EARNING_STAR || 50),
-  Superstar: Number(process.env.SUPERSTAR || 75),
-  Legend: Number(process.env.EARNING_LEGEND || 100),
+  Member: LOYALTY_CONFIG.earningMember,
+  Star: LOYALTY_CONFIG.earningStar,
+  Superstar: LOYALTY_CONFIG.earningSuperstar,
+  Legend: LOYALTY_CONFIG.earningLegend,
 };
 const POINTS_PER_NIGHT: { [key: string]: number } = {
-  Accrual: Number(process.env.RENTAL_POINTS_PER_NIGHT || 150), // 150 points per night
-  Redemption: Number(process.env.RENTAL_REDEMPTION_GOAL || 2000), // 2,000 points per night
+  Accrual: LOYALTY_CONFIG.rentalPointsPerNight,
+  Redemption: LOYALTY_CONFIG.rentalRedemptionGoal,
 };
 
 export function estimateAccrual(
@@ -103,13 +104,10 @@ export function estimateRedemption(data: any = {}) {
 }
 
 export function calculateTier(purchases: number): Tier {
-  if (purchases >= Number(process.env.TIER_LEGEND_PURCHASES || 50))
-    return "Legend"; // 50+ purchases minimum (default)
-  if (purchases >= Number(process.env.TIER_SUPERSTAR_PURCHASES || 20))
-    return "Superstar"; // 20+ purchases minimum (default)
-  if (purchases >= Number(process.env.TIER_STAR_PURCHASES || 10)) return "Star"; // 10+ purchases minimum (default)
-  if (purchases >= Number(process.env.TIER_MEMBER_PURCHASES || 0))
-    return "Member"; // No minimum requirement (default)
+  if (purchases >= LOYALTY_CONFIG.tierLegendPurchases) return "Legend";
+  if (purchases >= LOYALTY_CONFIG.tierSuperstarPurchases) return "Superstar";
+  if (purchases >= LOYALTY_CONFIG.tierStarPurchases) return "Star";
+  if (purchases >= LOYALTY_CONFIG.tierMemberPurchases) return "Member";
 
   return "Member"; // Default to Member if all else fails (should never happen)
 }
@@ -229,8 +227,8 @@ export async function createAccount(
     pin: pin ? await bcrypt.hash(pin, 10) : null, // hash the PIN w/ bcrypt
     hashed: true, // migrate to bcrypt for hashing (safe storage of passwords)
     loyalty: {
-      pointBalance: Number(process.env.NEW_POINT_BALANCE || 2000), // Get a FREE 1-night disc rental for signing up.
-      currentTier: process.env.NEW_TIER_DEFAULT || "Member", // this is their tier (calculated based on purchases)
+      pointBalance: LOYALTY_CONFIG.newPointBalance, // Get a FREE 1-night disc rental for signing up.
+      currentTier: LOYALTY_CONFIG.newTierDefault, // this is their tier (calculated based on purchases)
       tierCounter: 0, // this is their purchase count
     },
     promoCodes: [],

@@ -161,6 +161,23 @@ export const LoyaltyWebConfigSchema = Joi.object({
   enabled: Joi.boolean().optional(),
 }).meta({ className: "LoyaltyWebConfig" });
 
+export const LoyaltyConfigSchema = Joi.object({
+  earningMember: Joi.number().required(),
+  earningStar: Joi.number().required(),
+  earningSuperstar: Joi.number().required(),
+  earningLegend: Joi.number().required(),
+  rentalPointsPerNight: Joi.number().required(),
+  rentalRedemptionGoal: Joi.number().required(),
+  newPointBalance: Joi.number().required(),
+  newTierDefault: Joi.string()
+    .valid("Member", "Star", "Superstar", "Legend")
+    .required(),
+  tierMemberPurchases: Joi.number().required(),
+  tierStarPurchases: Joi.number().required(),
+  tierSuperstarPurchases: Joi.number().required(),
+  tierLegendPurchases: Joi.number().required(),
+}).meta({ className: "LoyaltyConfig" });
+
 export const DbConfigSchema = Joi.object({}).meta({ className: "DbConfig" });
 
 export const UserSchema = Joi.object({
@@ -214,6 +231,7 @@ export const AppConfigSchema = Joi.object({
   reelsConfig: ServiceConfigSchema.required(),
   transactionServiceConfig: ServiceConfigSchema.required(),
   mqttConfig: ServiceConfigSchema.required(),
+  loyaltyConfig: LoyaltyConfigSchema.required(),
   loginInfo: LoginInfoSchema.required(),
   caConfig: CAConfigSchema.required(),
 }).meta({ className: "AppConfig" });

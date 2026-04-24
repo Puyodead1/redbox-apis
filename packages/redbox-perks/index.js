@@ -311,8 +311,8 @@ app.post('/signup', rejectLoggedIn, (RATE_LIMITING ? SIGNUP_RATE_LIMIT : (req, r
             "pin": null,
             "hashed": true, // migrate to bcrypt for hashing (safe storage of passwords)
             "loyalty": {
-                "pointBalance": process.env.NEW_POINT_BALANCE || 2000, // Get a FREE 1-night disc rental for signing up.
-                "currentTier": process.env.NEW_TIER_DEFAULT || "Member", // this is their tier (calculated based on purchases)
+                "pointBalance": Config.get().loyaltyConfig.newPointBalance, // Get a FREE 1-night disc rental for signing up.
+                "currentTier": Config.get().loyaltyConfig.newTierDefault, // this is their tier (calculated based on purchases)
                 "tierCounter": 0 // this is their purchase count
             },
             "promoCodes": []

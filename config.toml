@@ -36,6 +36,24 @@ enabled = true
 port = 8883
 host = "127.0.0.1"
 
+[loyaltyConfig]
+# Points per $1.00 spent based on tier (for used disc purchases)
+earningMember = 50
+earningStar = 50
+earningSuperstar = 75
+earningLegend = 100
+
+rentalPointsPerNight = 150 # Amount of points earned per night (rentals)
+rentalRedemptionGoal = 2000 # Redemption amount needed for 1 free night rental
+newPointBalance = 2000 # Signup bonus granted to new members (currently 1 free night)
+newTierDefault = "Member" # Default tier the user is signed up for (Member, Star, Superstar, Legend)
+
+# Amount of purchases needed for each tier level-up
+tierMemberPurchases = 0 # No minimum requirement
+tierStarPurchases = 10 # 10+ purchases minimum
+tierSuperstarPurchases = 20 # 20+ purchases minimum
+tierLegendPurchases = 50 # 50+ purchases minimum
+
 [dbConfig]
 # nothing here yet
 

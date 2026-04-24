@@ -16,6 +16,7 @@ export interface AppConfig {
   iotCertificateServiceConfig: ServiceConfig;
   kioskInventoryServiceConfig: ServiceConfig;
   loginInfo: LoginInfo;
+  loyaltyConfig: LoyaltyConfig;
   loyaltyWebConfig: LoyaltyWebConfig;
   mqttConfig: ServiceConfig;
   proxyServiceConfig: ServiceConfig;
@@ -140,6 +141,21 @@ export interface LineItemGroup {
 export interface LoginInfo {
   desktop: User[];
   field: User[];
+}
+
+export interface LoyaltyConfig {
+  earningLegend: number;
+  earningMember: number;
+  earningStar: number;
+  earningSuperstar: number;
+  newPointBalance: number;
+  newTierDefault: 'Member' | 'Star' | 'Superstar' | 'Legend';
+  rentalPointsPerNight: number;
+  rentalRedemptionGoal: number;
+  tierLegendPurchases: number;
+  tierMemberPurchases: number;
+  tierStarPurchases: number;
+  tierSuperstarPurchases: number;
 }
 
 export interface LoyaltyWebConfig {
