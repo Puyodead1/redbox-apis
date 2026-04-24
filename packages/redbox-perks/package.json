@@ -4,6 +4,7 @@
   "version": "1.2.0",
   "description": "This is a web server for the Redbox Perks loyalty program, allowing users to manage their account.",
   "main": "index.js",
+  "type": "module",
   "scripts": {
     "start": "node index.js",
     "config": "nano .env"
@@ -29,6 +30,7 @@
   "homepage": "https://github.com/BrianWalczak/RedboxAPI#readme",
   "dependencies": {
     "@redbox-apis/common": "workspace:^",
+    "@redbox-apis/db": "workspace:^",
     "@types/node": "^24.10.0",
     "@types/nodemailer": "^7.0.3",
     "axios": "^1.13.1",

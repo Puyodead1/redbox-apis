@@ -1,20 +1,26 @@
-const { rateLimit } = require('express-rate-limit');
-const { Config } = require("@redbox-apis/common");
-const session = require('express-session');
-const express = require('express');
-const bcrypt = require('bcryptjs');
-const axios = require('axios');
-const fs = require('fs');
-const path = require('path');
-const { SMTPClient } = require('emailjs');
-require('dotenv').config({ path: "./.env" });
-const { getPrisma } = require("../db");
+import { rateLimit } from 'express-rate-limit';
+import { Config } from "@redbox-apis/common";
+import { getPrisma } from "@redbox-apis/db";
+import session from 'express-session';
+import express from 'express';
+import bcrypt from 'bcryptjs';
+import axios from 'axios';
+import fs from 'node:fs';
+import path from 'node:path';
+import { SMTPClient } from 'emailjs';
+import dotenv from 'dotenv';
+import { fileURLToPath } from 'node:url';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
+dotenv.config({ path: "./.env" });
 
 const app = express();
-const RATE_LIMITING = process.env.RATE_LIMITING === 'true' ? true : false;
+const RATE_LIMITING = process.env.RATE_LIMITING === 'true';
 app.locals.recaptcha = process.env.USE_RECAPTCHA === 'true' ? process.env.RECAPTCHA_PUBLIC_KEY : null;
 
-const API_CONFIGURATION = require('dotenv').parse(fs.readFileSync(path.join(__dirname, '../../', '.env')));
+const API_CONFIGURATION = dotenv.parse(fs.readFileSync(path.join(__dirname, '../../', '.env')));
 
 const GENERAL_RATE_LIMIT = rateLimit({
     windowMs: 24 * 60 * 60 * 1000, // 24 hours
