@@ -159,6 +159,7 @@ export interface LoyaltyConfig {
 }
 
 export interface LoyaltyWebConfig {
+  domain?: string;
   enabled?: boolean;
   host: string;
   port: number;

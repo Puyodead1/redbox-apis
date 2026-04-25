@@ -159,6 +159,7 @@ export const LoyaltyWebConfigSchema = Joi.object({
   port: Joi.number().required(),
   host: Joi.string().required(),
   enabled: Joi.boolean().optional(),
+  domain: Joi.string().optional(),
 }).meta({ className: "LoyaltyWebConfig" });
 
 export const LoyaltyConfigSchema = Joi.object({

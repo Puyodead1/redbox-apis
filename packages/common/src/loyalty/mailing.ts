@@ -1,5 +1,6 @@
 import { SMTPClient } from "emailjs";
 import { getStore } from "./utils";
+import { Config } from "../";
 import dotenv from "dotenv";
 import { getPathRelativeRoot } from "../utils";
 dotenv.config({ path: getPathRelativeRoot(".env") });
@@ -52,6 +53,7 @@ export async function sendSignup(
 ) {
   const store = await getStore(kioskId);
   try {
+    const BASE_DOMAIN = Config.get().loyaltyWebConfig.domain || "redbox.com";
     const store = await getStore(kioskId);
 
     const message = await client.sendAsync({
@@ -59,7 +61,7 @@ export async function sendSignup(
       to: email,
       subject: `Welcome to Redbox Perks!`,
       text: `You're in! Thanks for signing up at your local Redbox kiosk.\nYour temporary password for your Redbox account is: ${password}\n\nYou can access your online account by clicking here: https://${
-        process.env.BASE_DOMAIN || "redbox.com"
+        BASE_DOMAIN
       }/login\n\nIf you didn't create this account, please reply to this email immediately to let us know.\n\nThanks for being a part of Redbox!`,
       attachment: [
         {
@@ -67,7 +69,7 @@ export async function sendSignup(
             <p>You're in! Thanks for signing up at your local Redbox kiosk.</p>
             <p><strong>Your temporary password for your Redbox account is: <code>${password}</code></strong></p>
             <p>You can access your online account by <a href="https://${
-              process.env.BASE_DOMAIN || "redbox.com"
+              BASE_DOMAIN
             }/login">clicking here</a>.</p>
             <p>If you didn't create this account, please reply to this email immediately to let us know.</p>
             <br><p>As a special thanks for signing up, you'll receive a FREE 1-night disc rental on your next purchase. Thanks for being a part of Redbox!</p>

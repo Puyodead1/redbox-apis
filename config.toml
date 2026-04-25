@@ -31,6 +31,7 @@ host = "127.0.0.1"
 port = 3019
 host = "127.0.0.1"
 enabled = true
+domain = "redbox.com" # Replace with your hosted web-server domain (optional, used for signup emails)
 
 [mqttConfig]
 port = 8883
