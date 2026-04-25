@@ -17,7 +17,7 @@
     <%- include('header') %>
     <div class="form-container">
         <h1>Signup for Redbox Perks</h1>
-        <p style="text-align: center;">Your free Redbox account gives you perks.<br><b>Get a FREE 1-night disc rental for signing up.</b></p>
+        <p style="text-align: center;">Your free Redbox account gives you perks.<br><% if (promo) { %><b>Get <%= promo.type == 'rental' ? `a FREE ${promo.amount.toLocaleString()}-night disc rental` : promo.amount.toLocaleString() + ' FREE points' %> for signing up.</b><% } %></p>
 
         <form id="signup-form">
             <label for="name">First Name:</label>
