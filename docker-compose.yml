@@ -1,0 +1,25 @@
+services:
+  redbox-apis:
+    build: .
+    container_name: redbox-apis
+    restart: unless-stopped
+    env_file:
+      - .env # Main environment variables
+    environment:
+      - DATABASE_URL=file:/usr/src/app/data/redbox.db # Override database URL with folder mount
+    ports:
+      - "3012:3012" # Proxy Service
+      - "3013:3013" # Data Service
+      - "3014:3014" # Ad Server
+      - "3015:3015" # Transaction Service
+      - "3016:3016" # Reels
+      - "3017:3017" # Kiosk Inventory
+      - "3018:3018" # IOT Certificate Service
+      - "3019:3019" # Loyalty (Perks)
+      - "8883:8883" # MQTT Broker
+    volumes:
+      - ./data:/usr/src/app/data
+      - ./certificates:/usr/src/app/certificates
+      - ./config.toml:/usr/src/app/config.toml:ro
+      - ./.env:/usr/src/app/.env:ro
+      - ./packages/redbox-perks/.env:/usr/src/app/packages/redbox-perks/.env:ro

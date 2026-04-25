@@ -1,0 +1,15 @@
+node_modules/
+config.toml
+*.db
+*.sqlite
+*.sqlite3
+*.crt
+*.key
+*.pem
+*.pfx
+.env
+.env.*
+**/.env
+**/.env.*
+/certificates/
+/data/
