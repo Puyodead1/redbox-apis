@@ -1,13 +1,11 @@
-<h1 align="center">Redbox API's | Powered by Express.js</h1>
+<h1 align="center">Redbox API's</h1>
 
-<p align="center">A feature-rich API designed to restore the functionality of your Redbox kiosk, as well as Redbox Perks.<br>An attempt to recreate the Redbox backend APIs.<br></p>
-
-#### This project has been merged with the now unmaintained [RedboxAPI](https://github.com/BrianWalczak/RedboxAPI) project, restoring functionality for the Redbox Perks loyalty program.
+<p align="center">An API designed to restore the functionality of your Redbox kiosk by recreating the original backend services.<br></p>
 
 ## Installation
 
-To get started with hosting your Redbox API instance, make sure you have Node.js
-and pnpm installed. Follow the steps below to set up your environment:
+To get started hosting your Redbox API, make sure you have Node.js and pnpm
+installed, then follow the steps below to set up your environment:
 
 1. **Install Node.js** from [here](https://nodejs.org/).
 2. Clone the repository and install the dependencies:
@@ -20,14 +18,14 @@ pnpm install
 
 Next, configure the following environment files:
 
-- `.env`
-- `packages/db/.env`
-- `packages/redbox-perks/.env`
+- `.env` - SMTP settings, used for receipts & account registration
+- `packages/db/.env` - Prisma database URL (can likely leave as-is)
+- `packages/redbox-perks/.env` - Loyalty web UI admin config & reCAPTCHA tokens
+- `config.toml` - Global server and certificate configuration (ports, hosts, CA settings, MQTT, loyalty options)
 
-> ##### If you'd like to use reCAPTCHA (completely optional), you'll need to create a new project by visiting your [Google Cloud Console](https://console.cloud.google.com/). Then, visit the **APIs & Services** page and enable the [reCAPTCHA Enterprise API](https://console.cloud.google.com/apis/library/recaptchaenterprise.googleapis.com) (you may need to search for it). After enabling the API for your Google Cloud project, access the reCAPTCHA dashboard [here](https://www.google.com/u/1/recaptcha/admin/create) and follow the steps to add your domain (the one you'll use for the dashboard) and get your reCAPTCHA keys.
+> ##### If you want to use reCAPTCHA for the loyalty web UI (optional), create a project in [Google Cloud Console](https://console.cloud.google.com/), enable the [reCAPTCHA Enterprise API](https://console.cloud.google.com/apis/library/recaptchaenterprise.googleapis.com) in APIs & Services, then go to the [reCAPTCHA admin page](https://www.google.com/u/1/recaptcha/admin/create) to add your domain and get your keys.
 
-If you're okay with the default configuration, you can close the file. Once
-you've configured your web server, you're all done!
+If you're okay with the default configuration, or won't be using certain features, you can leave these unmodified.
 
 ## Building
 
@@ -54,7 +52,7 @@ pnpm start # start the API server
 ## Usage
 
 To apply these changes to your Redbox kiosk (and update the API to your custom
-server), you’ll need to configure the kiosk.
+server), you’ll need to configure the kiosk first.
 
 1. In the File Explorer, navigate to the file
    `C:\ProgramData\Redbox\UpdateClient\IoT\iotcertificatedata.json` and delete
@@ -64,9 +62,9 @@ server), you’ll need to configure the kiosk.
    server (either a custom domain or your router's IP address if you're using
    port forwarding).
 
-During the following steps, use the ports found below. Finally, restart your
-Redbox kiosk to apply the changes. Your kiosk will now be connected to your
-custom API!
+During the following steps, use the ports found below (these are the default, 
+and can be modified in `config.toml`). Finally, restart your Redbox kiosk to apply
+the changes. Your kiosk will now be connected to your API server!
 
 - Proxy Serivce: 3012
 - Data Service: 3013
@@ -75,7 +73,7 @@ custom API!
 - Reels: 3016
 - Kiosk Inventory: 3017
 - IOT Certificate Service: 3018
-- Loyalty Web UI: 3019
+- Loyalty Web UI: 3019 (optional)
 - MQTT Broker: 8883
 
 ### Certificate Authority
@@ -85,8 +83,8 @@ See [Certificate Authority](/ca.md)
 ## Legacy Database - Migration
 
 If your project currently uses the legacy database (which utilized the
-`database/` folder), it's required that you migrate to database usage by using
-the command: `pnpm perks:migrate`.
+`database/` folder), it's required that you migrate your database to the
+improved structure by using the command: `pnpm perks:migrate`.
 
 This will push any migrations to your existing Prisma database, and transfer all
 of your data over. It will then proceed to delete the `database/` folder and
@@ -99,11 +97,13 @@ your end.
   with the following command: `pnpm prebuild`
 - To run a script on a specific package, use the following operation:
   `pnpm --filter <package name> run <script name> [any args]`
+- To change the log level, set the environment variable `LOG_LEVEL`:
+  `LOG_LEVEL=verbose`
 
 ### Scripts
 
-Listed are the workspace scripts, individual packages may specify their own
-additional scripts
+Listed are the workspace scripts. Individual packages may specify their own
+additional scripts:
 
 - `build` - Builds all packages
 - `start` - Starts all servers
@@ -113,9 +113,9 @@ additional scripts
 - `migrate:dev` - Run migrations for a development database
 - `seed` - Seed the database, mainly for development, currently is just for
   adding promo codes for testing
+- `format` - Run prettier across the entire codebase
+- `perks:migrate` - Migrates the existing database structure (more info [here](#legacy-database---migration))
 
 ### Seeding
 
-We use seeding to add initial data to a database, this is called seeding it.
-Currently, we use this to add different types of promo codes for testing. If you
-want to test/use these promo codes, just run the `seed` script.
+We use seeding to add initial data to a database. Currently, we use this to add different types of promo codes for testing. If you want to test/use these promo codes, run the `seed` script.
