@@ -13,6 +13,10 @@ body.light_mode {
     color: #E30613;
 }
 
+.light_mode .modal-content h2 {
+    color: #E30613;
+}
+
 .light_mode label {
     color: #555;
 }
@@ -53,6 +57,16 @@ body.light_mode {
     color: #333;
 }
 
+.light_mode .close-btn {
+    background-color: #f0f0f0;
+    color: #666;
+}
+
+.light_mode .close-btn:hover {
+    background-color: #E30613;
+    color: white;
+}
+
 /* Dark Mode */
 body.dark_mode {
     background-color: #121212;
@@ -65,6 +79,10 @@ body.dark_mode {
 }
 
 .dark_mode h1 {
+    color: #E30613;
+}
+
+.dark_mode .modal-content h2 {
     color: #E30613;
 }
 
@@ -106,4 +124,14 @@ body.dark_mode {
 .dark_mode select {
     background-color: #2C2C2C;
     color: #FFFFFF;
+}
+
+.dark_mode .close-btn {
+    background-color: #2C2C2C;
+    color: #B3B3B3;
+}
+
+.dark_mode .close-btn:hover {
+    background-color: #BB0000;
+    color: white;
 }

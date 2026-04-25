@@ -101,6 +101,13 @@
             padding: 0;
         }
 
+        .result.empty {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 20%;
+        }
+
         .disclaimer {
             padding-top: 50px;
         }
@@ -375,7 +382,13 @@
                         <button id="view" onclick="viewAccount('${user.cpn}')">View</button>
                     </div>
                 `);
-                $userResults.append(userElements.join(''));
+
+                if (loadedUsers === 0 && usersToLoad.length === 0) {
+                    $userResults.append('<div class="result empty"><p style="margin: 0; color: #888;">No users found.</p></div>');
+                } else {
+                    $userResults.append(userElements.join(''));
+                }
+
                 loadedUsers += usersToLoad.length;
             }
 

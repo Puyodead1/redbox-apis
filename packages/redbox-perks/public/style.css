@@ -42,6 +42,13 @@ input[type="text"], input[type="email"], input[type="tel"], input[type="password
     font-family: 'Inter', Arial, sans-serif;
 }
 
+input[type="text"]:focus,
+input[type="email"]:focus,
+input[type="tel"]:focus,
+input[type="password"]:focus {
+    outline: none;
+}
+
 button {
     width: 100%;
     padding: 12px;
@@ -50,6 +57,10 @@ button {
     border-radius: 4px;
     cursor: pointer;
     font-weight: 600;
+}
+
+button:focus {
+    outline: none;
 }
 
 .g-recaptcha {
@@ -69,7 +80,8 @@ button:disabled {
     position: absolute;
     top: 10px;
     right: 10px;
-    padding: 7px 12px;
+    padding: 9px 14px;
+    font-weight: 600;
     text-decoration: none;
     border-radius: 5px;
 }
@@ -107,6 +119,24 @@ a {
     flex: 1;
 }
 
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+@keyframes fadeOut {
+    from {
+        opacity: 1;
+    }
+    to {
+        opacity: 0;
+    }
+}
+
 .modal {
     display: none;
     position: fixed;
@@ -118,28 +148,49 @@ a {
     overflow: auto;
     background-color: rgba(0, 0, 0, 0.4);
     padding-top: 60px;
+    animation: fadeIn 0.3s ease-in-out;
+}
+
+.modal.fade-out {
+    animation: fadeOut 0.3s ease-in-out;
 }
 
 .modal-content {
     margin: 5% auto;
-    padding: 20px;
+    padding: 30px 30px 20px 30px;
     width: 80%;
     max-width: 400px;
-    border-radius: 15px;
+    border-radius: 8px;
+    position: relative;
 }
 
 .close-btn {
-    color: #aaa;
-    float: right;
-    font-size: 28px;
-    font-weight: bold;
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    background-color: #f0f0f0;
+    border: none;
+    border-radius: 50%;
+    width: 36px;
+    height: 36px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background-color 0.2s ease;
+    padding: 0;
+    line-height: 1;
+    color: #666;
 }
 
-.close-btn:hover,
+.close-btn:hover {
+    background-color: #e0e0e0;
+    color: #333;
+}
+
 .close-btn:focus {
-    color: black;
-    text-decoration: none;
-    cursor: pointer;
+    outline: 2px solid #E30613;
+    outline-offset: 2px;
 }
 
 select {
@@ -151,4 +202,15 @@ select {
     margin-top: 5px;
     font-family: 'Inter', sans-serif;
     font-weight: bold;
+}
+
+select:focus {
+    outline: none;
+}
+
+.modal-content h2 {
+    margin-top: 5px;
+    margin-bottom: 20px;
+    font-size: 26px;
+    font-weight: 900;
 }

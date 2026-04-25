@@ -67,7 +67,11 @@
 
     <div id="editKiosk" class="modal">
         <div class="modal-content">
-            <span class="close-btn" onclick="$('#editKiosk').hide();">&times;</span>
+            <button class="close-btn" onclick="const modal = $('#editKiosk'); modal.addClass('fade-out'); modal.one('animationend', function() { requestAnimationFrame(() => { modal.hide(); modal.removeClass('fade-out'); }); });" aria-label="Close">
+                <svg width="12" height="12" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M3 3L17 17M17 3L3 17" stroke="currentColor" stroke-width="3.5" stroke-linecap="round"/>
+                </svg>
+            </button>
             <h2><%= (user.pin === null || user.phoneNumber === null) ? 'Setup Kiosk Login' : 'Update Kiosk Login' %></h2>
             <form id="kiosk-login-form">
                 <label for="phoneNumber">Phone Number:</label>
