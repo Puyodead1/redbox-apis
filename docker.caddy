@@ -1,0 +1,74 @@
+# Replace all occurrences of example.com with your domain. This example setup does NOT include MQTT broker.
+example.com {
+        reverse_proxy host.docker.internal:3019
+}
+
+http://*.example.com {
+        @adserver host adserver.example.com
+        @dataservice host dataservice.example.com
+        @kioskinventory host kioskinventory.example.com
+        @proxyservice host proxyservice.example.com
+        @reels host reels.example.com
+        @transactionservice host transactionservice.example.com
+        @iotcertificateservice host iotcertificateservice.example.com
+
+        handle @adserver {
+                reverse_proxy host.docker.internal:3014 {
+                        header_up Host {host}
+                        header_up X-Real-IP {remote_host}
+                        header_up X-Forwarded-Proto http
+                }
+        }
+
+        handle @dataservice {
+                reverse_proxy host.docker.internal:3013 {
+                        header_up Host {host}
+                        header_up X-Real-IP {remote_host}
+                        header_up X-Forwarded-Proto http
+                }
+        }
+
+        handle @kioskinventory {
+                reverse_proxy host.docker.internal:3017 {
+                        header_up Host {host}
+                        header_up X-Real-IP {remote_host}
+                        header_up X-Forwarded-Proto http
+                }
+        }
+
+        handle @proxyservice {
+                reverse_proxy host.docker.internal:3012 {
+                        header_up Host {host}
+                        header_up X-Real-IP {remote_host}
+                        header_up X-Forwarded-Proto http
+                }
+        }
+
+        handle @reels {
+                reverse_proxy host.docker.internal:3016 {
+                        header_up Host {host}
+                        header_up X-Real-IP {remote_host}
+                        header_up X-Forwarded-Proto http
+                }
+        }
+
+        handle @transactionservice {
+                reverse_proxy host.docker.internal:3015 {
+                        header_up Host {host}
+                        header_up X-Real-IP {remote_host}
+                        header_up X-Forwarded-Proto http
+                }
+        }
+
+        handle @iotcertificateservice {
+                reverse_proxy host.docker.internal:3018 {
+                        header_up Host {host}
+                        header_up X-Real-IP {remote_host}
+                        header_up X-Forwarded-Proto http
+                }
+        }
+
+        handle {
+                respond "Unknown subdomain" 404
+        }
+}
