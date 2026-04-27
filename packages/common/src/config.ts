@@ -39,4 +39,19 @@ export class Config {
     }
     return this.instance;
   }
+
+  static getLoyaltyPromo() {
+    const { newPointBalance, rentalRedemptionGoal } = this.get().loyaltyConfig;
+    const bonusExists = rentalRedemptionGoal > 0 && newPointBalance > 0;
+    
+    if (!bonusExists) return null;
+    
+    const earnedRentals = newPointBalance / rentalRedemptionGoal;
+    const isFullRental = Number.isInteger(earnedRentals);
+
+    return {
+        type: (isFullRental ? 'rental' : 'points') as 'rental' | 'points',
+        amount: (isFullRental ? earnedRentals : newPointBalance) as number
+    };
+  }
 }

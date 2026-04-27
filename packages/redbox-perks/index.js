@@ -203,21 +203,7 @@ app.get('/login', rejectLoggedIn, (req, res) => {
 });
 
 app.get('/signup', rejectLoggedIn, (req, res) => {
-    const { newPointBalance, rentalRedemptionGoal } = Config.get().loyaltyConfig;
-    const bonusExists = rentalRedemptionGoal > 0 && newPointBalance > 0;
-    let promo;
-
-    if (bonusExists) {
-        const earnedRentals = newPointBalance / rentalRedemptionGoal;
-        const isFullRental = Number.isInteger(earnedRentals);
-
-        promo = {
-            type: isFullRental ? 'rental' : 'points',
-            amount: isFullRental ? earnedRentals : newPointBalance
-        };
-    }
-
-    res.render('signup', { promo });
+    res.render('signup', { promo: Config.getLoyaltyPromo() });
 });
 
 app.get('/dashboard', acceptLoggedIn, async (req, res) => {
