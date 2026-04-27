@@ -51,28 +51,29 @@ export async function sendSignup(
   password: string,
   kioskId: string | number,
 ) {
-  const store = await getStore(kioskId);
   try {
     const BASE_DOMAIN = Config.get().loyaltyWebConfig.domain || "redbox.com";
     const store = await getStore(kioskId);
+    const promo = Config.getLoyaltyPromo();
+    let promoText = "";
+
+    if (promo) {
+      promoText = `As a special thanks for signing up, you'll receive ${promo.type === "rental" ? `a FREE ${promo.amount.toLocaleString()}-night disc rental` : `${promo.amount.toLocaleString()} FREE points`} on your next purchase. `;
+    }
 
     const message = await client.sendAsync({
       from: `Redbox Perks <${process.env.SMTP_USERNAME}>`,
       to: email,
       subject: `Welcome to Redbox Perks!`,
-      text: `You're in! Thanks for signing up at your local Redbox kiosk.\nYour temporary password for your Redbox account is: ${password}\n\nYou can access your online account by clicking here: https://${
-        BASE_DOMAIN
-      }/login\n\nIf you didn't create this account, please reply to this email immediately to let us know.\n\nThanks for being a part of Redbox!`,
+      text: `You're in! Thanks for signing up at your local Redbox kiosk.\nYour temporary password for your Redbox account is: ${password}\n\nYou can access your online account by clicking here: https://${BASE_DOMAIN}/login\n\nIf you didn't create this account, please reply to this email immediately to let us know.\n\n${promoText}Thanks for being a part of Redbox!`,
       attachment: [
         {
           data: `
             <p>You're in! Thanks for signing up at your local Redbox kiosk.</p>
             <p><strong>Your temporary password for your Redbox account is: <code>${password}</code></strong></p>
-            <p>You can access your online account by <a href="https://${
-              BASE_DOMAIN
-            }/login">clicking here</a>.</p>
+            <p>You can access your online account by <a href="https://${BASE_DOMAIN}/login">clicking here</a>.</p>
             <p>If you didn't create this account, please reply to this email immediately to let us know.</p>
-            <br><p>As a special thanks for signing up, you'll receive a FREE 1-night disc rental on your next purchase. Thanks for being a part of Redbox!</p>
+            <br><p>${promoText}Thanks for being a part of Redbox!</p>
             <small>Your sign-up was made at the following kiosk address: <strong>${
               store!.Address
             }, ${store!.City}, ${store!.State} ${
